@@ -7,17 +7,9 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from typing import Optional, List
-import pandas as pd
-import numpy as np
-import os
-import sys
+from typing import Optional, List, Dict
 import json
 from datetime import datetime
-
-# step1_user_matcher와 step3 모듈 임포트
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from step1_user_matcher import UserSegmentMatcher
 
 app = FastAPI(title="서울 카드 데이터 기반 추천 서비스 - 이중 매칭 알고리즘")
 
@@ -30,45 +22,48 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# 데이터 경로
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-OUTPUTS_DIR = os.path.join(BASE_DIR, 'outputs')
-REALTIME_PROFILES_FILE = os.path.join(OUTPUTS_DIR, 'realtime_area_profiles.json')
+# GitHub raw URL - 데이터 파일 직접 로드
+GITHUB_RAW_BASE = "https://raw.githubusercontent.com/SUE960/space_recommendation/main/outputs"
+STATIC_PROFILES_URL = f"{GITHUB_RAW_BASE}/step1_static_profiles.json"
+REALTIME_PROFILES_URL = f"{GITHUB_RAW_BASE}/realtime_area_profiles.json"
 
 # 전역 변수로 데이터 캐싱
-user_matcher = None
-realtime_profiles = None
+static_profiles_cache = None
+realtime_profiles_cache = None
 
 def load_data():
-    """데이터 로드 - 정적 프로필 + 실시간 프로필"""
-    global user_matcher, realtime_profiles
+    """데이터 로드 - GitHub에서 직접 로드"""
+    global static_profiles_cache, realtime_profiles_cache
     
-    # 1. 정적 프로필 매처 로드
-    if user_matcher is None:
+    import requests
+    
+    # 1. 정적 프로필 로드
+    if static_profiles_cache is None:
         try:
-            user_matcher = UserSegmentMatcher(profiles_dir=OUTPUTS_DIR)
-            print("✅ 정적 프로필 로드 완료 (14개 세그먼트)")
+            print(f"🔄 정적 프로필 로드 중... {STATIC_PROFILES_URL}")
+            response = requests.get(STATIC_PROFILES_URL, timeout=10)
+            response.raise_for_status()
+            static_profiles_cache = response.json()
+            print(f"✅ 정적 프로필 로드 완료 ({len(static_profiles_cache)} 세그먼트)")
         except Exception as e:
             print(f"⚠️ 정적 프로필 로드 실패: {e}")
-            user_matcher = None
+            static_profiles_cache = {}
     
-    # 2. 실시간 지역 프로필 로드
-    if realtime_profiles is None:
+    # 2. 실시간 프로필 로드
+    if realtime_profiles_cache is None:
         try:
-            if os.path.exists(REALTIME_PROFILES_FILE):
-                with open(REALTIME_PROFILES_FILE, 'r', encoding='utf-8') as f:
-                    data = json.load(f)
-                    # 리스트를 딕셔너리로 변환
-                    realtime_profiles = {item['basic_info']['area_nm']: item for item in data}
-                print(f"✅ 실시간 프로필 로드 완료 ({len(realtime_profiles)}개 지역)")
-            else:
-                print(f"⚠️ 실시간 프로필 파일 없음: {REALTIME_PROFILES_FILE}")
-                realtime_profiles = {}
+            print(f"🔄 실시간 프로필 로드 중... {REALTIME_PROFILES_URL}")
+            response = requests.get(REALTIME_PROFILES_URL, timeout=10)
+            response.raise_for_status()
+            data = response.json()
+            # 리스트를 딕셔너리로 변환
+            realtime_profiles_cache = {item['basic_info']['area_nm']: item for item in data}
+            print(f"✅ 실시간 프로필 로드 완료 ({len(realtime_profiles_cache)}개 지역)")
         except Exception as e:
             print(f"⚠️ 실시간 프로필 로드 실패: {e}")
-            realtime_profiles = {}
+            realtime_profiles_cache = {}
     
-    return user_matcher, realtime_profiles
+    return static_profiles_cache, realtime_profiles_cache
 
 # 업종 매핑 (카드 데이터 -> API 카테고리)
 INDUSTRY_MAPPING = {
@@ -400,21 +395,37 @@ async def get_recommendations(request: RecommendationRequest):
     5. 최종 점수 산출
     6. 상위 N개 지역 추천
     """
-    matcher, profiles = load_data()
+    static_profiles, realtime_profiles = load_data()
     
-    if matcher is None:
+    if not static_profiles:
         raise HTTPException(status_code=500, detail="정적 프로필을 로드할 수 없습니다")
     
-    if not profiles:
+    if not realtime_profiles:
         raise HTTPException(status_code=500, detail="실시간 프로필을 로드할 수 없습니다")
     
-    # 1-2단계: 정적 프로필 매칭
+    # 1-2단계: 정적 프로필 매칭 (간단한 버전)
     try:
-        static_profile = matcher.match_user(
-            age=request.age,
-            gender=request.gender,
-            income_level=request.income_level
-        )
+        # 나이대 결정
+        if request.age < 20:
+            age_group = "10s"
+        elif request.age < 30:
+            age_group = "20s"
+        elif request.age < 40:
+            age_group = "30s"
+        elif request.age < 50:
+            age_group = "40s"
+        elif request.age < 60:
+            age_group = "50s"
+        elif request.age < 70:
+            age_group = "60s"
+        else:
+            age_group = "70s"
+        
+        # 세그먼트 ID
+        segment_id = f"{age_group}_{request.gender}"
+        
+        # 정적 프로필 가져오기
+        static_profile = static_profiles.get(segment_id, static_profiles.get("20s_남", {}))
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"사용자 프로필 매칭 실패: {str(e)}")
     
