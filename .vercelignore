@@ -1,0 +1,42 @@
+# 백엔드 API 폴더 제외 (별도 배포)
+api/
+
+# Python 관련 파일 제외
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# 데이터 파일 (크기가 큰 파일들)
+outputs/*.csv
+data_2/
+
+# 발표 자료 (PDF 등)
+발표자료/
+*.pptx
+*.pdf
+
+# 분석 스크립트들
+*.py
+!next.config.js
+
+# 문서 (배포에 불필요)
+*.md
+!README.md
+
+# 로그 파일
+*.log
+
+# Jupyter notebooks
+notebooks/
+*.ipynb
+
+# 기타 불필요한 파일들
+.DS_Store
+
