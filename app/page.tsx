@@ -56,6 +56,17 @@ export default function Home() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  const handleShowForm = () => {
+    setShowForm(true)
+    // 폼으로 부드럽게 스크롤
+    setTimeout(() => {
+      const formSection = document.getElementById('recommendation-section')
+      if (formSection) {
+        formSection.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }
+    }, 100)
+  }
+
   const handleRecommend = async (formData: {
     age: number
     gender: string
@@ -137,10 +148,10 @@ export default function Home() {
               ⊙ 트렌드 맵 둘러보기
             </button>
             <button
-              onClick={() => setShowForm(true)}
+              onClick={handleShowForm}
               className={styles.triggerButton}
             >
-              개인 정보 입력하기
+              🎯 개인 정보 입력하기
             </button>
           </div>
         </div>
