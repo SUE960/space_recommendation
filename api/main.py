@@ -31,7 +31,7 @@ app.add_middleware(
 )
 
 # 데이터 경로
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUTS_DIR = os.path.join(BASE_DIR, 'outputs')
 REALTIME_PROFILES_FILE = os.path.join(OUTPUTS_DIR, 'realtime_area_profiles.json')
 

@@ -1,0 +1,1894 @@
+{
+  "teen_male": {
+    "segment_info": {
+      "age_group": "teen",
+      "age_group_kr": "20세미만",
+      "gender": "male",
+      "gender_kr": "남",
+      "profile_id": "teen_male"
+    },
+    "spending_characteristics": {
+      "total_spending": 1287156010,
+      "total_transactions": 232260,
+      "avg_transaction_amount": 5541,
+      "active_days": 547
+    },
+    "industry_preferences": [
+      {
+        "industry": "편의점",
+        "spending_amount": 498924383,
+        "transaction_count": 108553,
+        "avg_amount": 4596,
+        "preference_ratio": 38.76,
+        "rank": 1
+      },
+      {
+        "industry": "한식",
+        "spending_amount": 346697917,
+        "transaction_count": 15922,
+        "avg_amount": 21774,
+        "preference_ratio": 26.94,
+        "rank": 2
+      },
+      {
+        "industry": "게임방/오락실",
+        "spending_amount": 256297575,
+        "transaction_count": 86045,
+        "avg_amount": 2978,
+        "preference_ratio": 19.91,
+        "rank": 3
+      },
+      {
+        "industry": "의복/의류",
+        "spending_amount": 128717480,
+        "transaction_count": 9367,
+        "avg_amount": 13741,
+        "preference_ratio": 10.0,
+        "rank": 4
+      },
+      {
+        "industry": "노래방",
+        "spending_amount": 56518655,
+        "transaction_count": 12373,
+        "avg_amount": 4567,
+        "preference_ratio": 4.39,
+        "rank": 5
+      }
+    ],
+    "region_preferences": [
+      {
+        "region_code": "1150054000",
+        "spending_amount": 346697917,
+        "visit_count": 15922,
+        "rank": 1
+      },
+      {
+        "region_code": "1123061000",
+        "spending_amount": 256297575,
+        "visit_count": 86045,
+        "rank": 2
+      },
+      {
+        "region_code": "1129062000",
+        "spending_amount": 254450738,
+        "visit_count": 36221,
+        "rank": 3
+      },
+      {
+        "region_code": "1168058000",
+        "spending_amount": 244473645,
+        "visit_count": 72332,
+        "rank": 4
+      },
+      {
+        "region_code": "1174061000",
+        "spending_amount": 128717480,
+        "visit_count": 9367,
+        "rank": 5
+      },
+      {
+        "region_code": "1159051000",
+        "spending_amount": 56518655,
+        "visit_count": 12373,
+        "rank": 6
+      }
+    ]
+  },
+  "teen_female": {
+    "segment_info": {
+      "age_group": "teen",
+      "age_group_kr": "20세미만",
+      "gender": "female",
+      "gender_kr": "여",
+      "profile_id": "teen_female"
+    },
+    "spending_characteristics": {
+      "total_spending": 626454752,
+      "total_transactions": 21825,
+      "avg_transaction_amount": 28703,
+      "active_days": 547
+    },
+    "industry_preferences": [
+      {
+        "industry": "일식",
+        "spending_amount": 405087205,
+        "transaction_count": 9478,
+        "avg_amount": 42739,
+        "preference_ratio": 64.66,
+        "rank": 1
+      },
+      {
+        "industry": "한식",
+        "spending_amount": 221367547,
+        "transaction_count": 12347,
+        "avg_amount": 17928,
+        "preference_ratio": 35.34,
+        "rank": 2
+      }
+    ],
+    "region_preferences": [
+      {
+        "region_code": "1165053100",
+        "spending_amount": 405087205,
+        "visit_count": 9478,
+        "rank": 1
+      },
+      {
+        "region_code": "1117055500",
+        "spending_amount": 221367547,
+        "visit_count": 12347,
+        "rank": 2
+      }
+    ]
+  },
+  "20s_male": {
+    "segment_info": {
+      "age_group": "20s",
+      "age_group_kr": "20_29세",
+      "gender": "male",
+      "gender_kr": "남",
+      "profile_id": "20s_male"
+    },
+    "spending_characteristics": {
+      "total_spending": 7888242549,
+      "total_transactions": 845157,
+      "avg_transaction_amount": 9333,
+      "active_days": 547
+    },
+    "industry_preferences": [
+      {
+        "industry": "기타요식",
+        "spending_amount": 2069306549,
+        "transaction_count": 102792,
+        "avg_amount": 20131,
+        "preference_ratio": 26.23,
+        "rank": 1
+      },
+      {
+        "industry": "편의점",
+        "spending_amount": 1824243238,
+        "transaction_count": 265814,
+        "avg_amount": 6862,
+        "preference_ratio": 23.13,
+        "rank": 2
+      },
+      {
+        "industry": "영화/공연",
+        "spending_amount": 1430945707,
+        "transaction_count": 124515,
+        "avg_amount": 11492,
+        "preference_ratio": 18.14,
+        "rank": 3
+      },
+      {
+        "industry": "슈퍼마켓일반형",
+        "spending_amount": 1385584992,
+        "transaction_count": 200189,
+        "avg_amount": 6921,
+        "preference_ratio": 17.57,
+        "rank": 4
+      },
+      {
+        "industry": "노래방",
+        "spending_amount": 437418770,
+        "transaction_count": 79791,
+        "avg_amount": 5482,
+        "preference_ratio": 5.55,
+        "rank": 5
+      },
+      {
+        "industry": "제과점",
+        "spending_amount": 306864966,
+        "transaction_count": 31321,
+        "avg_amount": 9797,
+        "preference_ratio": 3.89,
+        "rank": 6
+      },
+      {
+        "industry": "헬스장",
+        "spending_amount": 206249325,
+        "transaction_count": 12312,
+        "avg_amount": 16751,
+        "preference_ratio": 2.61,
+        "rank": 7
+      },
+      {
+        "industry": "농수산물",
+        "spending_amount": 132461896,
+        "transaction_count": 12475,
+        "avg_amount": 10618,
+        "preference_ratio": 1.68,
+        "rank": 8
+      },
+      {
+        "industry": "전자상거래(다품목취급)",
+        "spending_amount": 95167106,
+        "transaction_count": 15948,
+        "avg_amount": 5967,
+        "preference_ratio": 1.21,
+        "rank": 9
+      }
+    ],
+    "region_preferences": [
+      {
+        "region_code": "1159068000",
+        "spending_amount": 2069306549,
+        "visit_count": 102792,
+        "rank": 1
+      },
+      {
+        "region_code": "1162073500",
+        "spending_amount": 1823003762,
+        "visit_count": 279980,
+        "rank": 2
+      },
+      {
+        "region_code": "1154570000",
+        "spending_amount": 1002321367,
+        "visit_count": 157490,
+        "rank": 3
+      },
+      {
+        "region_code": "1162054500",
+        "spending_amount": 821921871,
+        "visit_count": 108324,
+        "rank": 4
+      },
+      {
+        "region_code": "1141058500",
+        "spending_amount": 727323994,
+        "visit_count": 86308,
+        "rank": 5
+      },
+      {
+        "region_code": "1111061500",
+        "spending_amount": 703621713,
+        "visit_count": 38207,
+        "rank": 6
+      },
+      {
+        "region_code": "1171061000",
+        "spending_amount": 221611816,
+        "visit_count": 18909,
+        "rank": 7
+      },
+      {
+        "region_code": "1162058500",
+        "spending_amount": 206249325,
+        "visit_count": 12312,
+        "rank": 8
+      },
+      {
+        "region_code": "1126056500",
+        "spending_amount": 132461896,
+        "visit_count": 12475,
+        "rank": 9
+      },
+      {
+        "region_code": "1121583000",
+        "spending_amount": 95167106,
+        "visit_count": 15948,
+        "rank": 10
+      }
+    ]
+  },
+  "20s_female": {
+    "segment_info": {
+      "age_group": "20s",
+      "age_group_kr": "20_29세",
+      "gender": "female",
+      "gender_kr": "여",
+      "profile_id": "20s_female"
+    },
+    "spending_characteristics": {
+      "total_spending": 22479808954,
+      "total_transactions": 747509,
+      "avg_transaction_amount": 30072,
+      "active_days": 547
+    },
+    "industry_preferences": [
+      {
+        "industry": "ZZ_나머지",
+        "spending_amount": 10435212328,
+        "transaction_count": 164014,
+        "avg_amount": 63623,
+        "preference_ratio": 46.42,
+        "rank": 1
+      },
+      {
+        "industry": "한식",
+        "spending_amount": 7602741510,
+        "transaction_count": 256958,
+        "avg_amount": 29587,
+        "preference_ratio": 33.82,
+        "rank": 2
+      },
+      {
+        "industry": "생활잡화/수입상품점",
+        "spending_amount": 1778427955,
+        "transaction_count": 96053,
+        "avg_amount": 18515,
+        "preference_ratio": 7.91,
+        "rank": 3
+      },
+      {
+        "industry": "기타요식",
+        "spending_amount": 1756346300,
+        "transaction_count": 154579,
+        "avg_amount": 11362,
+        "preference_ratio": 7.81,
+        "rank": 4
+      },
+      {
+        "industry": "싸우나/목욕탕",
+        "spending_amount": 619239045,
+        "transaction_count": 28849,
+        "avg_amount": 21464,
+        "preference_ratio": 2.75,
+        "rank": 5
+      },
+      {
+        "industry": "슈퍼마켓일반형",
+        "spending_amount": 142666330,
+        "transaction_count": 15817,
+        "avg_amount": 9019,
+        "preference_ratio": 0.63,
+        "rank": 6
+      },
+      {
+        "industry": "노래방",
+        "spending_amount": 102547624,
+        "transaction_count": 21901,
+        "avg_amount": 4682,
+        "preference_ratio": 0.46,
+        "rank": 7
+      },
+      {
+        "industry": "기타식품",
+        "spending_amount": 42627862,
+        "transaction_count": 9338,
+        "avg_amount": 4564,
+        "preference_ratio": 0.19,
+        "rank": 8
+      }
+    ],
+    "region_preferences": [
+      {
+        "region_code": "1156062000",
+        "spending_amount": 10107792445,
+        "visit_count": 44932,
+        "rank": 1
+      },
+      {
+        "region_code": "1165061000",
+        "spending_amount": 2913989222,
+        "visit_count": 67395,
+        "rank": 2
+      },
+      {
+        "region_code": "1114057000",
+        "spending_amount": 2725769819,
+        "visit_count": 100032,
+        "rank": 3
+      },
+      {
+        "region_code": "1162058500",
+        "spending_amount": 1778427955,
+        "visit_count": 96053,
+        "rank": 4
+      },
+      {
+        "region_code": "1121586000",
+        "spending_amount": 1756346300,
+        "visit_count": 154579,
+        "rank": 5
+      },
+      {
+        "region_code": "1168075000",
+        "spending_amount": 1081100712,
+        "visit_count": 41388,
+        "rank": 6
+      },
+      {
+        "region_code": "1174054000",
+        "spending_amount": 881881757,
+        "visit_count": 48143,
+        "rank": 7
+      },
+      {
+        "region_code": "1168059000",
+        "spending_amount": 619239045,
+        "visit_count": 28849,
+        "rank": 8
+      },
+      {
+        "region_code": "1168061000",
+        "spending_amount": 470086213,
+        "visit_count": 134899,
+        "rank": 9
+      },
+      {
+        "region_code": "1154562000",
+        "spending_amount": 102547624,
+        "visit_count": 21901,
+        "rank": 10
+      }
+    ]
+  },
+  "30s_male": {
+    "segment_info": {
+      "age_group": "30s",
+      "age_group_kr": "30_39세",
+      "gender": "male",
+      "gender_kr": "남",
+      "profile_id": "30s_male"
+    },
+    "spending_characteristics": {
+      "total_spending": 73821362556,
+      "total_transactions": 2191349,
+      "avg_transaction_amount": 33687,
+      "active_days": 547
+    },
+    "industry_preferences": [
+      {
+        "industry": "한식",
+        "spending_amount": 28306419667,
+        "transaction_count": 747135,
+        "avg_amount": 37886,
+        "preference_ratio": 38.34,
+        "rank": 1
+      },
+      {
+        "industry": "보험",
+        "spending_amount": 15028838088,
+        "transaction_count": 54809,
+        "avg_amount": 274203,
+        "preference_ratio": 20.36,
+        "rank": 2
+      },
+      {
+        "industry": "안마/마사지",
+        "spending_amount": 10767629933,
+        "transaction_count": 28431,
+        "avg_amount": 378728,
+        "preference_ratio": 14.59,
+        "rank": 3
+      },
+      {
+        "industry": "기타요식",
+        "spending_amount": 5031342447,
+        "transaction_count": 421805,
+        "avg_amount": 11928,
+        "preference_ratio": 6.82,
+        "rank": 4
+      },
+      {
+        "industry": "주유소",
+        "spending_amount": 3738189841,
+        "transaction_count": 101702,
+        "avg_amount": 36756,
+        "preference_ratio": 5.06,
+        "rank": 5
+      },
+      {
+        "industry": "싸우나/목욕탕",
+        "spending_amount": 1756569459,
+        "transaction_count": 125467,
+        "avg_amount": 14000,
+        "preference_ratio": 2.38,
+        "rank": 6
+      },
+      {
+        "industry": "제과점",
+        "spending_amount": 1454403967,
+        "transaction_count": 140920,
+        "avg_amount": 10320,
+        "preference_ratio": 1.97,
+        "rank": 7
+      },
+      {
+        "industry": "일반병원",
+        "spending_amount": 1190215690,
+        "transaction_count": 12436,
+        "avg_amount": 95707,
+        "preference_ratio": 1.61,
+        "rank": 8
+      },
+      {
+        "industry": "패스트푸드",
+        "spending_amount": 1178400457,
+        "transaction_count": 116044,
+        "avg_amount": 10154,
+        "preference_ratio": 1.6,
+        "rank": 9
+      },
+      {
+        "industry": "슈퍼마켓일반형",
+        "spending_amount": 1092794717,
+        "transaction_count": 86240,
+        "avg_amount": 12671,
+        "preference_ratio": 1.48,
+        "rank": 10
+      }
+    ],
+    "region_preferences": [
+      {
+        "region_code": "1162064500",
+        "spending_amount": 18953630377,
+        "visit_count": 535040,
+        "rank": 1
+      },
+      {
+        "region_code": "1111061500",
+        "spending_amount": 15028838088,
+        "visit_count": 54809,
+        "rank": 2
+      },
+      {
+        "region_code": "1168064000",
+        "spending_amount": 10767629933,
+        "visit_count": 28431,
+        "rank": 3
+      },
+      {
+        "region_code": "1121585000",
+        "spending_amount": 9352789290,
+        "visit_count": 212095,
+        "rank": 4
+      },
+      {
+        "region_code": "1165065100",
+        "spending_amount": 4611383613,
+        "visit_count": 351685,
+        "rank": 5
+      },
+      {
+        "region_code": "1168065600",
+        "spending_amount": 2529401307,
+        "visit_count": 60753,
+        "rank": 6
+      },
+      {
+        "region_code": "1150059100",
+        "spending_amount": 1756569459,
+        "visit_count": 125467,
+        "rank": 7
+      },
+      {
+        "region_code": "1156056000",
+        "spending_amount": 1190215690,
+        "visit_count": 12436,
+        "rank": 8
+      },
+      {
+        "region_code": "1156051500",
+        "spending_amount": 1178400457,
+        "visit_count": 116044,
+        "rank": 9
+      },
+      {
+        "region_code": "1165059000",
+        "spending_amount": 1033429686,
+        "visit_count": 60460,
+        "rank": 10
+      }
+    ]
+  },
+  "30s_female": {
+    "segment_info": {
+      "age_group": "30s",
+      "age_group_kr": "30_39세",
+      "gender": "female",
+      "gender_kr": "여",
+      "profile_id": "30s_female"
+    },
+    "spending_characteristics": {
+      "total_spending": 27619389504,
+      "total_transactions": 1350372,
+      "avg_transaction_amount": 20453,
+      "active_days": 547
+    },
+    "industry_preferences": [
+      {
+        "industry": "컴퓨터/소프트웨어",
+        "spending_amount": 10629727336,
+        "transaction_count": 215250,
+        "avg_amount": 49383,
+        "preference_ratio": 38.49,
+        "rank": 1
+      },
+      {
+        "industry": "커피전문점",
+        "spending_amount": 4891135551,
+        "transaction_count": 300419,
+        "avg_amount": 16281,
+        "preference_ratio": 17.71,
+        "rank": 2
+      },
+      {
+        "industry": "기타요식",
+        "spending_amount": 3866174427,
+        "transaction_count": 331100,
+        "avg_amount": 11676,
+        "preference_ratio": 14.0,
+        "rank": 3
+      },
+      {
+        "industry": "편의점",
+        "spending_amount": 2639374008,
+        "transaction_count": 266352,
+        "avg_amount": 9909,
+        "preference_ratio": 9.56,
+        "rank": 4
+      },
+      {
+        "industry": "한식",
+        "spending_amount": 2233068330,
+        "transaction_count": 77505,
+        "avg_amount": 28811,
+        "preference_ratio": 8.09,
+        "rank": 5
+      },
+      {
+        "industry": "패션잡화",
+        "spending_amount": 767528004,
+        "transaction_count": 29641,
+        "avg_amount": 25894,
+        "preference_ratio": 2.78,
+        "rank": 6
+      },
+      {
+        "industry": "생활잡화/수입상품점",
+        "spending_amount": 644332917,
+        "transaction_count": 31609,
+        "avg_amount": 20384,
+        "preference_ratio": 2.33,
+        "rank": 7
+      },
+      {
+        "industry": "슈퍼마켓일반형",
+        "spending_amount": 503506198,
+        "transaction_count": 35259,
+        "avg_amount": 14280,
+        "preference_ratio": 1.82,
+        "rank": 8
+      },
+      {
+        "industry": "일식",
+        "spending_amount": 481115233,
+        "transaction_count": 18987,
+        "avg_amount": 25339,
+        "preference_ratio": 1.74,
+        "rank": 9
+      },
+      {
+        "industry": "연구/번역서비스",
+        "spending_amount": 451094959,
+        "transaction_count": 9317,
+        "avg_amount": 48416,
+        "preference_ratio": 1.63,
+        "rank": 10
+      }
+    ],
+    "region_preferences": [
+      {
+        "region_code": "1150060300",
+        "spending_amount": 10629727336,
+        "visit_count": 215250,
+        "rank": 1
+      },
+      {
+        "region_code": "1120066000",
+        "spending_amount": 4721146340,
+        "visit_count": 271879,
+        "rank": 2
+      },
+      {
+        "region_code": "1165053000",
+        "spending_amount": 3108399990,
+        "visit_count": 280851,
+        "rank": 3
+      },
+      {
+        "region_code": "1121573000",
+        "spending_amount": 2233068330,
+        "visit_count": 77505,
+        "rank": 4
+      },
+      {
+        "region_code": "1120065000",
+        "spending_amount": 1906052037,
+        "visit_count": 161205,
+        "rank": 5
+      },
+      {
+        "region_code": "1114055000",
+        "spending_amount": 767528004,
+        "visit_count": 29641,
+        "rank": 6
+      },
+      {
+        "region_code": "1144061000",
+        "spending_amount": 757774437,
+        "visit_count": 50249,
+        "rank": 7
+      },
+      {
+        "region_code": "1120054000",
+        "spending_amount": 733321971,
+        "visit_count": 105147,
+        "rank": 8
+      },
+      {
+        "region_code": "1130554500",
+        "spending_amount": 644332917,
+        "visit_count": 31609,
+        "rank": 9
+      },
+      {
+        "region_code": "1123056000",
+        "spending_amount": 503506198,
+        "visit_count": 35259,
+        "rank": 10
+      }
+    ]
+  },
+  "40s_male": {
+    "segment_info": {
+      "age_group": "40s",
+      "age_group_kr": "40_49세",
+      "gender": "male",
+      "gender_kr": "남",
+      "profile_id": "40s_male"
+    },
+    "spending_characteristics": {
+      "total_spending": 67157371089,
+      "total_transactions": 2169378,
+      "avg_transaction_amount": 30956,
+      "active_days": 547
+    },
+    "industry_preferences": [
+      {
+        "industry": "대형마트",
+        "spending_amount": 37030997578,
+        "transaction_count": 440081,
+        "avg_amount": 84145,
+        "preference_ratio": 55.14,
+        "rank": 1
+      },
+      {
+        "industry": "한식",
+        "spending_amount": 9571123181,
+        "transaction_count": 234828,
+        "avg_amount": 40758,
+        "preference_ratio": 14.25,
+        "rank": 2
+      },
+      {
+        "industry": "주유소",
+        "spending_amount": 5535032144,
+        "transaction_count": 130801,
+        "avg_amount": 42316,
+        "preference_ratio": 8.24,
+        "rank": 3
+      },
+      {
+        "industry": "편의점",
+        "spending_amount": 5075376089,
+        "transaction_count": 756494,
+        "avg_amount": 6709,
+        "preference_ratio": 7.56,
+        "rank": 4
+      },
+      {
+        "industry": "기타식품",
+        "spending_amount": 3578530774,
+        "transaction_count": 190016,
+        "avg_amount": 18832,
+        "preference_ratio": 5.33,
+        "rank": 5
+      },
+      {
+        "industry": "LPG가스",
+        "spending_amount": 1373327538,
+        "transaction_count": 31927,
+        "avg_amount": 43014,
+        "preference_ratio": 2.04,
+        "rank": 6
+      },
+      {
+        "industry": "패스트푸드",
+        "spending_amount": 1236881771,
+        "transaction_count": 119863,
+        "avg_amount": 10319,
+        "preference_ratio": 1.84,
+        "rank": 7
+      },
+      {
+        "industry": "기타요식",
+        "spending_amount": 1049726684,
+        "transaction_count": 54877,
+        "avg_amount": 19128,
+        "preference_ratio": 1.56,
+        "rank": 8
+      },
+      {
+        "industry": "약국",
+        "spending_amount": 753328269,
+        "transaction_count": 67066,
+        "avg_amount": 11232,
+        "preference_ratio": 1.12,
+        "rank": 9
+      },
+      {
+        "industry": "정육점",
+        "spending_amount": 640418243,
+        "transaction_count": 26102,
+        "avg_amount": 24535,
+        "preference_ratio": 0.95,
+        "rank": 10
+      }
+    ],
+    "region_preferences": [
+      {
+        "region_code": "1154567000",
+        "spending_amount": 37030997578,
+        "visit_count": 440081,
+        "rank": 1
+      },
+      {
+        "region_code": "1138069000",
+        "spending_amount": 8688265442,
+        "visit_count": 209321,
+        "rank": 2
+      },
+      {
+        "region_code": "1114055000",
+        "spending_amount": 4206488698,
+        "visit_count": 635146,
+        "rank": 3
+      },
+      {
+        "region_code": "1135062500",
+        "spending_amount": 3578530774,
+        "visit_count": 190016,
+        "rank": 4
+      },
+      {
+        "region_code": "1153051000",
+        "spending_amount": 3141071980,
+        "visit_count": 50603,
+        "rank": 5
+      },
+      {
+        "region_code": "1156065000",
+        "spending_amount": 2393960164,
+        "visit_count": 80198,
+        "rank": 6
+      },
+      {
+        "region_code": "1159066000",
+        "spending_amount": 1373327538,
+        "visit_count": 31927,
+        "rank": 7
+      },
+      {
+        "region_code": "1162068500",
+        "spending_amount": 1049726684,
+        "visit_count": 54877,
+        "rank": 8
+      },
+      {
+        "region_code": "1138058000",
+        "spending_amount": 979780314,
+        "visit_count": 91238,
+        "rank": 9
+      },
+      {
+        "region_code": "1129062000",
+        "spending_amount": 882857739,
+        "visit_count": 25507,
+        "rank": 10
+      }
+    ]
+  },
+  "40s_female": {
+    "segment_info": {
+      "age_group": "40s",
+      "age_group_kr": "40_49세",
+      "gender": "female",
+      "gender_kr": "여",
+      "profile_id": "40s_female"
+    },
+    "spending_characteristics": {
+      "total_spending": 16691366641,
+      "total_transactions": 799524,
+      "avg_transaction_amount": 20876,
+      "active_days": 547
+    },
+    "industry_preferences": [
+      {
+        "industry": "미용실",
+        "spending_amount": 4845734025,
+        "transaction_count": 28556,
+        "avg_amount": 169692,
+        "preference_ratio": 29.03,
+        "rank": 1
+      },
+      {
+        "industry": "슈퍼마켓일반형",
+        "spending_amount": 3721881458,
+        "transaction_count": 184377,
+        "avg_amount": 20186,
+        "preference_ratio": 22.3,
+        "rank": 2
+      },
+      {
+        "industry": "제과점",
+        "spending_amount": 2717997186,
+        "transaction_count": 270626,
+        "avg_amount": 10043,
+        "preference_ratio": 16.28,
+        "rank": 3
+      },
+      {
+        "industry": "의복/의류",
+        "spending_amount": 2113595532,
+        "transaction_count": 15921,
+        "avg_amount": 132755,
+        "preference_ratio": 12.66,
+        "rank": 4
+      },
+      {
+        "industry": "생활잡화/수입상품점",
+        "spending_amount": 1454929297,
+        "transaction_count": 92652,
+        "avg_amount": 15703,
+        "preference_ratio": 8.72,
+        "rank": 5
+      },
+      {
+        "industry": "커피전문점",
+        "spending_amount": 644885927,
+        "transaction_count": 63736,
+        "avg_amount": 10118,
+        "preference_ratio": 3.86,
+        "rank": 6
+      },
+      {
+        "industry": "ZZ_나머지",
+        "spending_amount": 603857383,
+        "transaction_count": 63993,
+        "avg_amount": 9436,
+        "preference_ratio": 3.62,
+        "rank": 7
+      },
+      {
+        "industry": "노래방",
+        "spending_amount": 278269461,
+        "transaction_count": 41312,
+        "avg_amount": 6735,
+        "preference_ratio": 1.67,
+        "rank": 8
+      },
+      {
+        "industry": "할인점/슈퍼마켓/양판점",
+        "spending_amount": 224072685,
+        "transaction_count": 9698,
+        "avg_amount": 23105,
+        "preference_ratio": 1.34,
+        "rank": 9
+      },
+      {
+        "industry": "게임방/오락실",
+        "spending_amount": 86143687,
+        "transaction_count": 28653,
+        "avg_amount": 3006,
+        "preference_ratio": 0.52,
+        "rank": 10
+      }
+    ],
+    "region_preferences": [
+      {
+        "region_code": "1150060300",
+        "spending_amount": 4233264697,
+        "visit_count": 16172,
+        "rank": 1
+      },
+      {
+        "region_code": "1171071000",
+        "spending_amount": 3263521336,
+        "visit_count": 129582,
+        "rank": 2
+      },
+      {
+        "region_code": "1154571000",
+        "spending_amount": 2988051826,
+        "visit_count": 133764,
+        "rank": 3
+      },
+      {
+        "region_code": "1159053000",
+        "spending_amount": 904482319,
+        "visit_count": 96096,
+        "rank": 4
+      },
+      {
+        "region_code": "1150061500",
+        "spending_amount": 833138050,
+        "visit_count": 28638,
+        "rank": 5
+      },
+      {
+        "region_code": "1120059000",
+        "spending_amount": 733829632,
+        "visit_count": 50613,
+        "rank": 6
+      },
+      {
+        "region_code": "1144074000",
+        "spending_amount": 644885927,
+        "visit_count": 63736,
+        "rank": 7
+      },
+      {
+        "region_code": "1135059500",
+        "spending_amount": 621791247,
+        "visit_count": 64014,
+        "rank": 8
+      },
+      {
+        "region_code": "1126059000",
+        "spending_amount": 612469328,
+        "visit_count": 12384,
+        "rank": 9
+      },
+      {
+        "region_code": "1171065000",
+        "spending_amount": 536406991,
+        "visit_count": 54560,
+        "rank": 10
+      }
+    ]
+  },
+  "50s_male": {
+    "segment_info": {
+      "age_group": "50s",
+      "age_group_kr": "50_59세",
+      "gender": "male",
+      "gender_kr": "남",
+      "profile_id": "50s_male"
+    },
+    "spending_characteristics": {
+      "total_spending": 44884432314,
+      "total_transactions": 884043,
+      "avg_transaction_amount": 50771,
+      "active_days": 547
+    },
+    "industry_preferences": [
+      {
+        "industry": "기타식품",
+        "spending_amount": 23218245060,
+        "transaction_count": 159863,
+        "avg_amount": 145238,
+        "preference_ratio": 51.73,
+        "rank": 1
+      },
+      {
+        "industry": "한식",
+        "spending_amount": 13208695090,
+        "transaction_count": 265398,
+        "avg_amount": 49769,
+        "preference_ratio": 29.43,
+        "rank": 2
+      },
+      {
+        "industry": "일식",
+        "spending_amount": 2490951580,
+        "transaction_count": 45001,
+        "avg_amount": 55353,
+        "preference_ratio": 5.55,
+        "rank": 3
+      },
+      {
+        "industry": "생활잡화/수입상품점",
+        "spending_amount": 1393746015,
+        "transaction_count": 76865,
+        "avg_amount": 18132,
+        "preference_ratio": 3.11,
+        "rank": 4
+      },
+      {
+        "industry": "기타요식",
+        "spending_amount": 1152954121,
+        "transaction_count": 28838,
+        "avg_amount": 39980,
+        "preference_ratio": 2.57,
+        "rank": 5
+      },
+      {
+        "industry": "농수산물",
+        "spending_amount": 741984306,
+        "transaction_count": 9261,
+        "avg_amount": 80119,
+        "preference_ratio": 1.65,
+        "rank": 6
+      },
+      {
+        "industry": "여행사/항공사",
+        "spending_amount": 622885467,
+        "transaction_count": 108966,
+        "avg_amount": 5716,
+        "preference_ratio": 1.39,
+        "rank": 7
+      },
+      {
+        "industry": "패스트푸드",
+        "spending_amount": 541164177,
+        "transaction_count": 50981,
+        "avg_amount": 10615,
+        "preference_ratio": 1.21,
+        "rank": 8
+      },
+      {
+        "industry": "약국",
+        "spending_amount": 505557170,
+        "transaction_count": 50265,
+        "avg_amount": 10057,
+        "preference_ratio": 1.13,
+        "rank": 9
+      },
+      {
+        "industry": "스포츠시설",
+        "spending_amount": 394116711,
+        "transaction_count": 15845,
+        "avg_amount": 24873,
+        "preference_ratio": 0.88,
+        "rank": 10
+      }
+    ],
+    "region_preferences": [
+      {
+        "region_code": "1123053600",
+        "spending_amount": 23218245060,
+        "visit_count": 159863,
+        "rank": 1
+      },
+      {
+        "region_code": "1174066000",
+        "spending_amount": 13208695090,
+        "visit_count": 265398,
+        "rank": 2
+      },
+      {
+        "region_code": "1147051000",
+        "spending_amount": 2490951580,
+        "visit_count": 45001,
+        "rank": 3
+      },
+      {
+        "region_code": "1150064000",
+        "spending_amount": 1232294225,
+        "visit_count": 64429,
+        "rank": 4
+      },
+      {
+        "region_code": "1121578000",
+        "spending_amount": 1152954121,
+        "visit_count": 28838,
+        "rank": 5
+      },
+      {
+        "region_code": "1120062000",
+        "spending_amount": 741984306,
+        "visit_count": 9261,
+        "rank": 6
+      },
+      {
+        "region_code": "1168064000",
+        "spending_amount": 622885467,
+        "visit_count": 108966,
+        "rank": 7
+      },
+      {
+        "region_code": "1154567000",
+        "spending_amount": 541164177,
+        "visit_count": 50981,
+        "rank": 8
+      },
+      {
+        "region_code": "1141068500",
+        "spending_amount": 394116711,
+        "visit_count": 15845,
+        "rank": 9
+      },
+      {
+        "region_code": "1171051000",
+        "spending_amount": 275413843,
+        "visit_count": 15884,
+        "rank": 10
+      }
+    ]
+  },
+  "50s_female": {
+    "segment_info": {
+      "age_group": "50s",
+      "age_group_kr": "50_59세",
+      "gender": "female",
+      "gender_kr": "여",
+      "profile_id": "50s_female"
+    },
+    "spending_characteristics": {
+      "total_spending": 19328388716,
+      "total_transactions": 1051184,
+      "avg_transaction_amount": 18387,
+      "active_days": 547
+    },
+    "industry_preferences": [
+      {
+        "industry": "양식",
+        "spending_amount": 4920948037,
+        "transaction_count": 92136,
+        "avg_amount": 53409,
+        "preference_ratio": 25.46,
+        "rank": 1
+      },
+      {
+        "industry": "편의점",
+        "spending_amount": 3267986121,
+        "transaction_count": 473233,
+        "avg_amount": 6905,
+        "preference_ratio": 16.91,
+        "rank": 2
+      },
+      {
+        "industry": "한식",
+        "spending_amount": 2696415949,
+        "transaction_count": 69886,
+        "avg_amount": 38583,
+        "preference_ratio": 13.95,
+        "rank": 3
+      },
+      {
+        "industry": "기타요식",
+        "spending_amount": 2160784298,
+        "transaction_count": 154829,
+        "avg_amount": 13955,
+        "preference_ratio": 11.18,
+        "rank": 4
+      },
+      {
+        "industry": "학원/학습지",
+        "spending_amount": 1311304677,
+        "transaction_count": 9391,
+        "avg_amount": 139634,
+        "preference_ratio": 6.78,
+        "rank": 5
+      },
+      {
+        "industry": "패스트푸드",
+        "spending_amount": 1300772493,
+        "transaction_count": 111671,
+        "avg_amount": 11648,
+        "preference_ratio": 6.73,
+        "rank": 6
+      },
+      {
+        "industry": "의복/의류",
+        "spending_amount": 1008979793,
+        "transaction_count": 25719,
+        "avg_amount": 39230,
+        "preference_ratio": 5.22,
+        "rank": 7
+      },
+      {
+        "industry": "주유소",
+        "spending_amount": 715911817,
+        "transaction_count": 16005,
+        "avg_amount": 44730,
+        "preference_ratio": 3.7,
+        "rank": 8
+      },
+      {
+        "industry": "영화/공연",
+        "spending_amount": 698624886,
+        "transaction_count": 35477,
+        "avg_amount": 19692,
+        "preference_ratio": 3.61,
+        "rank": 9
+      },
+      {
+        "industry": "일식",
+        "spending_amount": 594407984,
+        "transaction_count": 9370,
+        "avg_amount": 63437,
+        "preference_ratio": 3.08,
+        "rank": 10
+      }
+    ],
+    "region_preferences": [
+      {
+        "region_code": "1162064500",
+        "spending_amount": 3682416119,
+        "visit_count": 73277,
+        "rank": 1
+      },
+      {
+        "region_code": "1117063000",
+        "spending_amount": 2465793416,
+        "visit_count": 60550,
+        "rank": 2
+      },
+      {
+        "region_code": "1132069000",
+        "spending_amount": 1842188976,
+        "visit_count": 254583,
+        "rank": 3
+      },
+      {
+        "region_code": "1171061000",
+        "spending_amount": 1311304677,
+        "visit_count": 9391,
+        "rank": 4
+      },
+      {
+        "region_code": "1114059000",
+        "spending_amount": 1258677727,
+        "visit_count": 93376,
+        "rank": 5
+      },
+      {
+        "region_code": "1174066000",
+        "spending_amount": 1238531918,
+        "visit_count": 18859,
+        "rank": 6
+      },
+      {
+        "region_code": "1114055000",
+        "spending_amount": 1170845395,
+        "visit_count": 192461,
+        "rank": 7
+      },
+      {
+        "region_code": "1114061500",
+        "spending_amount": 1008979793,
+        "visit_count": 25719,
+        "rank": 8
+      },
+      {
+        "region_code": "1165053000",
+        "spending_amount": 777372842,
+        "visit_count": 60246,
+        "rank": 9
+      },
+      {
+        "region_code": "1130561500",
+        "spending_amount": 715911817,
+        "visit_count": 16005,
+        "rank": 10
+      }
+    ]
+  },
+  "60s_male": {
+    "segment_info": {
+      "age_group": "60s",
+      "age_group_kr": "60_69세",
+      "gender": "male",
+      "gender_kr": "남",
+      "profile_id": "60s_male"
+    },
+    "spending_characteristics": {
+      "total_spending": 16449292529,
+      "total_transactions": 519797,
+      "avg_transaction_amount": 31645,
+      "active_days": 547
+    },
+    "industry_preferences": [
+      {
+        "industry": "LPG가스",
+        "spending_amount": 5918467794,
+        "transaction_count": 160267,
+        "avg_amount": 36928,
+        "preference_ratio": 35.98,
+        "rank": 1
+      },
+      {
+        "industry": "한식",
+        "spending_amount": 2759503958,
+        "transaction_count": 85912,
+        "avg_amount": 32120,
+        "preference_ratio": 16.78,
+        "rank": 2
+      },
+      {
+        "industry": "주유소",
+        "spending_amount": 2695445289,
+        "transaction_count": 60688,
+        "avg_amount": 44414,
+        "preference_ratio": 16.39,
+        "rank": 3
+      },
+      {
+        "industry": "슈퍼마켓일반형",
+        "spending_amount": 2229459399,
+        "transaction_count": 86642,
+        "avg_amount": 25731,
+        "preference_ratio": 13.55,
+        "rank": 4
+      },
+      {
+        "industry": "정육점",
+        "spending_amount": 1112620596,
+        "transaction_count": 28266,
+        "avg_amount": 39362,
+        "preference_ratio": 6.76,
+        "rank": 5
+      },
+      {
+        "industry": "기타요식",
+        "spending_amount": 566465150,
+        "transaction_count": 16062,
+        "avg_amount": 35267,
+        "preference_ratio": 3.44,
+        "rank": 6
+      },
+      {
+        "industry": "실내/실외골프장",
+        "spending_amount": 387286528,
+        "transaction_count": 9313,
+        "avg_amount": 41585,
+        "preference_ratio": 2.35,
+        "rank": 7
+      },
+      {
+        "industry": "패스트푸드",
+        "spending_amount": 268713848,
+        "transaction_count": 25604,
+        "avg_amount": 10494,
+        "preference_ratio": 1.63,
+        "rank": 8
+      },
+      {
+        "industry": "서적",
+        "spending_amount": 260185858,
+        "transaction_count": 12434,
+        "avg_amount": 20925,
+        "preference_ratio": 1.58,
+        "rank": 9
+      },
+      {
+        "industry": "커피전문점",
+        "spending_amount": 89581549,
+        "transaction_count": 9374,
+        "avg_amount": 9556,
+        "preference_ratio": 0.54,
+        "rank": 10
+      }
+    ],
+    "region_preferences": [
+      {
+        "region_code": "1123070500",
+        "spending_amount": 5918467794,
+        "visit_count": 160267,
+        "rank": 1
+      },
+      {
+        "region_code": "1147056000",
+        "spending_amount": 2759503958,
+        "visit_count": 85912,
+        "rank": 2
+      },
+      {
+        "region_code": "1135060000",
+        "spending_amount": 2695445289,
+        "visit_count": 60688,
+        "rank": 3
+      },
+      {
+        "region_code": "1129081000",
+        "spending_amount": 2229459399,
+        "visit_count": 86642,
+        "rank": 4
+      },
+      {
+        "region_code": "1162066500",
+        "spending_amount": 636984544,
+        "visit_count": 9368,
+        "rank": 5
+      },
+      {
+        "region_code": "1135066500",
+        "spending_amount": 566465150,
+        "visit_count": 16062,
+        "rank": 6
+      },
+      {
+        "region_code": "1141069000",
+        "spending_amount": 475636052,
+        "visit_count": 18898,
+        "rank": 7
+      },
+      {
+        "region_code": "1150061500",
+        "spending_amount": 387286528,
+        "visit_count": 9313,
+        "rank": 8
+      },
+      {
+        "region_code": "1174068500",
+        "spending_amount": 268713848,
+        "visit_count": 25604,
+        "rank": 9
+      },
+      {
+        "region_code": "1147051000",
+        "spending_amount": 260185858,
+        "visit_count": 12434,
+        "rank": 10
+      }
+    ]
+  },
+  "60s_female": {
+    "segment_info": {
+      "age_group": "60s",
+      "age_group_kr": "60_69세",
+      "gender": "female",
+      "gender_kr": "여",
+      "profile_id": "60s_female"
+    },
+    "spending_characteristics": {
+      "total_spending": 3763996163,
+      "total_transactions": 289926,
+      "avg_transaction_amount": 12982,
+      "active_days": 547
+    },
+    "industry_preferences": [
+      {
+        "industry": "한식",
+        "spending_amount": 967564245,
+        "transaction_count": 50783,
+        "avg_amount": 19052,
+        "preference_ratio": 25.71,
+        "rank": 1
+      },
+      {
+        "industry": "제과점",
+        "spending_amount": 858456031,
+        "transaction_count": 60020,
+        "avg_amount": 14302,
+        "preference_ratio": 22.81,
+        "rank": 2
+      },
+      {
+        "industry": "슈퍼마켓일반형",
+        "spending_amount": 654840670,
+        "transaction_count": 38080,
+        "avg_amount": 17196,
+        "preference_ratio": 17.4,
+        "rank": 3
+      },
+      {
+        "industry": "편의점",
+        "spending_amount": 578826475,
+        "transaction_count": 55353,
+        "avg_amount": 10457,
+        "preference_ratio": 15.38,
+        "rank": 4
+      },
+      {
+        "industry": "패스트푸드",
+        "spending_amount": 418502384,
+        "transaction_count": 57394,
+        "avg_amount": 7291,
+        "preference_ratio": 11.12,
+        "rank": 5
+      },
+      {
+        "industry": "커피전문점",
+        "spending_amount": 157013169,
+        "transaction_count": 18937,
+        "avg_amount": 8291,
+        "preference_ratio": 4.17,
+        "rank": 6
+      },
+      {
+        "industry": "싸우나/목욕탕",
+        "spending_amount": 128793189,
+        "transaction_count": 9359,
+        "avg_amount": 13761,
+        "preference_ratio": 3.42,
+        "rank": 7
+      }
+    ],
+    "region_preferences": [
+      {
+        "region_code": "1117059000",
+        "spending_amount": 774611968,
+        "visit_count": 40926,
+        "rank": 1
+      },
+      {
+        "region_code": "1141058500",
+        "spending_amount": 654840670,
+        "visit_count": 38080,
+        "rank": 2
+      },
+      {
+        "region_code": "1138055200",
+        "spending_amount": 578826475,
+        "visit_count": 55353,
+        "rank": 3
+      },
+      {
+        "region_code": "1162068500",
+        "spending_amount": 500158514,
+        "visit_count": 22149,
+        "rank": 4
+      },
+      {
+        "region_code": "1150054000",
+        "spending_amount": 342057495,
+        "visit_count": 38336,
+        "rank": 5
+      },
+      {
+        "region_code": "1153072000",
+        "spending_amount": 243386927,
+        "visit_count": 41300,
+        "rank": 6
+      },
+      {
+        "region_code": "1141072000",
+        "spending_amount": 209192299,
+        "visit_count": 9392,
+        "rank": 7
+      },
+      {
+        "region_code": "1138052000",
+        "spending_amount": 175115457,
+        "visit_count": 16094,
+        "rank": 8
+      },
+      {
+        "region_code": "1130564500",
+        "spending_amount": 157013169,
+        "visit_count": 18937,
+        "rank": 9
+      },
+      {
+        "region_code": "1138069000",
+        "spending_amount": 128793189,
+        "visit_count": 9359,
+        "rank": 10
+      }
+    ]
+  },
+  "70plus_male": {
+    "segment_info": {
+      "age_group": "70plus",
+      "age_group_kr": "70세이상",
+      "gender": "male",
+      "gender_kr": "남",
+      "profile_id": "70plus_male"
+    },
+    "spending_characteristics": {
+      "total_spending": 5576236918,
+      "total_transactions": 272873,
+      "avg_transaction_amount": 20435,
+      "active_days": 547
+    },
+    "industry_preferences": [
+      {
+        "industry": "기타요식",
+        "spending_amount": 1561850099,
+        "transaction_count": 19017,
+        "avg_amount": 82129,
+        "preference_ratio": 28.01,
+        "rank": 1
+      },
+      {
+        "industry": "농수산물",
+        "spending_amount": 1339703784,
+        "transaction_count": 80376,
+        "avg_amount": 16667,
+        "preference_ratio": 24.03,
+        "rank": 2
+      },
+      {
+        "industry": "슈퍼마켓일반형",
+        "spending_amount": 1301573580,
+        "transaction_count": 108681,
+        "avg_amount": 11976,
+        "preference_ratio": 23.34,
+        "rank": 3
+      },
+      {
+        "industry": "할인점/슈퍼마켓/양판점",
+        "spending_amount": 730868151,
+        "transaction_count": 26657,
+        "avg_amount": 27417,
+        "preference_ratio": 13.11,
+        "rank": 4
+      },
+      {
+        "industry": "정육점",
+        "spending_amount": 481260963,
+        "transaction_count": 15828,
+        "avg_amount": 30405,
+        "preference_ratio": 8.63,
+        "rank": 5
+      },
+      {
+        "industry": "편의점",
+        "spending_amount": 160980341,
+        "transaction_count": 22314,
+        "avg_amount": 7214,
+        "preference_ratio": 2.89,
+        "rank": 6
+      }
+    ],
+    "region_preferences": [
+      {
+        "region_code": "1111051500",
+        "spending_amount": 1561850099,
+        "visit_count": 19017,
+        "rank": 1
+      },
+      {
+        "region_code": "1159063000",
+        "spending_amount": 846192306,
+        "visit_count": 54600,
+        "rank": 2
+      },
+      {
+        "region_code": "1138057000",
+        "spending_amount": 787320588,
+        "visit_count": 50745,
+        "rank": 3
+      },
+      {
+        "region_code": "1114067000",
+        "spending_amount": 730868151,
+        "visit_count": 26657,
+        "rank": 4
+      },
+      {
+        "region_code": "1154567000",
+        "spending_amount": 493511478,
+        "visit_count": 25776,
+        "rank": 5
+      },
+      {
+        "region_code": "1126057000",
+        "spending_amount": 481260963,
+        "visit_count": 15828,
+        "rank": 6
+      },
+      {
+        "region_code": "1135056000",
+        "spending_amount": 402614071,
+        "visit_count": 41851,
+        "rank": 7
+      },
+      {
+        "region_code": "1120056000",
+        "spending_amount": 160980341,
+        "visit_count": 22314,
+        "rank": 8
+      },
+      {
+        "region_code": "1117064000",
+        "spending_amount": 111638921,
+        "visit_count": 16085,
+        "rank": 9
+      }
+    ]
+  },
+  "70plus_female": {
+    "segment_info": {
+      "age_group": "70plus",
+      "age_group_kr": "70세이상",
+      "gender": "female",
+      "gender_kr": "여",
+      "profile_id": "70plus_female"
+    },
+    "spending_characteristics": {
+      "total_spending": 2462992905,
+      "total_transactions": 107268,
+      "avg_transaction_amount": 22961,
+      "active_days": 547
+    },
+    "industry_preferences": [
+      {
+        "industry": "슈퍼마켓일반형",
+        "spending_amount": 939122662,
+        "transaction_count": 50523,
+        "avg_amount": 18588,
+        "preference_ratio": 38.13,
+        "rank": 1
+      },
+      {
+        "industry": "슈퍼마켓기업형",
+        "spending_amount": 924166236,
+        "transaction_count": 25367,
+        "avg_amount": 36431,
+        "preference_ratio": 37.52,
+        "rank": 2
+      },
+      {
+        "industry": "기타요식",
+        "spending_amount": 441121166,
+        "transaction_count": 12482,
+        "avg_amount": 35340,
+        "preference_ratio": 17.91,
+        "rank": 3
+      },
+      {
+        "industry": "제과점",
+        "spending_amount": 158582841,
+        "transaction_count": 18896,
+        "avg_amount": 8392,
+        "preference_ratio": 6.44,
+        "rank": 4
+      }
+    ],
+    "region_preferences": [
+      {
+        "region_code": "1156062000",
+        "spending_amount": 728323057,
+        "visit_count": 38141,
+        "rank": 1
+      },
+      {
+        "region_code": "1135061200",
+        "spending_amount": 488277183,
+        "visit_count": 9362,
+        "rank": 2
+      },
+      {
+        "region_code": "1150061100",
+        "spending_amount": 441121166,
+        "visit_count": 12482,
+        "rank": 3
+      },
+      {
+        "region_code": "1121574000",
+        "spending_amount": 435889053,
+        "visit_count": 16005,
+        "rank": 4
+      },
+      {
+        "region_code": "1135062500",
+        "spending_amount": 210799605,
+        "visit_count": 12382,
+        "rank": 5
+      },
+      {
+        "region_code": "1159063000",
+        "spending_amount": 158582841,
+        "visit_count": 18896,
+        "rank": 6
+      }
+    ]
+  }
+}
