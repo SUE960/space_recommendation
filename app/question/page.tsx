@@ -142,8 +142,8 @@ export default function QuestionPage() {
         return 30 // 기본값
       }
 
-      // Vercel에서는 같은 도메인의 /api 사용
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || '/api'
+      // 로컬 개발: http://localhost:8000
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
       const response = await fetch(`${apiUrl}/api/recommend`, {
         method: 'POST',
         headers: {
