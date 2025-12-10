@@ -1,0 +1,220 @@
+.processFlow {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 32px;
+  padding: 0;
+}
+
+.stepContainer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.step {
+  width: 100%;
+  background: white;
+  border-radius: 20px;
+  padding: 40px 32px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid #e5e7eb;
+  min-height: 360px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  position: relative;
+  overflow: hidden;
+}
+
+.step::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+
+.step:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(102, 126, 234, 0.15);
+  border-color: #667eea;
+}
+
+.step:hover::before {
+  transform: scaleX(1);
+}
+
+.finalStep {
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  color: white;
+  border-radius: 50%;
+  width: 280px;
+  height: 280px;
+  min-width: 280px;
+  max-width: 280px;
+  min-height: 280px;
+  max-height: 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 30px;
+  box-shadow: 0 8px 40px rgba(44, 62, 80, 0.3);
+}
+
+.finalStep:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 50px rgba(44, 62, 80, 0.4);
+}
+
+.logoContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.logo {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.logoText {
+  font-size: 12px;
+  color: #666;
+  text-align: center;
+  font-weight: 500;
+}
+
+.finalStep .logoText {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.dataSource {
+  font-size: 14px;
+  color: #888;
+  text-align: center;
+  margin-bottom: 16px;
+  font-weight: 500;
+}
+
+.finalStep .dataSource {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.stepTitle {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  text-align: center;
+  color: #1a1a1a;
+}
+
+.finalStep .stepTitle {
+  color: white;
+  font-size: 22px;
+}
+
+.description {
+  text-align: center;
+  line-height: 1.8;
+  color: #555;
+}
+
+.finalStep .description {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.description p {
+  margin: 4px 0;
+  font-size: 14px;
+}
+
+.arrow {
+  display: none;
+}
+
+/* 데스크톱에서만 화살표 표시 */
+@media (min-width: 1024px) {
+  .processFlow {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .stepContainer:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: -16px;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 2px;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    z-index: 1;
+  }
+
+  .stepContainer:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: -24px;
+    transform: translateY(-50%) rotate(45deg);
+    width: 12px;
+    height: 12px;
+    border-right: 2px solid #667eea;
+    border-top: 2px solid #667eea;
+    z-index: 1;
+  }
+}
+
+/* 반응형 디자인 */
+@media (min-width: 769px) and (max-width: 1023px) {
+  .processFlow {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .processFlow {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .step {
+    padding: 32px 24px;
+    min-height: auto;
+  }
+
+  .finalStep {
+    width: 100%;
+    height: auto;
+    min-height: 280px;
+    padding: 32px 24px;
+  }
+
+  .stepTitle {
+    font-size: 20px;
+  }
+
+  .finalStep .stepTitle {
+    font-size: 22px;
+  }
+
+  .description p {
+    font-size: 14px;
+  }
+}
+

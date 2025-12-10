@@ -1,0 +1,55 @@
+.container {
+  min-height: 100vh;
+  background: #000000;
+  padding: 20px;
+}
+
+.header {
+  max-width: 1200px;
+  margin: 0 auto 40px;
+}
+
+.homeButton {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 8px 0;
+  margin-bottom: 16px;
+  transition: all 0.3s ease;
+}
+
+.homeButton:hover {
+  color: #ffffff;
+  transform: translateX(-4px);
+}
+
+.title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 16px;
+}
+
+.loading {
+  color: #ffffff;
+  text-align: center;
+  padding: 60px 20px;
+  font-size: 18px;
+}
+
+@media (max-width: 768px) {
+  .resultCard {
+    padding: 40px 24px;
+  }
+
+  .title {
+    font-size: 24px;
+  }
+
+  .description {
+    font-size: 16px;
+  }
+}
+

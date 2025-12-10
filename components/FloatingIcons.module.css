@@ -1,0 +1,246 @@
+.container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.icon {
+  position: absolute;
+  opacity: 0.65;
+  filter: drop-shadow(0 20px 60px rgba(0, 0, 0, 0.6)) blur(1px);
+  z-index: 0;
+}
+
+.icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* 크리스마스 트리 - 초록색 - 좌상단 */
+.tree {
+  width: 600px;
+  height: 600px;
+  top: -50px;
+  left: 3%;
+  transform: rotate(-15deg);
+  animation: float1 20s ease-in-out infinite;
+}
+
+/* 위치 핀 - 빨간색/주황색 - 우상단 */
+.pin {
+  width: 550px;
+  height: 550px;
+  top: 8%;
+  right: 5%;
+  transform: rotate(12deg);
+  animation: float2 25s ease-in-out infinite;
+}
+
+/* 엄지척 - 주황색 - 우하단 */
+.thumbs {
+  width: 500px;
+  height: 500px;
+  bottom: 5%;
+  right: 8%;
+  transform: rotate(-8deg);
+  animation: float3 22s ease-in-out infinite;
+}
+
+/* 구체들 - 주황색/빨간색 - 중앙 우측 */
+.spheres {
+  width: 650px;
+  height: 650px;
+  top: 35%;
+  right: 10%;
+  transform: rotate(18deg);
+  animation: float4 18s ease-in-out infinite;
+}
+
+/* 음표 - 파란색 - 중앙 좌측 */
+.note {
+  width: 580px;
+  height: 580px;
+  top: 40%;
+  left: 5%;
+  transform: rotate(-12deg);
+  animation: float5 24s ease-in-out infinite;
+}
+
+/* 북마크 - 핑크색 - 좌하단 */
+.bookmark {
+  width: 520px;
+  height: 520px;
+  bottom: 8%;
+  left: 8%;
+  transform: rotate(10deg);
+  animation: float6 21s ease-in-out infinite;
+}
+
+@keyframes float1 {
+  0%, 100% {
+    transform: translate(0, 0) rotate(-15deg);
+  }
+  25% {
+    transform: translate(20px, -30px) rotate(-10deg);
+  }
+  50% {
+    transform: translate(-15px, 25px) rotate(-20deg);
+  }
+  75% {
+    transform: translate(30px, 15px) rotate(-12deg);
+  }
+}
+
+@keyframes float2 {
+  0%, 100% {
+    transform: translate(0, 0) rotate(12deg);
+  }
+  33% {
+    transform: translate(-25px, -20px) rotate(18deg);
+  }
+  66% {
+    transform: translate(20px, 30px) rotate(6deg);
+  }
+}
+
+@keyframes float3 {
+  0%, 100% {
+    transform: translate(0, 0) rotate(-8deg);
+  }
+  30% {
+    transform: translate(-30px, -25px) rotate(-14deg);
+  }
+  60% {
+    transform: translate(25px, 30px) rotate(-2deg);
+  }
+}
+
+@keyframes float4 {
+  0%, 100% {
+    transform: translate(0, 0) rotate(18deg);
+  }
+  40% {
+    transform: translate(-35px, -20px) rotate(25deg);
+  }
+  80% {
+    transform: translate(30px, 35px) rotate(12deg);
+  }
+}
+
+@keyframes float5 {
+  0%, 100% {
+    transform: translate(0, 0) rotate(-12deg);
+  }
+  35% {
+    transform: translate(30px, -25px) rotate(-18deg);
+  }
+  70% {
+    transform: translate(-25px, 30px) rotate(-6deg);
+  }
+}
+
+@keyframes float6 {
+  0%, 100% {
+    transform: translate(0, 0) rotate(10deg);
+  }
+  28% {
+    transform: translate(-30px, -20px) rotate(16deg);
+  }
+  56% {
+    transform: translate(25px, 30px) rotate(4deg);
+  }
+}
+
+@media (max-width: 1024px) {
+  .tree {
+    width: 450px;
+    height: 450px;
+    top: -30px;
+    left: 2%;
+  }
+
+  .pin {
+    width: 400px;
+    height: 400px;
+    top: 5%;
+    right: 3%;
+  }
+
+  .thumbs {
+    width: 380px;
+    height: 380px;
+    bottom: 3%;
+    right: 5%;
+  }
+
+  .spheres {
+    width: 480px;
+    height: 480px;
+    top: 30%;
+    right: 7%;
+  }
+
+  .note {
+    width: 420px;
+    height: 420px;
+    top: 35%;
+    left: 3%;
+  }
+
+  .bookmark {
+    width: 390px;
+    height: 390px;
+    bottom: 5%;
+    left: 5%;
+  }
+}
+
+@media (max-width: 768px) {
+  .tree {
+    width: 350px;
+    height: 350px;
+    top: -20px;
+    left: 1%;
+  }
+
+  .pin {
+    width: 300px;
+    height: 300px;
+    top: 3%;
+    right: 2%;
+  }
+
+  .thumbs {
+    width: 280px;
+    height: 280px;
+    bottom: 2%;
+    right: 3%;
+  }
+
+  .spheres {
+    width: 360px;
+    height: 360px;
+    top: 25%;
+    right: 5%;
+  }
+
+  .note {
+    width: 320px;
+    height: 320px;
+    top: 30%;
+    left: 2%;
+  }
+
+  .bookmark {
+    width: 300px;
+    height: 300px;
+    bottom: 3%;
+    left: 3%;
+  }
+}
+

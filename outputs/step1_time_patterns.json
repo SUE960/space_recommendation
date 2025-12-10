@@ -1,0 +1,56 @@
+{
+  "hourly_patterns": [
+    {
+      "hour": 1,
+      "time_category": "새벽",
+      "spending_amount": 17304993339,
+      "transaction_count": 541011,
+      "ratio": 4.29
+    },
+    {
+      "hour": 2,
+      "time_category": "새벽",
+      "spending_amount": 37271299392,
+      "transaction_count": 1280560,
+      "ratio": 9.25
+    },
+    {
+      "hour": 3,
+      "time_category": "새벽",
+      "spending_amount": 142929924457,
+      "transaction_count": 3719356,
+      "ratio": 35.46
+    },
+    {
+      "hour": 4,
+      "time_category": "새벽",
+      "spending_amount": 85451382962,
+      "transaction_count": 2869144,
+      "ratio": 21.2
+    },
+    {
+      "hour": 5,
+      "time_category": "새벽",
+      "spending_amount": 77008838853,
+      "transaction_count": 2907078,
+      "ratio": 19.1
+    },
+    {
+      "hour": 6,
+      "time_category": "오전",
+      "spending_amount": 43129023654,
+      "transaction_count": 1963644,
+      "ratio": 10.7
+    }
+  ],
+  "period_summary": [
+    {
+      "period": "새벽",
+      "spending_ratio": 89.3
+    },
+    {
+      "period": "오전",
+      "spending_ratio": 10.7
+    }
+  ]
+}

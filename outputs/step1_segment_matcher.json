@@ -1,0 +1,131 @@
+{
+  "age_mapping": {
+    "20세미만": "teen",
+    "20_29세": "20s",
+    "30_39세": "30s",
+    "40_49세": "40s",
+    "50_59세": "50s",
+    "60_69세": "60s",
+    "70세이상": "70plus"
+  },
+  "gender_mapping": {
+    "남": "male",
+    "여": "female"
+  },
+  "available_segments": [
+    "teen_male",
+    "teen_female",
+    "20s_male",
+    "20s_female",
+    "30s_male",
+    "30s_female",
+    "40s_male",
+    "40s_female",
+    "50s_male",
+    "50s_female",
+    "60s_male",
+    "60s_female",
+    "70plus_male",
+    "70plus_female"
+  ],
+  "segment_descriptions": {
+    "teen_male": {
+      "segment_id": "teen_male",
+      "description_kr": "20세미만 남",
+      "total_spending": 1287156010,
+      "avg_transaction": 5541,
+      "primary_interest": "편의점"
+    },
+    "teen_female": {
+      "segment_id": "teen_female",
+      "description_kr": "20세미만 여",
+      "total_spending": 626454752,
+      "avg_transaction": 28703,
+      "primary_interest": "일식"
+    },
+    "20s_male": {
+      "segment_id": "20s_male",
+      "description_kr": "20_29세 남",
+      "total_spending": 7888242549,
+      "avg_transaction": 9333,
+      "primary_interest": "기타요식"
+    },
+    "20s_female": {
+      "segment_id": "20s_female",
+      "description_kr": "20_29세 여",
+      "total_spending": 22479808954,
+      "avg_transaction": 30072,
+      "primary_interest": "ZZ_나머지"
+    },
+    "30s_male": {
+      "segment_id": "30s_male",
+      "description_kr": "30_39세 남",
+      "total_spending": 73821362556,
+      "avg_transaction": 33687,
+      "primary_interest": "한식"
+    },
+    "30s_female": {
+      "segment_id": "30s_female",
+      "description_kr": "30_39세 여",
+      "total_spending": 27619389504,
+      "avg_transaction": 20453,
+      "primary_interest": "컴퓨터/소프트웨어"
+    },
+    "40s_male": {
+      "segment_id": "40s_male",
+      "description_kr": "40_49세 남",
+      "total_spending": 67157371089,
+      "avg_transaction": 30956,
+      "primary_interest": "대형마트"
+    },
+    "40s_female": {
+      "segment_id": "40s_female",
+      "description_kr": "40_49세 여",
+      "total_spending": 16691366641,
+      "avg_transaction": 20876,
+      "primary_interest": "미용실"
+    },
+    "50s_male": {
+      "segment_id": "50s_male",
+      "description_kr": "50_59세 남",
+      "total_spending": 44884432314,
+      "avg_transaction": 50771,
+      "primary_interest": "기타식품"
+    },
+    "50s_female": {
+      "segment_id": "50s_female",
+      "description_kr": "50_59세 여",
+      "total_spending": 19328388716,
+      "avg_transaction": 18387,
+      "primary_interest": "양식"
+    },
+    "60s_male": {
+      "segment_id": "60s_male",
+      "description_kr": "60_69세 남",
+      "total_spending": 16449292529,
+      "avg_transaction": 31645,
+      "primary_interest": "LPG가스"
+    },
+    "60s_female": {
+      "segment_id": "60s_female",
+      "description_kr": "60_69세 여",
+      "total_spending": 3763996163,
+      "avg_transaction": 12982,
+      "primary_interest": "한식"
+    },
+    "70plus_male": {
+      "segment_id": "70plus_male",
+      "description_kr": "70세이상 남",
+      "total_spending": 5576236918,
+      "avg_transaction": 20435,
+      "primary_interest": "기타요식"
+    },
+    "70plus_female": {
+      "segment_id": "70plus_female",
+      "description_kr": "70세이상 여",
+      "total_spending": 2462992905,
+      "avg_transaction": 22961,
+      "primary_interest": "슈퍼마켓일반형"
+    }
+  }
+}

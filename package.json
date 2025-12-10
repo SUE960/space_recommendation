@@ -1,0 +1,25 @@
+{
+  "name": "seoul-card-recommendation",
+  "version": "1.0.0",
+  "description": "서울 카드 데이터 기반 트렌드 지역 분석 및 개인 맞춤 추천 서비스",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "api": "cd api && uvicorn main:app --reload --port 8000"
+  },
+  "dependencies": {
+    "next": "^14.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "typescript": "^5.0.0"
+  }
+}
+

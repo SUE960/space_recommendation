@@ -1,0 +1,211 @@
+.container {
+  min-height: 100vh;
+  background: #0a0e27;
+}
+
+/* Banner Section */
+.banner {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  min-height: 600px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.bannerImageWrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.bannerImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.bannerContent {
+  position: absolute;
+  left: 5%;
+  max-width: 600px;
+  z-index: 10;
+  color: white;
+  padding: 40px;
+}
+
+.bannerTag {
+  display: inline-block;
+  padding: 8px 20px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 32px;
+  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: 0.3px;
+}
+
+.bannerTitle {
+  font-size: 64px;
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 24px;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+}
+
+.bannerTitleHighlight {
+  color: #ffffff;
+}
+
+.bannerDescription {
+  font-size: 18px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 400;
+  margin-bottom: 56px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.bannerButtons {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.primaryButton {
+  padding: 16px 40px;
+  background: #ffffff;
+  color: #0a0e27;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.primaryButton:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.secondaryButton {
+  padding: 16px 40px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  color: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.secondaryButton:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.5);
+  color: #ffffff;
+}
+
+/* Section Styles */
+.serviceSection {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 120px 20px;
+  background: #0a0e27;
+}
+
+.formTrigger {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+}
+
+.triggerButton {
+  padding: 16px 40px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  color: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.triggerButton:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.5);
+  color: #ffffff;
+}
+
+
+.error {
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 16px 24px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 8px;
+  color: #fca5a5;
+  text-align: center;
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .banner {
+    height: 70vh;
+    min-height: 500px;
+    justify-content: center;
+  }
+
+  .bannerContent {
+    left: 0;
+    right: 0;
+    max-width: 100%;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .bannerTag {
+    font-size: 12px;
+    padding: 6px 16px;
+    margin-bottom: 24px;
+  }
+
+  .bannerTitle {
+    font-size: 36px;
+  }
+
+  .bannerDescription {
+    font-size: 16px;
+    margin-bottom: 32px;
+  }
+
+  .bannerButtons {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .primaryButton,
+  .secondaryButton {
+    width: 100%;
+  }
+
+  .serviceSection {
+    padding: 60px 16px;
+  }
+}
+

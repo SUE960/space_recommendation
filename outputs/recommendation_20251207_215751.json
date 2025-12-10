@@ -1,0 +1,91 @@
+{
+  "user_info": {
+    "age": 28,
+    "gender": "남",
+    "income_level": "중",
+    "matched_segment": "20_29세 남",
+    "avg_budget": 30000
+  },
+  "preferences": {
+    "preferred_industries": [
+      "한식",
+      "커피전문점",
+      "영화/공연"
+    ],
+    "time_preference": "저녁",
+    "budget": 30000,
+    "priorities": {
+      "preference_match": 0.7,
+      "score": 0.3
+    }
+  },
+  "recommendations": [
+    {
+      "rank": 1,
+      "region_code": "1159068000",
+      "gu_name": "동작구",
+      "match_score": 100,
+      "reason": "해당 지역에서 102,792회 방문 기록",
+      "spending_amount": 2069306549,
+      "visit_count": 102792,
+      "matching_factors": {
+        "user_preference": 100,
+        "visit_frequency": 100
+      }
+    },
+    {
+      "rank": 2,
+      "region_code": "1162073500",
+      "gu_name": "관악구",
+      "match_score": 90,
+      "reason": "해당 지역에서 279,980회 방문 기록",
+      "spending_amount": 1823003762,
+      "visit_count": 279980,
+      "matching_factors": {
+        "user_preference": 90,
+        "visit_frequency": 100
+      }
+    },
+    {
+      "rank": 3,
+      "region_code": "1154570000",
+      "gu_name": "금천구",
+      "match_score": 80,
+      "reason": "해당 지역에서 157,490회 방문 기록",
+      "spending_amount": 1002321367,
+      "visit_count": 157490,
+      "matching_factors": {
+        "user_preference": 80,
+        "visit_frequency": 100
+      }
+    },
+    {
+      "rank": 4,
+      "region_code": "1162054500",
+      "gu_name": "관악구",
+      "match_score": 70,
+      "reason": "해당 지역에서 108,324회 방문 기록",
+      "spending_amount": 821921871,
+      "visit_count": 108324,
+      "matching_factors": {
+        "user_preference": 70,
+        "visit_frequency": 100
+      }
+    },
+    {
+      "rank": 5,
+      "region_code": "1141058500",
+      "gu_name": "서대문구",
+      "match_score": 60,
+      "reason": "해당 지역에서 86,308회 방문 기록",
+      "spending_amount": 727323994,
+      "visit_count": 86308,
+      "matching_factors": {
+        "user_preference": 60,
+        "visit_frequency": 100
+      }
+    }
+  ],
+  "recommendation_count": 5,
+  "timestamp": "2025-12-07T21:57:51.087190"
+}

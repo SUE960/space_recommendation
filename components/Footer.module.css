@@ -1,0 +1,28 @@
+.footer {
+  background: linear-gradient(180deg, #0f172a 0%, #0a0e27 100%);
+  color: rgba(255, 255, 255, 0.6);
+  padding: 60px 20px;
+  text-align: center;
+  border-top: 1px solid rgba(34, 211, 238, 0.1);
+}
+
+.footerContent {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.copyright {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .footer {
+    padding: 32px 16px;
+  }
+
+  .copyright {
+    font-size: 12px;
+  }
+}
+

@@ -1,0 +1,95 @@
+{
+  "user_info": {
+    "age": 35,
+    "gender": "여",
+    "income_level": "고",
+    "matched_segment": "30_39세 여",
+    "avg_budget": 20453
+  },
+  "preferences": {
+    "preferred_industries": [
+      "카페",
+      "레스토랑",
+      "문화시설"
+    ],
+    "priorities": {
+      "preference_match": 0.5,
+      "score": 0.5
+    },
+    "budget": 20453
+  },
+  "recommendations": [
+    {
+      "rank": 1,
+      "region_name": "강남구",
+      "match_score": 50.0,
+      "preference_score": 50.0,
+      "step2_score": 50.0,
+      "reason": "30_39세 여에게 인기, 컴퓨터/소프트웨어 관심사에 적합",
+      "region_details": {
+        "특징": "학원/학습지 특화 (31.4%)",
+        "업종다양성": "보통(14개)",
+        "소비안정성": "안정적(16.8%)",
+        "성장률": "0.62% (→유지)"
+      }
+    },
+    {
+      "rank": 2,
+      "region_name": "강동구",
+      "match_score": 50.0,
+      "preference_score": 50.0,
+      "step2_score": 50.0,
+      "reason": "30_39세 여에게 인기, 컴퓨터/소프트웨어 관심사에 적합",
+      "region_details": {
+        "특징": "대형마트 특화 (87.1%)",
+        "업종다양성": "낮음(2개)",
+        "소비안정성": "안정적(19.8%)",
+        "성장률": "0.63% (→유지)"
+      }
+    },
+    {
+      "rank": 3,
+      "region_name": "강북구",
+      "match_score": 50.0,
+      "preference_score": 50.0,
+      "step2_score": 50.0,
+      "reason": "30_39세 여에게 인기, 컴퓨터/소프트웨어 관심사에 적합",
+      "region_details": {
+        "특징": "한식 특화 (78.2%)",
+        "업종다양성": "낮음(4개)",
+        "소비안정성": "안정적(18.2%)",
+        "성장률": "0.68% (→유지)"
+      }
+    },
+    {
+      "rank": 4,
+      "region_name": "강서구",
+      "match_score": 50.0,
+      "preference_score": 50.0,
+      "step2_score": 50.0,
+      "reason": "30_39세 여에게 인기, 컴퓨터/소프트웨어 관심사에 적합",
+      "region_details": {
+        "특징": "데이터 부족",
+        "업종다양성": "낮음(1개)",
+        "소비안정성": "보통(21.2%)",
+        "성장률": "0.63% (→유지)"
+      }
+    },
+    {
+      "rank": 5,
+      "region_name": "관악구",
+      "match_score": 50.0,
+      "preference_score": 50.0,
+      "step2_score": 50.0,
+      "reason": "30_39세 여에게 인기, 컴퓨터/소프트웨어 관심사에 적합",
+      "region_details": {
+        "특징": "일식 특화 (71.4%)",
+        "업종다양성": "낮음(4개)",
+        "소비안정성": "안정적(18.1%)",
+        "성장률": "+2.00% (↑상승)"
+      }
+    }
+  ],
+  "recommendation_count": 5,
+  "timestamp": "2025-12-07T21:58:25.197734"
+}

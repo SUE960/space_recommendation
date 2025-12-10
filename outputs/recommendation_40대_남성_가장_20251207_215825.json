@@ -1,0 +1,95 @@
+{
+  "user_info": {
+    "age": 45,
+    "gender": "남",
+    "income_level": "중",
+    "matched_segment": "40_49세 남",
+    "avg_budget": 30956
+  },
+  "preferences": {
+    "preferred_industries": [
+      "대형마트",
+      "주유소",
+      "한식"
+    ],
+    "priorities": {
+      "preference_match": 0.6,
+      "score": 0.4
+    },
+    "budget": 30956
+  },
+  "recommendations": [
+    {
+      "rank": 1,
+      "region_name": "강남구",
+      "match_score": 50.0,
+      "preference_score": 50.0,
+      "step2_score": 50.0,
+      "reason": "40_49세 남에게 인기, 대형마트 관심사에 적합",
+      "region_details": {
+        "특징": "학원/학습지 특화 (31.4%)",
+        "업종다양성": "보통(14개)",
+        "소비안정성": "안정적(16.8%)",
+        "성장률": "0.62% (→유지)"
+      }
+    },
+    {
+      "rank": 2,
+      "region_name": "강동구",
+      "match_score": 50.0,
+      "preference_score": 50.0,
+      "step2_score": 50.0,
+      "reason": "40_49세 남에게 인기, 대형마트 관심사에 적합",
+      "region_details": {
+        "특징": "대형마트 특화 (87.1%)",
+        "업종다양성": "낮음(2개)",
+        "소비안정성": "안정적(19.8%)",
+        "성장률": "0.63% (→유지)"
+      }
+    },
+    {
+      "rank": 3,
+      "region_name": "강북구",
+      "match_score": 50.0,
+      "preference_score": 50.0,
+      "step2_score": 50.0,
+      "reason": "40_49세 남에게 인기, 대형마트 관심사에 적합",
+      "region_details": {
+        "특징": "한식 특화 (78.2%)",
+        "업종다양성": "낮음(4개)",
+        "소비안정성": "안정적(18.2%)",
+        "성장률": "0.68% (→유지)"
+      }
+    },
+    {
+      "rank": 4,
+      "region_name": "강서구",
+      "match_score": 50.0,
+      "preference_score": 50.0,
+      "step2_score": 50.0,
+      "reason": "40_49세 남에게 인기, 대형마트 관심사에 적합",
+      "region_details": {
+        "특징": "데이터 부족",
+        "업종다양성": "낮음(1개)",
+        "소비안정성": "보통(21.2%)",
+        "성장률": "0.63% (→유지)"
+      }
+    },
+    {
+      "rank": 5,
+      "region_name": "관악구",
+      "match_score": 50.0,
+      "preference_score": 50.0,
+      "step2_score": 50.0,
+      "reason": "40_49세 남에게 인기, 대형마트 관심사에 적합",
+      "region_details": {
+        "특징": "일식 특화 (71.4%)",
+        "업종다양성": "낮음(4개)",
+        "소비안정성": "안정적(18.1%)",
+        "성장률": "+2.00% (↑상승)"
+      }
+    }
+  ],
+  "recommendation_count": 5,
+  "timestamp": "2025-12-07T21:58:25.206160"
+}
