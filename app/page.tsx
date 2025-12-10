@@ -81,9 +81,8 @@ export default function Home() {
     setRecommendations(null)
 
     try {
-      // 로컬 개발: http://localhost:8000
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
-      const response = await fetch(`${apiUrl}/api/recommend`, {
+      // Next.js API Routes 사용 (Vercel에서 완벽 작동!)
+      const response = await fetch('/api/recommend', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
