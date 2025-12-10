@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { RecommendationForm } from '@/components/RecommendationForm'
 import { RecommendationResults } from '@/components/RecommendationResults'
+import { LoadingSpinner } from '@/components/LoadingSpinner'
 import { Footer } from '@/components/Footer'
 import Image from 'next/image'
 import styles from './page.module.css'
@@ -69,7 +70,8 @@ export default function Home() {
     setRecommendations(null)
 
     try {
-      const response = await fetch('http://localhost:8000/api/recommend', {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+      const response = await fetch(`${apiUrl}/api/recommend`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -150,13 +152,23 @@ export default function Home() {
           <>
             <RecommendationForm onSubmit={handleRecommend} loading={loading} />
 
+            {loading && <LoadingSpinner />}
+
             {error && (
-              <div className={styles.error}>
-                <p>❌ {error}</p>
+              <div className={styles.errorContainer}>
+                <div className={styles.errorIcon}>⚠️</div>
+                <h3 className={styles.errorTitle}>오류가 발생했습니다</h3>
+                <p className={styles.errorMessage}>{error}</p>
+                <button 
+                  onClick={() => setError(null)} 
+                  className={styles.errorButton}
+                >
+                  다시 시도하기
+                </button>
               </div>
             )}
 
-            {recommendations && (
+            {recommendations && !loading && (
               <RecommendationResults recommendations={recommendations} />
             )}
           </>

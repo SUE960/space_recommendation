@@ -152,16 +152,50 @@
 }
 
 
-.error {
-  max-width: 500px;
-  margin: 20px auto;
-  padding: 16px 24px;
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.2);
-  border-radius: 8px;
-  color: #fca5a5;
+.errorContainer {
+  max-width: 600px;
+  margin: 3rem auto;
+  padding: 3rem 2rem;
+  background: rgba(239, 68, 68, 0.05);
+  border: 2px solid rgba(239, 68, 68, 0.2);
+  border-radius: 16px;
   text-align: center;
-  font-size: 14px;
+}
+
+.errorIcon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.errorTitle {
+  margin: 0 0 1rem 0;
+  font-size: 1.5rem;
+  color: #fca5a5;
+}
+
+.errorMessage {
+  margin: 0 0 2rem 0;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.errorButton {
+  padding: 0.75rem 2rem;
+  background: rgba(239, 68, 68, 0.2);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.errorButton:hover {
+  background: rgba(239, 68, 68, 0.3);
+  border-color: rgba(239, 68, 68, 0.5);
+  transform: translateY(-2px);
 }
 
 @media (max-width: 768px) {
