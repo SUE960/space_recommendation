@@ -1,7 +1,7 @@
 {
-  "name": "seoul-card-recommendation",
+  "name": "placemate",
   "version": "1.0.0",
-  "description": "서울 카드 데이터 기반 트렌드 지역 분석 및 개인 맞춤 추천 서비스",
+  "description": "플레이스메이트 - AI 기반 나이대별 트렌드 지역 추천 서비스",
   "private": true,
   "scripts": {
     "dev": "next dev",

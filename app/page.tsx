@@ -119,10 +119,10 @@ export default function Home() {
         <div className={styles.bannerContent}>
           <span className={styles.bannerTag}>AI 기반 지역 추천</span>
           <h1 className={styles.bannerTitle}>
-            <span className={styles.bannerTitleHighlight}>우리 나이에도 가도 될까?</span>
+            <span className={styles.bannerTitleHighlight}>플레이스메이트 🤝</span>
           </h1>
           <p className={styles.bannerDescription}>
-            트렌드 지역이 핫하다고 해도, 내 연령대에 맞는 곳인지 고민되시나요?
+            트렌드 지역이 핫하다고 해도, 나한테 맞는 곳인지 고민되시나요?
             <br />
             서울시민 소비 데이터로 분석한 <strong>나이대별 트렌드 지역</strong>을 추천해드립니다.
           </p>
