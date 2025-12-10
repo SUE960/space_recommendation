@@ -5,23 +5,43 @@ import { useRouter } from 'next/navigation'
 import { RecommendationResults } from '@/components/RecommendationResults'
 import styles from './page.module.css'
 
+interface Recommendation {
+  rank: number
+  region: string
+  final_score: number
+  static_score: number
+  realtime_score: number
+  static_details: {
+    industry_match: number
+    demographic_match: number
+    spending_match: number
+    time_match: number
+  }
+  realtime_details: {
+    user_industry_match: number
+    comprehensive_score: number
+    specialization_match: number
+    time_match: number
+  }
+  comprehensive_score: number
+  grade: string
+  specialized_industries: string[]
+  reasons: string[]
+}
+
 interface RecommendationResponse {
-  recommendations: Array<{
-    region: string
-    score: number
-    specialization: string | null
-    specialization_ratio: number | null
-    stability: string
-    growth_rate: number | null
-    reason: string
-  }>
+  recommendations: Recommendation[]
   user_profile: {
-    age_group: string
+    age: number
     gender: string
-    preferred_industry: string | null
-    time_period: string | null
+    income_level: string
+    matched_segment: string
+    segment_description: string
+    preferred_industries: string[]
+    time_period: string
     is_weekend: boolean
-    matched_preferences: string[]
+    preference_type: string
+    top_segment_industries: string[]
   }
 }
 

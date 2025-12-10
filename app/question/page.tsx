@@ -130,17 +130,32 @@ export default function QuestionPage() {
   const submitAnswers = async (finalAnswers: Answers) => {
     setLoading(true)
     try {
-      const response = await fetch('http://localhost:8000/api/recommend', {
+      // 연령대를 숫자로 변환 (예: "20-29세" -> 25)
+      const ageGroupToNumber = (ageGroup: string): number => {
+        if (ageGroup === '20세미만') return 18
+        if (ageGroup === '70세이상') return 70
+        const match = ageGroup.match(/(\d+)-(\d+)/)
+        if (match) {
+          const [, min, max] = match
+          return Math.floor((parseInt(min) + parseInt(max)) / 2)
+        }
+        return 30 // 기본값
+      }
+
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+      const response = await fetch(`${apiUrl}/api/recommend`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          age_group: finalAnswers.age_group,
-          gender: finalAnswers.gender,
-          preferred_industry: finalAnswers.preferred_industry || null,
-          time_period: finalAnswers.time_period || null,
+          age: ageGroupToNumber(finalAnswers.age_group || '30-39세'),
+          gender: finalAnswers.gender === '남성' ? '남' : '여',
+          income_level: '중',
+          preferred_industries: finalAnswers.preferred_industry ? [finalAnswers.preferred_industry] : ['한식'],
+          time_period: finalAnswers.time_period || '저녁',
           is_weekend: finalAnswers.is_weekend || false,
+          preference_type: '활발한',
         }),
       })
 
@@ -149,7 +164,6 @@ export default function QuestionPage() {
       }
 
       const data = await response.json()
-      // 결과를 쿼리 파라미터로 전달하거나 세션 스토리지에 저장
       sessionStorage.setItem('recommendations', JSON.stringify(data))
       router.push('/result')
     } catch (err) {
