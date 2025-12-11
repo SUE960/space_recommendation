@@ -21,14 +21,14 @@ const SEOUL_GUS = [
   '중구', '중랑구', '강서구'
 ]
 
-// 연령대별 선호 지역 매핑 (실제 데이터 기반)
+// 연령대별 선호 지역 매핑 (실제 핫스팟 데이터 기반)
 const AGE_PREFERENCE_MAP: Record<string, string[]> = {
-  '10-19': ['강남구', '홍대', '이태원', '명동', '강남역'],
-  '20-29': ['홍대', '강남구', '이태원', '명동', '신촌', '건대', '강남역', '잠실'],
-  '30-39': ['강남구', '서초구', '송파구', '잠실', '목동', '여의도'],
-  '40-49': ['서초구', '강남구', '송파구', '목동', '잠실', '종로구'],
-  '50-59': ['종로구', '서초구', '송파구', '잠실', '목동'],
-  '60+': ['종로구', '서초구', '송파구', '잠실']
+  '10-19': ['홍대 관광특구', '강남역', '이태원 관광특구', '명동 관광특구', '건대입구역'],
+  '20-29': ['홍대 관광특구', '강남역', '이태원 관광특구', '명동 관광특구', '신촌·이대역', '건대입구역', '잠실 관광특구', '용리단길'],
+  '30-39': ['강남역', '서초구', '송파구', '잠실 관광특구', '압구정로데오거리', '여의도'],
+  '40-49': ['서초구', '강남역', '송파구', '잠실 관광특구', '종로·청계 관광특구'],
+  '50-59': ['종로·청계 관광특구', '서초구', '송파구', '잠실 관광특구', '광화문·덕수궁'],
+  '60+': ['종로·청계 관광특구', '서초구', '송파구', '잠실 관광특구', '인사동']
 }
 
 // 목적(purpose)에 따른 업종 매핑
@@ -136,10 +136,21 @@ function calculateAgePreferenceScore(
     return 1.0 - (index * 0.1) // 1위: 1.0, 2위: 0.9, ...
   }
   
-  // 부분 매칭 (구 이름 포함)
+  // 부분 매칭 (핫스팟명 포함 체크)
   for (const pref of preferredRegions) {
+    // 정확한 매칭
+    if (regionName === pref) {
+      return 0.8
+    }
+    // 부분 매칭 (홍대, 강남역 등 키워드 포함)
     if (regionName.includes(pref) || pref.includes(regionName)) {
       return 0.7
+    }
+    // 키워드 매칭 (홍대 관광특구 -> 홍대)
+    const prefKeyword = pref.split(' ')[0].split('·')[0].split('관광특구')[0]
+    const regionKeyword = regionName.split(' ')[0].split('·')[0].split('관광특구')[0]
+    if (prefKeyword === regionKeyword || regionName.includes(prefKeyword)) {
+      return 0.6
     }
   }
   
@@ -209,11 +220,17 @@ function calculateRecommendationScore(
   // 우선순위에 따른 가중치 조정
   const weights = getPriorityWeights(request.priority || null)
   
+  // 핫스팟 데이터와 구 데이터의 필드명이 다를 수 있으므로 처리
+  const specializationRatio = parseFloat(
+    data.특화비율 || data['특화비율'] || 
+    data.특화점수 || data['특화점수'] || '0'
+  )
+  const specializationIndustry = (data.특화업종 || data['특화업종'] || '').trim()
+  
   // 1. 업종 매칭 (purpose 반영)
-  const specializationRatio = parseFloat(data.특화비율 || '0')
   const industryMatch = calculateIndustryMatch(
     request.preferred_industry,
-    data.특화업종 || '',
+    specializationIndustry,
     specializationRatio,
     request.purpose || null
   )
@@ -226,13 +243,29 @@ function calculateRecommendationScore(
   )
   score += agePreference * weights.age
   
-  // 3. 안정성
-  const cv = parseFloat(data.변동계수 || '20')
-  const stability = calculateStabilityScore(cv)
+  // 3. 안정성 (핫스팟 데이터는 상권활성도 기반)
+  const cv = parseFloat(data.변동계수 || data['변동계수'] || '0')
+  const activity = parseFloat(data.상권활성도 || data['상권활성도'] || '0')
+  let stability = 0.5
+  if (cv > 0) {
+    // 구 데이터인 경우
+    stability = calculateStabilityScore(cv)
+  } else if (activity > 0) {
+    // 핫스팟 데이터인 경우 (상권활성도 기반)
+    stability = activity >= 70 ? 0.9 : activity >= 50 ? 0.7 : activity >= 30 ? 0.5 : 0.3
+  }
   score += stability * weights.stability
   
   // 4. 업종 다양성
-  const diversity = calculateDiversityScore(data.업종다양성 || '')
+  const diversityText = data.업종다양성 || data['업종다양성'] || ''
+  const industryCount = parseFloat(data.업종수 || data['업종수'] || '0')
+  let diversity = 0.5
+  if (diversityText) {
+    diversity = calculateDiversityScore(diversityText)
+  } else if (industryCount > 0) {
+    // 핫스팟 데이터는 업종수로 다양성 계산
+    diversity = Math.min(industryCount / 10, 1.0) // 10개 이상이면 1.0
+  }
   score += diversity * weights.diversity
   
   // 5. 특화 비율 보너스
@@ -264,17 +297,28 @@ export async function POST(request: NextRequest) {
   try {
     const body: RecommendationRequest = await request.json()
     
-    // CSV 데이터 읽기 (public 폴더 또는 outputs 폴더)
-    let csvPath = path.join(process.cwd(), 'public', 'seoul_all_gu_characteristics.csv')
+    // 핫스팟 데이터 읽기 (강남역, 홍대 등 실제 지역명 포함)
+    let csvPath = path.join(process.cwd(), 'public', 'api_all_72_hotspots_realtime_scores.csv')
     if (!fs.existsSync(csvPath)) {
-      csvPath = path.join(process.cwd(), 'outputs', 'seoul_all_gu_characteristics.csv')
+      csvPath = path.join(process.cwd(), 'outputs', 'api_all_72_hotspots_realtime_scores.csv')
     }
+    
+    if (!fs.existsSync(csvPath)) {
+      console.error('Hotspot CSV file not found, falling back to gu data')
+      // 폴백: 구 데이터 사용
+      csvPath = path.join(process.cwd(), 'public', 'seoul_all_gu_characteristics.csv')
+      if (!fs.existsSync(csvPath)) {
+        csvPath = path.join(process.cwd(), 'outputs', 'seoul_all_gu_characteristics.csv')
+      }
+    }
+    
     const csvContent = fs.readFileSync(csvPath, 'utf-8')
     const lines = csvContent.split('\n').filter(line => line.trim())
     const headers = lines[0].split(',').map(h => h.trim())
     
     console.log('CSV Headers:', headers)
     console.log('Total lines:', lines.length)
+    console.log('Using data file:', csvPath)
     
     // CSV 파싱 (더 정교한 파싱)
     const regions: any[] = []
@@ -307,23 +351,44 @@ export async function POST(request: NextRequest) {
         region[header] = value.replace(/^"|"$/g, '').trim()
       })
       
-      // 지역 이름 추출 - CSV 첫 번째 컬럼이 '구'이므로 직접 사용
-      // values[0]이 항상 지역 이름 (강남구, 강동구 등)
-      const regionName = (values[0] || '').trim()
+      // 지역 이름 추출 - 핫스팟명 또는 구 컬럼에서 가져오기
+      let regionName = ''
       
-      // 지역 이름이 유효한 경우만 추가 (강남구, 홍대 등 실제 지역명)
+      if (region.핫스팟명) {
+        // 핫스팟 데이터인 경우
+        regionName = String(region.핫스팟명).trim()
+      } else if (region['핫스팟명']) {
+        regionName = String(region['핫스팟명']).trim()
+      } else if (region.구) {
+        // 구 데이터인 경우
+        regionName = String(region.구).trim()
+      } else if (region['구']) {
+        regionName = String(region['구']).trim()
+      } else if (headers.includes('핫스팟명') && values[headers.indexOf('핫스팟명')]) {
+        // 핫스팟명 컬럼에서 직접 가져오기
+        regionName = String(values[headers.indexOf('핫스팟명')]).trim()
+      } else if (headers.includes('구') && values[headers.indexOf('구')]) {
+        // 구 컬럼에서 직접 가져오기
+        regionName = String(values[headers.indexOf('구')]).trim()
+      } else if (values[0]) {
+        // 첫 번째 값이 지역 이름일 가능성
+        regionName = String(values[0]).trim()
+      }
+      
+      // 지역 이름이 유효한 경우만 추가 (홍대 관광특구, 강남역, 강남구 등)
       if (regionName && regionName !== '' && regionName.length >= 2) {
         // region 객체에 명시적으로 저장
         region.regionName = regionName
-        region.구 = regionName
-        // region 객체의 모든 속성에도 명시적으로 설정
-        if (headers[0] === '구') {
-          region[headers[0]] = regionName
+        if (headers.includes('핫스팟명')) {
+          region.핫스팟명 = regionName
+        }
+        if (headers.includes('구')) {
+          region.구 = regionName
         }
         regions.push(region)
         console.log(`✅ Added region: ${regionName}`)
       } else {
-        console.warn(`❌ Skipped line ${i}: Invalid region name "${regionName}". Values: [${values.join(', ')}]`)
+        console.warn(`❌ Skipped line ${i}: Invalid region name. Headers: [${headers.join(', ')}], Values: [${values.join(', ')}]`)
       }
     }
     
@@ -353,16 +418,34 @@ export async function POST(request: NextRequest) {
         
         console.log(`📊 Calculating score for region: ${finalRegionName}`)
         
-        const score = calculateRecommendationScore(finalRegionName, region, body)
-        const specializationRatio = parseFloat(region.특화비율 || region['특화비율'] || '0')
+        // 핫스팟 데이터와 구 데이터의 필드명이 다를 수 있으므로 처리
+        const specializationRatio = parseFloat(
+          region.특화비율 || region['특화비율'] || 
+          region.특화점수 || region['특화점수'] || '0'
+        )
+        
+        // 변동계수는 구 데이터에만 있으므로, 핫스팟 데이터는 상권활성도로 대체
         const cv = parseFloat(region.변동계수 || region['변동계수'] || '20')
+        const activity = parseFloat(region.상권활성도 || region['상권활성도'] || '50')
+        
+        // 안정성 계산 (핫스팟 데이터는 상권활성도 기반)
+        let stability = '보통'
+        if (cv > 0) {
+          // 구 데이터인 경우
+          stability = cv < 16 ? '매우 안정적' : cv < 18 ? '안정적' : cv < 20 ? '보통' : '불안정'
+        } else if (activity > 0) {
+          // 핫스팟 데이터인 경우 (상권활성도 기반)
+          stability = activity >= 70 ? '매우 안정적' : activity >= 50 ? '안정적' : activity >= 30 ? '보통' : '불안정'
+        }
+        
+        const score = calculateRecommendationScore(finalRegionName, region, body)
         
         const recommendation = {
-          region: finalRegionName, // 반드시 지역 이름 포함 (강남구, 홍대 등)
+          region: finalRegionName, // 반드시 지역 이름 포함 (홍대 관광특구, 강남역, 강남구 등)
           score: Math.round(score * 10) / 10,
           specialization: (region.특화업종 || region['특화업종'] || '').trim() || null,
           specialization_ratio: specializationRatio || null,
-          stability: cv < 16 ? '매우 안정적' : cv < 18 ? '안정적' : cv < 20 ? '보통' : '불안정',
+          stability: stability,
           growth_rate: null,
           reason: generateReason(region, body, score)
         }
