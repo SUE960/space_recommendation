@@ -36,7 +36,6 @@ export default function Home() {
   const [recommendations, setRecommendations] = useState<RecommendationResponse | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [showModal, setShowModal] = useState(false)
 
   const handleRecommend = async (formData: {
     ageGroup: string
@@ -101,14 +100,9 @@ export default function Home() {
           <div className={styles.bannerButtons}>
             <button
               onClick={() => {
-                // localStorage에서 기본 세팅 확인
-                const savedData = localStorage.getItem('userPreferences')
-                if (!savedData) {
-                  // 기본 세팅이 없으면 팝업 표시
-                  setShowModal(true)
-                } else {
-                  // 기본 세팅이 있으면 바로 질문 페이지로
-                  router.push('/question')
+                const section = document.getElementById('recommendation-section')
+                if (section) {
+                  section.scrollIntoView({ behavior: 'smooth' })
                 }
               }}
               className={styles.primaryButton}
@@ -116,7 +110,12 @@ export default function Home() {
               추천받기 →
             </button>
             <button
-              onClick={() => router.push('/trend-map')}
+              onClick={() => {
+                const section = document.getElementById('recommendation-section')
+                if (section) {
+                  section.scrollIntoView({ behavior: 'smooth' })
+                }
+              }}
               className={styles.secondaryButton}
             >
               ⊙ 트렌드 맵 둘러보기
@@ -146,41 +145,6 @@ export default function Home() {
           <RecommendationResults recommendations={recommendations} />
         )}
       </section>
-
-      {/* Modal */}
-      {showModal && (
-        <div className={styles.modalOverlay} onClick={() => setShowModal(false)}>
-          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-            <h3 className={styles.modalTitle}>기본 세팅이 필요합니다</h3>
-            <p className={styles.modalDescription}>
-              추천을 받기 전에 먼저 기본 정보를 입력해주세요
-            </p>
-            <div className={styles.modalButtons}>
-              <button
-                className={styles.modalPrimaryButton}
-                onClick={() => {
-                  setShowModal(false)
-                  const section = document.getElementById('recommendation-section')
-                  if (section) {
-                    section.scrollIntoView({ behavior: 'smooth' })
-                  }
-                }}
-              >
-                기본 세팅하기
-              </button>
-              <button
-                className={styles.modalSecondaryButton}
-                onClick={() => {
-                  setShowModal(false)
-                  router.push('/question')
-                }}
-              >
-                바로 시작하기
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Footer */}
       <Footer />
