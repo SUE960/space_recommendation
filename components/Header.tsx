@@ -15,7 +15,15 @@ export function Header() {
 
         <nav className={styles.nav}>
           <button
-            onClick={() => router.push('/question')}
+            onClick={() => {
+              router.push('/')
+              setTimeout(() => {
+                const section = document.getElementById('recommendation-section')
+                if (section) {
+                  section.scrollIntoView({ behavior: 'smooth' })
+                }
+              }, 100)
+            }}
             className={styles.navButton}
           >
             기본 세팅하기

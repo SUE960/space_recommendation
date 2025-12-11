@@ -32,7 +32,7 @@ interface RecommendationResponse {
 
 export default function Home() {
   const router = useRouter()
-  const [showForm, setShowForm] = useState(false)
+  const [showForm, setShowForm] = useState(true)
   const [recommendations, setRecommendations] = useState<RecommendationResponse | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -100,7 +100,12 @@ export default function Home() {
           </p>
           <div className={styles.bannerButtons}>
             <button
-              onClick={() => router.push('/question')}
+              onClick={() => {
+                const section = document.getElementById('recommendation-section')
+                if (section) {
+                  section.scrollIntoView({ behavior: 'smooth' })
+                }
+              }}
               className={styles.primaryButton}
             >
               지금 시작하기 →
@@ -114,27 +119,23 @@ export default function Home() {
 
       {/* Recommendation Section */}
       <section id="recommendation-section" className={styles.serviceSection}>
-        {!showForm ? (
-          <div className={styles.formTrigger}>
-            <div className={styles.welcomeMessage}>
-              <h2>🎯 나에게 맞는 지역을 찾아보세요</h2>
-              <p>상단 헤더의 "기본 세팅하기" 버튼을 눌러 시작하세요</p>
-            </div>
+        <div className={styles.sectionHeader}>
+          <h2 className={styles.sectionTitle}>기본 세팅하기</h2>
+          <p className={styles.sectionDescription}>
+            연령대, 성별 등 기본 정보를 입력하시면 맞춤형 지역을 추천해드립니다
+          </p>
+        </div>
+
+        <RecommendationForm onSubmit={handleRecommend} loading={loading} />
+
+        {error && (
+          <div className={styles.error}>
+            <p>❌ {error}</p>
           </div>
-        ) : (
-          <>
-            <RecommendationForm onSubmit={handleRecommend} loading={loading} />
+        )}
 
-            {error && (
-              <div className={styles.error}>
-                <p>❌ {error}</p>
-              </div>
-            )}
-
-            {recommendations && (
-              <RecommendationResults recommendations={recommendations} />
-            )}
-          </>
+        {recommendations && (
+          <RecommendationResults recommendations={recommendations} />
         )}
       </section>
 

@@ -119,52 +119,24 @@
   background: #fafafa;
 }
 
-.formTrigger {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 300px;
-}
-
-.welcomeMessage {
+.sectionHeader {
   text-align: center;
-  padding: 60px 20px;
-  background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  margin-bottom: 48px;
 }
 
-.welcomeMessage h2 {
-  font-size: 2rem;
+.sectionTitle {
+  font-size: 2.5rem;
   font-weight: 700;
   color: #333333;
-  margin-bottom: 1rem;
+  margin-bottom: 16px;
   letter-spacing: -0.02em;
 }
 
-.welcomeMessage p {
+.sectionDescription {
   font-size: 1.125rem;
   color: #666666;
   line-height: 1.6;
-}
-
-.triggerButton {
-  padding: 18px 48px;
-  background: #FF7426;
-  color: #ffffff;
-  border: none;
-  border-radius: 28px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 16px rgba(255, 116, 38, 0.2);
-}
-
-.triggerButton:hover {
-  background: #FF8542;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 116, 38, 0.3);
+  font-weight: 500;
 }
 
 
