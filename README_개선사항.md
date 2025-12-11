@@ -379,3 +379,4 @@ region  commercial_activity  specialization_score
 
 **감사합니다!** 🙏
 
+

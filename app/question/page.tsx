@@ -122,6 +122,16 @@ export default function QuestionPage() {
         </div>
       </div>
 
+      {/* Title Section */}
+      {currentQuestion === 0 && (
+        <div className={styles.titleSection}>
+          <h1 className={styles.title}>기본 세팅하기</h1>
+          <p className={styles.subtitle}>
+            몇 가지 질문에 답하시면 당신에게 딱 맞는 서울 지역을 추천해드립니다
+          </p>
+        </div>
+      )}
+
       {/* Question Card */}
       <div className={styles.questionCard}>
         <h2 className={styles.question}>{currentQ.question}</h2>

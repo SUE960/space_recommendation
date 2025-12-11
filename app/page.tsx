@@ -103,7 +103,7 @@ export default function Home() {
               onClick={() => router.push('/question')}
               className={styles.primaryButton}
             >
-              어디로 갈까? →
+              지금 시작하기 →
             </button>
             <button className={styles.secondaryButton}>
               ⊙ 트렌드 맵 둘러보기
@@ -118,7 +118,7 @@ export default function Home() {
           <div className={styles.formTrigger}>
             <div className={styles.welcomeMessage}>
               <h2>🎯 나에게 맞는 지역을 찾아보세요</h2>
-              <p>상단 헤더의 "개인정보 입력하기" 버튼을 눌러 시작하세요</p>
+              <p>상단 헤더의 "기본 세팅하기" 버튼을 눌러 시작하세요</p>
             </div>
           </div>
         ) : (

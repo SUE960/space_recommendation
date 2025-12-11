@@ -18,7 +18,7 @@ export function Header() {
             onClick={() => router.push('/question')}
             className={styles.navButton}
           >
-            개인정보 입력하기
+            기본 세팅하기
           </button>
           <button
             onClick={() => {
