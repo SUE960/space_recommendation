@@ -304,21 +304,32 @@ export async function POST(request: NextRequest) {
         region[header] = value.replace(/^"|"$/g, '').trim()
       })
       
-      // 지역 이름이 있는 경우만 추가
-      const regionName = region.구 || region['구']
-      if (regionName && regionName !== '') {
+      // 지역 이름이 있는 경우만 추가 (데이터와 로직 기반 추천을 위해 필수)
+      const regionName = (region.구 || region['구'] || '').trim()
+      if (regionName && regionName !== '' && regionName.length > 0) {
+        // 지역 이름이 유효한 경우만 regions 배열에 추가
         regions.push(region)
       }
     }
     
-    // 각 지역에 대해 추천 점수 계산
+    // 지역 이름이 있는 데이터만 추천 후보로 사용
+    if (regions.length === 0) {
+      console.error('No regions with valid names found in CSV')
+      return NextResponse.json(
+        { error: '유효한 지역 데이터를 찾을 수 없습니다' },
+        { status: 500 }
+      )
+    }
+    
+    // 각 지역에 대해 추천 점수 계산 (지역 이름이 있는 데이터만)
     const recommendations = regions
       .map(region => {
         // 지역 이름 추출 (반드시 '구' 컬럼에서 가져옴)
         const regionName = (region.구 || region['구'] || '').trim()
         
-        // 지역 이름이 없으면 스킵
-        if (!regionName || regionName === '') {
+        // 지역 이름이 없으면 null 반환 (이미 필터링했지만 이중 체크)
+        if (!regionName || regionName === '' || regionName.length === 0) {
+          console.warn('Region without name found in recommendations:', region)
           return null
         }
         
@@ -336,17 +347,42 @@ export async function POST(request: NextRequest) {
           reason: generateReason(region, body, score)
         }
       })
-      .filter((rec): rec is NonNullable<typeof rec> => rec !== null && rec.region !== '') // null과 빈 지역명 제거
+      .filter((rec): rec is NonNullable<typeof rec> => {
+        // 지역 이름이 있는 추천만 통과
+        if (!rec || !rec.region || rec.region.trim() === '') {
+          return false
+        }
+        return true
+      })
       .sort((a, b) => b.score - a.score)
       .slice(0, 3) // 상위 3개
     
-    // 추천 결과가 없으면 에러
+    // 추천 결과가 없거나 지역 이름이 없는 경우 에러
     if (recommendations.length === 0) {
-      console.error('No valid regions found in CSV data')
+      console.error('No valid recommendations with region names found')
       return NextResponse.json(
         { error: '추천할 지역 데이터를 찾을 수 없습니다' },
         { status: 500 }
       )
+    }
+    
+    // 최종 검증: 모든 추천에 지역 이름이 있는지 확인
+    const invalidRecs = recommendations.filter(rec => !rec.region || rec.region.trim() === '')
+    if (invalidRecs.length > 0) {
+      console.error('Found recommendations without region names:', invalidRecs)
+      // 지역 이름이 없는 추천 제거
+      const validRecs = recommendations.filter(rec => rec.region && rec.region.trim() !== '')
+      if (validRecs.length === 0) {
+        return NextResponse.json(
+          { error: '유효한 지역 추천을 생성할 수 없습니다' },
+          { status: 500 }
+        )
+      }
+      // 유효한 추천만 반환
+      return NextResponse.json({
+        recommendations: validRecs,
+        user_profile: userProfile
+      })
     }
     
     // 사용자 프로필 구성
