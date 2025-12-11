@@ -1,8 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import Map from 'react-map-gl'
-import { Marker, Popup } from 'react-map-gl'
+import Map from 'react-map-gl/mapbox'
+import { Marker, Popup } from 'react-map-gl/mapbox'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import styles from './TrendMap.module.css'
 

@@ -207,7 +207,7 @@ function calculateRecommendationScore(
   let score = 0 // 0부터 시작하여 가중치 합산
   
   // 우선순위에 따른 가중치 조정
-  const weights = getPriorityWeights(request.priority)
+  const weights = getPriorityWeights(request.priority || null)
   
   // 1. 업종 매칭 (purpose 반영)
   const specializationRatio = parseFloat(data.특화비율 || '0')
