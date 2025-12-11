@@ -1,6 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 import styles from './Header.module.css'
 
 export function Header() {
@@ -10,6 +11,13 @@ export function Header() {
     <header className={styles.header}>
       <div className={styles.container}>
         <div className={styles.logo} onClick={() => router.push('/')}>
+          <Image
+            src="/logo.png"
+            alt="서울 추천 서비스 로고"
+            width={40}
+            height={40}
+            className={styles.logoImage}
+          />
           <span className={styles.logoText}>서울 추천 서비스</span>
         </div>
 
