@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import styles from './RecommendationForm.module.css'
 
 interface RecommendationFormProps {
@@ -14,19 +14,57 @@ interface RecommendationFormProps {
   loading: boolean
 }
 
+const INDUSTRIES = [
+  '한식',
+  '일식',
+  '양식',
+  '중식',
+  '카페/디저트',
+  '패스트푸드',
+  '대형마트',
+  '편의점',
+  '의류/패션',
+  '화장품/뷰티',
+  '문화/여가',
+  '스포츠',
+  '병원/약국',
+  '학원/교육',
+]
+
 export function RecommendationForm({ onSubmit, loading }: RecommendationFormProps) {
   const [ageGroup, setAgeGroup] = useState('30-39세')
   const [gender, setGender] = useState('남성')
-  const [preferredIndustry, setPreferredIndustry] = useState('')
+  const [selectedIndustries, setSelectedIndustries] = useState<string[]>([])
+  const [isIndustryDropdownOpen, setIsIndustryDropdownOpen] = useState(false)
   const [timePeriod, setTimePeriod] = useState('')
   const [isWeekend, setIsWeekend] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsIndustryDropdownOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  const toggleIndustry = (industry: string) => {
+    setSelectedIndustries(prev =>
+      prev.includes(industry)
+        ? prev.filter(i => i !== industry)
+        : [...prev, industry]
+    )
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     onSubmit({
       ageGroup,
       gender,
-      preferredIndustry,
+      preferredIndustry: selectedIndustries.join(', '),
       timePeriod,
       isWeekend,
     })
@@ -65,15 +103,36 @@ export function RecommendationForm({ onSubmit, loading }: RecommendationFormProp
         </select>
       </div>
 
-      <div className={styles.formGroup}>
-        <label htmlFor="preferredIndustry">선호 업종 (선택)</label>
-        <input
-          id="preferredIndustry"
-          type="text"
-          value={preferredIndustry}
-          onChange={(e) => setPreferredIndustry(e.target.value)}
-          placeholder="예: 한식, 대형마트, 일식 등"
-        />
+      <div className={styles.formGroup} ref={dropdownRef}>
+        <label>선호 업종 (선택)</label>
+        <div
+          className={styles.multiSelectTrigger}
+          onClick={() => setIsIndustryDropdownOpen(!isIndustryDropdownOpen)}
+        >
+          <span className={styles.multiSelectText}>
+            {selectedIndustries.length === 0
+              ? '예: 한식, 대형마트, 일식 등'
+              : selectedIndustries.join(', ')}
+          </span>
+          <span className={styles.multiSelectArrow}>
+            {isIndustryDropdownOpen ? '▲' : '▼'}
+          </span>
+        </div>
+        {isIndustryDropdownOpen && (
+          <div className={styles.multiSelectDropdown}>
+            {INDUSTRIES.map((industry) => (
+              <label key={industry} className={styles.multiSelectOption}>
+                <input
+                  type="checkbox"
+                  checked={selectedIndustries.includes(industry)}
+                  onChange={() => toggleIndustry(industry)}
+                  className={styles.multiSelectCheckbox}
+                />
+                <span>{industry}</span>
+              </label>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className={styles.formGroup}>
