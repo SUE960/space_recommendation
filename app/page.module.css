@@ -123,6 +123,25 @@
   min-height: 300px;
 }
 
+.welcomeMessage {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.welcomeMessage h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+}
+
+.welcomeMessage p {
+  font-size: 1.125rem;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.6;
+}
+
 .triggerButton {
   padding: 18px 48px;
   background: #ffffff;

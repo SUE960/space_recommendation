@@ -116,12 +116,10 @@ export default function Home() {
       <section id="recommendation-section" className={styles.serviceSection}>
         {!showForm ? (
           <div className={styles.formTrigger}>
-            <button
-              onClick={() => setShowForm(true)}
-              className={styles.triggerButton}
-            >
-              개인 정보 입력하기
-            </button>
+            <div className={styles.welcomeMessage}>
+              <h2>🎯 나에게 맞는 지역을 찾아보세요</h2>
+              <p>상단 헤더의 "개인정보 입력하기" 버튼을 눌러 시작하세요</p>
+            </div>
           </div>
         ) : (
           <>

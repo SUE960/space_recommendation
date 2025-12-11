@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import { Header } from '@/components/Header'
 
 export const metadata: Metadata = {
   title: '서울 카드 데이터 기반 추천 서비스',
@@ -13,7 +14,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
-      <body>{children}</body>
+      <body>
+        <Header />
+        <div style={{ paddingTop: '80px' }}>
+          {children}
+        </div>
+      </body>
     </html>
   )
 }
