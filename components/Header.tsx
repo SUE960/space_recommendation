@@ -12,13 +12,13 @@ export function Header() {
       <div className={styles.container}>
         <div className={styles.logo} onClick={() => router.push('/')}>
           <Image
-            src="/logo.jpeg"
-            alt="서울 추천 서비스 로고"
-            width={45}
-            height={45}
+            src="/logo.png"
+            alt="서울 추천 서비스"
+            width={180}
+            height={40}
             className={styles.logoImage}
+            priority
           />
-          <span className={styles.logoText}>서울 추천 서비스</span>
         </div>
 
         <nav className={styles.nav}>

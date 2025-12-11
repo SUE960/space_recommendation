@@ -33,23 +33,15 @@
 }
 
 .logoImage {
-  width: 45px;
-  height: 45px;
+  width: auto;
+  height: 40px;
   object-fit: contain;
-  border-radius: 8px;
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
 .logo:hover .logoImage {
-  transform: scale(1.08);
-}
-
-.logoText {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #FF7426;
-  letter-spacing: -0.02em;
-  white-space: nowrap;
+  transform: scale(1.05);
+  opacity: 0.9;
 }
 
 .nav {
@@ -133,12 +125,7 @@
 
 @media (max-width: 480px) {
   .logoImage {
-    width: 36px;
-    height: 36px;
-  }
-
-  .logoText {
-    font-size: 0.95rem;
+    height: 32px;
   }
 
   .navButton {
