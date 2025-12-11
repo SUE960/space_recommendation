@@ -23,7 +23,7 @@ const questions: Question[] = [
   },
   {
     id: 2,
-    question: '오늘은 주말인가요?',
+    question: '방문하는 날은 주말인가요?',
     options: [
       '평일',
       '주말',
