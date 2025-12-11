@@ -115,7 +115,10 @@ export default function Home() {
             >
               추천받기 →
             </button>
-            <button className={styles.secondaryButton}>
+            <button
+              onClick={() => router.push('/trend-map')}
+              className={styles.secondaryButton}
+            >
               ⊙ 트렌드 맵 둘러보기
             </button>
           </div>

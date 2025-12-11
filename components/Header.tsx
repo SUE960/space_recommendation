@@ -23,12 +23,6 @@ export function Header() {
 
         <nav className={styles.nav}>
           <button
-            onClick={() => router.push('/trend-map')}
-            className={styles.navButtonTertiary}
-          >
-            트렌드 맵
-          </button>
-          <button
             onClick={() => {
               router.push('/')
               setTimeout(() => {
