@@ -17,13 +17,11 @@ export default function RootLayout({
   
   return (
     <html lang="ko">
-      <head>
+      <body>
         <Script
           src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoKey}&autoload=false`}
-          strategy="beforeInteractive"
+          strategy="lazyOnload"
         />
-      </head>
-      <body>
         <Header />
         <div style={{ paddingTop: '80px' }}>
           {children}

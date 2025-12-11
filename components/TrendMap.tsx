@@ -130,15 +130,46 @@ export default function TrendMap({ hotspots }: TrendMapProps) {
     return '#90EE90' // 연두
   }
 
-  useEffect(() => {
-    if (!mapContainer.current || !window.kakao) return
 
-    // 카카오맵 초기화
-    window.kakao.maps.load(() => {
+  // 카카오맵 SDK 로드 및 초기화
+  useEffect(() => {
+    const loadKakaoMap = () => {
+      // 카카오맵 SDK가 이미 로드되어 있는지 확인
+      if (window.kakao && window.kakao.maps) {
+        // 이미 로드되어 있으면 바로 초기화
+        if (mapContainer.current) {
+          initializeMap()
+        }
+        return
+      }
+
+      // SDK가 없으면 스크립트 동적 로드
+      const script = document.createElement('script')
+      const kakaoKey = process.env.NEXT_PUBLIC_KAKAO_MAP_KEY || 'c2e410bd46b3705d319f436284127360'
+      script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoKey}&autoload=false`
+      script.async = true
+      script.onload = () => {
+        if (window.kakao && window.kakao.maps) {
+          window.kakao.maps.load(() => {
+            if (mapContainer.current) {
+              initializeMap()
+            }
+          })
+        }
+      }
+      script.onerror = () => {
+        console.error('카카오맵 SDK 로드 실패')
+      }
+      document.head.appendChild(script)
+    }
+
+    const initializeMap = () => {
+      if (!mapContainer.current || !window.kakao || !window.kakao.maps) return
+
       const center = new window.kakao.maps.LatLng(37.5665, 126.9780)
       const options = {
         center,
-        level: 6, // 확대 레벨
+        level: 6,
       }
 
       const kakaoMap = new window.kakao.maps.Map(mapContainer.current, options)
@@ -174,7 +205,6 @@ export default function TrendMap({ hotspots }: TrendMapProps) {
         window.kakao.maps.event.addListener(marker, 'click', () => {
           setSelectedHotspot(hotspot)
           
-          // 인포윈도우 생성
           const content = `
             <div style="padding: 12px; min-width: 200px;">
               <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: bold; color: #333; border-bottom: 2px solid #ff6b6b; padding-bottom: 6px;">
@@ -209,7 +239,6 @@ export default function TrendMap({ hotspots }: TrendMapProps) {
             </div>
           `
 
-          // 기존 인포윈도우 제거
           if (infoWindow) {
             infoWindow.close()
           }
@@ -227,24 +256,12 @@ export default function TrendMap({ hotspots }: TrendMapProps) {
       })
 
       setMarkers(markerList)
-    })
+    }
+
+    loadKakaoMap()
   }, [hotspotsWithCoords])
 
-  // 카카오맵 SDK 로드 확인
-  useEffect(() => {
-    const checkKakaoMap = () => {
-      if (window.kakao && window.kakao.maps) {
-        window.kakao.maps.load(() => {
-          // SDK 로드 완료
-        })
-      } else {
-        setTimeout(checkKakaoMap, 100)
-      }
-    }
-    checkKakaoMap()
-  }, [])
-
-  if (!window.kakao) {
+  if (!map) {
     return (
       <div className={styles.errorContainer}>
         <p>⚠️ 카카오맵 SDK를 불러오는 중...</p>
