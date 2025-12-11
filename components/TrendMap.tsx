@@ -138,38 +138,53 @@ export default function TrendMap({ hotspots }: TrendMapProps) {
 
     const kakaoKey = process.env.NEXT_PUBLIC_KAKAO_MAP_KEY || 'c2e410bd46b3705d319f436284127360'
     
-    // 이미 스크립트가 로드되어 있는지 확인
-    const existingScript = document.querySelector(`script[src*="dapi.kakao.com"]`)
-    
     const loadKakaoMap = () => {
       // 카카오맵 SDK가 이미 로드되어 있는지 확인
       if (window.kakao && window.kakao.maps) {
-        initializeMap()
+        window.kakao.maps.load(() => {
+          initializeMap()
+        })
         return
       }
 
-      // 스크립트가 이미 추가되어 있으면 로드 대기
+      // 스크립트가 이미 있는지 확인
+      const existingScript = document.querySelector(`script[src*="dapi.kakao.com"]`)
+      
       if (existingScript) {
+        // 스크립트가 있으면 로드 대기
+        let attempts = 0
+        const maxAttempts = 100 // 10초 (100ms * 100)
+        
         const checkInterval = setInterval(() => {
+          attempts++
+          
           if (window.kakao && window.kakao.maps) {
             clearInterval(checkInterval)
-            initializeMap()
+            window.kakao.maps.load(() => {
+              initializeMap()
+            })
+          } else if (attempts >= maxAttempts) {
+            clearInterval(checkInterval)
+            // 스크립트가 있지만 로드되지 않으면 수동 로드 시도
+            loadScriptManually()
           }
         }, 100)
-
-        // 10초 후 타임아웃
-        setTimeout(() => {
-          clearInterval(checkInterval)
-          if (!window.kakao || !window.kakao.maps) {
-            setError('카카오맵 SDK 로드 시간이 초과되었습니다. 페이지를 새로고침해주세요.')
-            setLoading(false)
-          }
-        }, 10000)
-
+        
         return
       }
 
-      // 스크립트 동적 로드
+      // 스크립트가 없으면 수동 로드
+      loadScriptManually()
+    }
+
+    const loadScriptManually = () => {
+      // 기존 스크립트 제거 (있다면)
+      const oldScript = document.querySelector(`script[src*="dapi.kakao.com"]`)
+      if (oldScript) {
+        oldScript.remove()
+      }
+
+      // 새 스크립트 생성 및 로드
       const script = document.createElement('script')
       script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoKey}&autoload=false`
       script.async = true
@@ -191,8 +206,14 @@ export default function TrendMap({ hotspots }: TrendMapProps) {
     }
 
     const initializeMap = () => {
-      if (!mapContainer.current || !window.kakao || !window.kakao.maps) {
-        setError('카카오맵을 초기화할 수 없습니다.')
+      if (!mapContainer.current) {
+        console.error('맵 컨테이너가 없습니다')
+        return
+      }
+
+      if (!window.kakao || !window.kakao.maps) {
+        console.error('카카오맵 SDK가 로드되지 않았습니다')
+        setError('카카오맵 SDK를 불러올 수 없습니다.')
         setLoading(false)
         return
       }
@@ -205,8 +226,14 @@ export default function TrendMap({ hotspots }: TrendMapProps) {
         }
 
         const kakaoMap = new window.kakao.maps.Map(mapContainer.current, options)
+        
+        if (!kakaoMap) {
+          throw new Error('카카오맵 생성 실패')
+        }
+        
         setMap(kakaoMap)
         setLoading(false)
+        setError(null)
 
         // 마커 생성
         const markerList: any[] = []
