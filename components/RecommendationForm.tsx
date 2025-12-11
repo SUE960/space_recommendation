@@ -114,9 +114,25 @@ export function RecommendationForm({ onSubmit, loading }: RecommendationFormProp
               ? '예: 한식, 대형마트, 일식 등'
               : selectedIndustries.join(', ')}
           </span>
-          <span className={styles.multiSelectArrow}>
-            {isIndustryDropdownOpen ? '▲' : '▼'}
-          </span>
+          <svg
+            className={styles.multiSelectArrow}
+            width="18"
+            height="18"
+            viewBox="0 0 16 16"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            style={{
+              transform: isIndustryDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+            }}
+          >
+            <path
+              d="M4 6L8 10L12 6"
+              stroke="#666666"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
         </div>
         {isIndustryDropdownOpen && (
           <div className={styles.multiSelectDropdown}>
