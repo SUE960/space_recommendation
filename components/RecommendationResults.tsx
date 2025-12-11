@@ -30,6 +30,9 @@ interface RecommendationResultsProps {
 
 export function RecommendationResults({ recommendations }: RecommendationResultsProps) {
   const { recommendations: recs, user_profile } = recommendations
+  
+  // TOP 3로 제한
+  const topRecs = recs.slice(0, 3)
 
   return (
     <div className={styles.results}>
@@ -64,9 +67,9 @@ export function RecommendationResults({ recommendations }: RecommendationResults
       </div>
 
       <div className={styles.recommendationsSection}>
-        <h3 className={styles.recommendationsTitle}>추천 지역 Top {recs.length}</h3>
+        <h3 className={styles.recommendationsTitle}>추천 지역 Top 3</h3>
         <div className={styles.recommendationsList}>
-          {recs.map((rec, index) => (
+          {topRecs.map((rec, index) => (
             <div key={rec.region} className={styles.recommendationCard}>
               <div className={styles.rankBadge}>
                 {index + 1}
@@ -79,7 +82,7 @@ export function RecommendationResults({ recommendations }: RecommendationResults
                   <div className={styles.scoreBarContainer}>
                     <div
                       className={styles.scoreBarFill}
-                      style={{ width: `${(rec.score / recs[0].score) * 100}%` }}
+                      style={{ width: `${(rec.score / topRecs[0].score) * 100}%` }}
                     />
                   </div>
                 </div>

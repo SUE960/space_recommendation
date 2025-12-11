@@ -43,30 +43,32 @@ function calculateRecommendationScore(
   data: any,
   request: RecommendationRequest
 ): number {
-  let score = 0.5 // 기본 점수
+  let score = 30 // 기본 점수 (30점부터 시작)
   
   // 업종 매칭 (40%)
   const industryMatch = calculateIndustryMatch(
     request.preferred_industry,
     data.특화업종 || ''
   )
-  score += industryMatch * 0.4
+  score += industryMatch * 40
   
-  // 특화 비율 (30%)
+  // 특화 비율 (20%)
   const specializationRatio = parseFloat(data.특화비율 || '0') / 100
-  score += specializationRatio * 0.3
+  score += specializationRatio * 20
   
-  // 안정성 (20%)
+  // 안정성 (10%)
   const cv = parseFloat(data.변동계수 || '20')
   const stability = cv < 18 ? 0.9 : cv < 20 ? 0.7 : 0.5
-  score += stability * 0.2
+  score += stability * 10
   
-  // 주말 보너스 (10%)
+  // 주말 보너스 (최대 5점)
   if (request.is_weekend) {
-    score += 0.1
+    score += 5
   }
   
-  return Math.min(score, 1.0) * 100 // 0-100 점수로 변환
+  // 점수 차별화를 위한 랜덤 요소 제거하고, 실제 데이터 기반으로만 계산
+  // 최대 100점이지만, 실제로는 30-100 사이의 점수가 나오도록 조정
+  return Math.min(Math.max(score, 30), 100) // 30-100 점수 범위
 }
 
 export async function POST(request: NextRequest) {
@@ -96,22 +98,25 @@ export async function POST(request: NextRequest) {
     // 각 지역에 대해 추천 점수 계산
     const recommendations = regions
       .map(region => {
-        const score = calculateRecommendationScore(region.구, region, body)
-        const specializationRatio = parseFloat(region.특화비율 || '0')
-        const cv = parseFloat(region.변동계수 || '20')
+        // 지역 이름 추출 (여러 가능한 컬럼명 시도)
+        const regionName = region.구 || region['구'] || region.region || region.Region || '알 수 없는 지역'
+        const score = calculateRecommendationScore(regionName, region, body)
+        const specializationRatio = parseFloat(region.특화비율 || region['특화비율'] || '0')
+        const cv = parseFloat(region.변동계수 || region['변동계수'] || '20')
         
         return {
-          region: region.구,
+          region: regionName,
           score: Math.round(score * 10) / 10,
-          specialization: region.특화업종 || null,
+          specialization: region.특화업종 || region['특화업종'] || null,
           specialization_ratio: specializationRatio || null,
           stability: cv < 18 ? '매우 안정적' : cv < 20 ? '안정적' : '보통',
           growth_rate: null,
           reason: generateReason(region, body, score)
         }
       })
+      .filter(rec => rec.region && rec.region !== '알 수 없는 지역') // 유효한 지역만 필터링
       .sort((a, b) => b.score - a.score)
-      .slice(0, 10) // 상위 10개
+      .slice(0, 3) // 상위 3개
     
     // 사용자 프로필 구성
     const userProfile = {
