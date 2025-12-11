@@ -359,27 +359,27 @@ export async function POST(request: NextRequest) {
       // 지역 이름 추출 - 핫스팟명 또는 구 컬럼에서 직접 가져오기
       let regionName = ''
       
-      // 핫스팟 데이터: '핫스팟명' 컬럼 찾기
+      // 방법 1: 헤더에서 '핫스팟명' 또는 '구' 컬럼 인덱스 찾기
       const hotspotIndex = headers.indexOf('핫스팟명')
-      if (hotspotIndex >= 0 && values[hotspotIndex]) {
+      const guIndex = headers.indexOf('구')
+      
+      if (hotspotIndex >= 0 && hotspotIndex < values.length && values[hotspotIndex]) {
         regionName = String(values[hotspotIndex]).trim()
+        console.log(`Found 핫스팟명 at index ${hotspotIndex}: "${regionName}"`)
+      } else if (guIndex >= 0 && guIndex < values.length && values[guIndex]) {
+        regionName = String(values[guIndex]).trim()
+        console.log(`Found 구 at index ${guIndex}: "${regionName}"`)
       }
       
-      // 구 데이터: '구' 컬럼 찾기
-      if (!regionName) {
-        const guIndex = headers.indexOf('구')
-        if (guIndex >= 0 && values[guIndex]) {
-          regionName = String(values[guIndex]).trim()
-        }
-      }
-      
-      // 폴백: 첫 번째 컬럼이 '순위'면 두 번째가 지역명
-      if (!regionName && headers[0] === '순위' && values[1]) {
+      // 방법 2: 첫 번째 컬럼이 '순위'면 두 번째가 지역명 (핫스팟 데이터)
+      if (!regionName && headers[0] === '순위' && values.length > 1 && values[1]) {
         regionName = String(values[1]).trim()
+        console.log(`Found region from values[1]: "${regionName}"`)
       }
-      // 폴백: 첫 번째 값이 숫자가 아니면 지역명
+      // 방법 3: 첫 번째 값이 숫자가 아니면 지역명 (구 데이터)
       else if (!regionName && values[0] && !values[0].match(/^\d+$/)) {
         regionName = String(values[0]).trim()
+        console.log(`Found region from values[0]: "${regionName}"`)
       }
       
       // 지역 이름이 유효한 경우만 추가 (홍대 관광특구, 강남역, 강남구 등)
@@ -387,9 +387,9 @@ export async function POST(request: NextRequest) {
         // region 객체에 명시적으로 저장
         region.regionName = regionName
         regions.push(region)
-        console.log(`✅ Added region: ${regionName} (line ${i})`)
+        console.log(`✅ Added region: ${regionName} (line ${i}, total: ${regions.length})`)
       } else {
-        console.warn(`❌ Skipped line ${i}: No region name. Headers[0]: "${headers[0]}", Values[0]: "${values[0]}", Values[1]: "${values[1]}"`)
+        console.warn(`❌ Skipped line ${i}: No region name found. Headers: [${headers.join(', ')}], Values: [${values.slice(0, 3).join(', ')}]`)
       }
     }
     
