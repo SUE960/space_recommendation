@@ -357,6 +357,18 @@ export async function POST(request: NextRequest) {
       .sort((a, b) => b.score - a.score)
       .slice(0, 3) // 상위 3개
     
+    // 사용자 프로필 구성 (먼저 선언)
+    const userProfile = {
+      age_group: body.age_group,
+      gender: body.gender,
+      preferred_industry: body.preferred_industry,
+      time_period: body.time_period,
+      is_weekend: body.is_weekend,
+      matched_preferences: body.preferred_industry 
+        ? body.preferred_industry.split(',').map(i => i.trim())
+        : []
+    }
+    
     // 추천 결과가 없거나 지역 이름이 없는 경우 에러
     if (recommendations.length === 0) {
       console.error('No valid recommendations with region names found')
@@ -383,18 +395,6 @@ export async function POST(request: NextRequest) {
         recommendations: validRecs,
         user_profile: userProfile
       })
-    }
-    
-    // 사용자 프로필 구성
-    const userProfile = {
-      age_group: body.age_group,
-      gender: body.gender,
-      preferred_industry: body.preferred_industry,
-      time_period: body.time_period,
-      is_weekend: body.is_weekend,
-      matched_preferences: body.preferred_industry 
-        ? body.preferred_industry.split(',').map(i => i.trim())
-        : []
     }
     
     return NextResponse.json({
