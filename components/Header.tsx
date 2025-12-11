@@ -10,7 +10,6 @@ export function Header() {
     <header className={styles.header}>
       <div className={styles.container}>
         <div className={styles.logo} onClick={() => router.push('/')}>
-          <span className={styles.logoIcon}>📍</span>
           <span className={styles.logoText}>서울 추천 서비스</span>
         </div>
 
@@ -37,4 +36,5 @@ export function Header() {
     </header>
   )
 }
+
 
