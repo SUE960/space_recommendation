@@ -4,14 +4,14 @@ import { useState, useRef, useEffect } from 'react'
 import styles from './RecommendationForm.module.css'
 
 interface RecommendationFormProps {
-  onSubmit: (formData: {
+  onSubmit?: (formData: {
     ageGroup: string
     gender: string
     preferredIndustry: string
     timePeriod: string
     isWeekend: boolean
   }) => void
-  loading: boolean
+  loading?: boolean
 }
 
 const INDUSTRIES = [
@@ -37,8 +37,23 @@ export function RecommendationForm({ onSubmit, loading }: RecommendationFormProp
   const [selectedIndustries, setSelectedIndustries] = useState<string[]>([])
   const [isIndustryDropdownOpen, setIsIndustryDropdownOpen] = useState(false)
   const [timePeriod, setTimePeriod] = useState('')
-  const [isWeekend, setIsWeekend] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
+
+  // localStorage에서 저장된 데이터 불러오기
+  useEffect(() => {
+    const savedData = localStorage.getItem('userPreferences')
+    if (savedData) {
+      try {
+        const parsed = JSON.parse(savedData)
+        setAgeGroup(parsed.ageGroup || '30-39세')
+        setGender(parsed.gender || '남성')
+        setSelectedIndustries(parsed.selectedIndustries || [])
+        setTimePeriod(parsed.timePeriod || '')
+      } catch (e) {
+        console.error('Failed to load saved preferences:', e)
+      }
+    }
+  }, [])
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -59,15 +74,22 @@ export function RecommendationForm({ onSubmit, loading }: RecommendationFormProp
     )
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSave = (e: React.FormEvent) => {
     e.preventDefault()
-    onSubmit({
+    
+    // localStorage에 저장
+    const userPreferences = {
       ageGroup,
       gender,
-      preferredIndustry: selectedIndustries.join(', '),
+      selectedIndustries,
       timePeriod,
-      isWeekend,
-    })
+      savedAt: new Date().toISOString(),
+    }
+    
+    localStorage.setItem('userPreferences', JSON.stringify(userPreferences))
+    
+    // 저장 완료 알림
+    alert('기본 세팅이 저장되었습니다!')
   }
 
   return (
@@ -163,19 +185,8 @@ export function RecommendationForm({ onSubmit, loading }: RecommendationFormProp
         </select>
       </div>
 
-      <div className={styles.formGroup}>
-        <label className={styles.checkboxLabel}>
-          <input
-            type="checkbox"
-            checked={isWeekend}
-            onChange={(e) => setIsWeekend(e.target.checked)}
-          />
-          <span>주말 여부</span>
-        </label>
-      </div>
-
-      <button type="submit" className={styles.submitButton} disabled={loading}>
-        {loading ? '추천 중...' : '지역 추천 받기'}
+      <button type="submit" className={styles.submitButton} onClick={handleSave}>
+        저장
       </button>
     </form>
   )

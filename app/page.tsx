@@ -126,7 +126,7 @@ export default function Home() {
           </p>
         </div>
 
-        <RecommendationForm onSubmit={handleRecommend} loading={loading} />
+        <RecommendationForm />
 
         {error && (
           <div className={styles.error}>
