@@ -93,7 +93,7 @@ export function RecommendationForm({ onSubmit, loading }: RecommendationFormProp
   }
 
   return (
-    <form onSubmit={handleSubmit} className={styles.form}>
+    <form onSubmit={handleSave} className={styles.form}>
       <div className={styles.formGroup}>
         <label htmlFor="ageGroup">연령대</label>
         <select
