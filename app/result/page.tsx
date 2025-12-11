@@ -56,7 +56,7 @@ export default function ResultPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          age_group: data.ageGroup,
+          age_group: data.ageGroup?.replace('세', '') || '20-29',
           gender: data.gender,
           preferred_industry: data.preferredIndustry || null,
           time_period: data.currentTime || null,
@@ -84,19 +84,77 @@ export default function ResultPage() {
     }
   }
 
-  // 이미 결과가 있으면 바로 표시
+  // 페이지 로드 시 자동으로 추천 요청 (실제 데이터와 로직 기반)
   useEffect(() => {
-    const savedResults = localStorage.getItem('recommendationResults')
-    if (savedResults) {
+    const fetchRecommendations = async () => {
+      // localStorage에서 데이터 불러오기
+      const savedData = localStorage.getItem('recommendationData')
+      if (!savedData) {
+        // 저장된 데이터가 없으면 질문 페이지로 리다이렉트
+        router.push('/question')
+        return
+      }
+
+      // 이미 결과가 있으면 바로 표시
+      const savedResults = localStorage.getItem('recommendationResults')
+      if (savedResults) {
+        try {
+          const parsed = JSON.parse(savedResults)
+          setRecommendations(parsed)
+          setShowResults(true)
+          return
+        } catch (e) {
+          console.error('Failed to load saved results:', e)
+        }
+      }
+
+      // 새로 추천 요청
       try {
-        const parsed = JSON.parse(savedResults)
-        setRecommendations(parsed)
+        const data = JSON.parse(savedData)
+        setLoading(true)
+        setError(null)
+
+        // ageGroup 형식 변환 (예: '20-29세' -> '20-29')
+        const ageGroup = data.ageGroup?.replace('세', '') || '20-29'
+        
+        // API 호출 - 질문에서 수집한 모든 정보를 실제 데이터 기반 추천에 활용
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || '/api'
+        const response = await fetch(`${apiUrl}/recommend`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            age_group: ageGroup,
+            gender: data.gender,
+            preferred_industry: data.preferredIndustry || null,
+            time_period: data.currentTime || null,
+            is_weekend: data.isWeekend || false,
+            purpose: data.purpose || null, // 방문 목적
+            budget: data.budget || null, // 예산
+            priority: data.priority || null, // 우선순위
+          }),
+        })
+
+        if (!response.ok) {
+          throw new Error('추천 요청에 실패했습니다')
+        }
+
+        const result: RecommendationResponse = await response.json()
+        setRecommendations(result)
         setShowResults(true)
-      } catch (e) {
-        console.error('Failed to load saved results:', e)
+        
+        // 결과를 localStorage에 저장
+        localStorage.setItem('recommendationResults', JSON.stringify(result))
+      } catch (err) {
+        setError(err instanceof Error ? err.message : '알 수 없는 오류가 발생했습니다')
+      } finally {
+        setLoading(false)
       }
     }
-  }, [])
+
+    fetchRecommendations()
+  }, [router])
 
   if (showResults && recommendations) {
     return (
@@ -114,27 +172,41 @@ export default function ResultPage() {
     )
   }
 
-  return (
-    <div className={styles.container}>
-      <div className={styles.resultCard}>
-        <h1 className={styles.title}>질문이 완료되었습니다!</h1>
-        <p className={styles.description}>
-          입력하신 정보를 바탕으로 지역을 추천해드리겠습니다.
-        </p>
-        {error && (
+  // 로딩 중이거나 에러가 있을 때만 표시
+  if (loading) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.resultCard}>
+          <h1 className={styles.title}>추천 중...</h1>
+          <p className={styles.description}>
+            입력하신 정보를 바탕으로 실제 데이터와 로직을 활용하여 최적의 지역을 찾고 있습니다.
+          </p>
+          <div className={styles.loadingSpinner}>⏳</div>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.resultCard}>
+          <h1 className={styles.title}>오류가 발생했습니다</h1>
           <div className={styles.error}>
             <p>❌ {error}</p>
           </div>
-        )}
-        <button
-          onClick={handleGetRecommendations}
-          className={styles.button}
-          disabled={loading}
-        >
-          {loading ? '추천 중...' : '추천 결과 보기 →'}
-        </button>
+          <button
+            onClick={handleGetRecommendations}
+            className={styles.button}
+          >
+            다시 시도
+          </button>
+        </div>
       </div>
-    </div>
-  )
+    )
+  }
+
+  // 결과가 아직 없으면 (로딩 완료 전)
+  return null
 }
 
