@@ -307,17 +307,39 @@ export async function POST(request: NextRequest) {
         region[header] = value.replace(/^"|"$/g, '').trim()
       })
       
-      // 지역 이름 추출 (첫 번째 컬럼이 '구'인지 확인)
-      const regionName = (region.구 || region['구'] || values[0] || '').trim()
+      // 지역 이름 추출 - 여러 방법 시도
+      let regionName = ''
       
+      // 방법 1: '구' 컬럼에서 가져오기
+      if (region.구) {
+        regionName = String(region.구).trim()
+      } else if (region['구']) {
+        regionName = String(region['구']).trim()
+      }
+      
+      // 방법 2: 첫 번째 컬럼이 '구'인 경우 직접 가져오기
+      if (!regionName && headers[0] === '구' && values[0]) {
+        regionName = String(values[0]).trim()
+      }
+      
+      // 방법 3: 첫 번째 값이 지역 이름일 가능성
+      if (!regionName && values[0]) {
+        const firstValue = String(values[0]).trim()
+        // '구'로 끝나는 경우 지역 이름으로 간주
+        if (firstValue.endsWith('구') && firstValue.length >= 3) {
+          regionName = firstValue
+        }
+      }
+      
+      // 지역 이름이 유효한 경우만 추가
       if (regionName && regionName !== '' && regionName.length > 0) {
-        // 지역 이름이 유효한 경우만 regions 배열에 추가
-        // region 객체에 regionName을 명시적으로 저장
+        // region 객체에 regionName을 명시적으로 저장 (중요!)
         region.regionName = regionName
+        region.구 = regionName // 확실하게 설정
         regions.push(region)
         console.log(`Added region: ${regionName}`)
       } else {
-        console.warn(`Skipped line ${i}: No valid region name. First value: "${values[0]}"`)
+        console.warn(`Skipped line ${i}: No valid region name. Headers: ${headers.join(', ')}, Values: ${values.join(', ')}`)
       }
     }
     
