@@ -15,20 +15,11 @@
   justify-content: flex-start;
 }
 
-.bannerImageWrapper {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-}
-
 .bannerImage {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
+  z-index: 0;
 }
 
 .bannerContent {
@@ -133,11 +124,10 @@
 }
 
 .triggerButton {
-  padding: 16px 40px;
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(10px);
-  color: rgba(255, 255, 255, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 18px 48px;
+  background: #ffffff;
+  color: #0a0e27;
+  border: none;
   border-radius: 8px;
   font-size: 16px;
   font-weight: 500;
@@ -146,56 +136,20 @@
 }
 
 .triggerButton:hover {
-  background: rgba(255, 255, 255, 0.25);
-  border-color: rgba(255, 255, 255, 0.5);
-  color: #ffffff;
+  opacity: 0.9;
 }
 
 
-.errorContainer {
-  max-width: 600px;
-  margin: 3rem auto;
-  padding: 3rem 2rem;
-  background: rgba(239, 68, 68, 0.05);
-  border: 2px solid rgba(239, 68, 68, 0.2);
-  border-radius: 16px;
-  text-align: center;
-}
-
-.errorIcon {
-  font-size: 4rem;
-  margin-bottom: 1rem;
-}
-
-.errorTitle {
-  margin: 0 0 1rem 0;
-  font-size: 1.5rem;
-  color: #fca5a5;
-}
-
-.errorMessage {
-  margin: 0 0 2rem 0;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 1rem;
-  line-height: 1.6;
-}
-
-.errorButton {
-  padding: 0.75rem 2rem;
-  background: rgba(239, 68, 68, 0.2);
-  color: #fca5a5;
-  border: 1px solid rgba(239, 68, 68, 0.3);
+.error {
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 16px 24px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
   border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.errorButton:hover {
-  background: rgba(239, 68, 68, 0.3);
-  border-color: rgba(239, 68, 68, 0.5);
-  transform: translateY(-2px);
+  color: #fca5a5;
+  text-align: center;
+  font-size: 14px;
 }
 
 @media (max-width: 768px) {

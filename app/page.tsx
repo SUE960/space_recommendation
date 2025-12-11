@@ -4,48 +4,29 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { RecommendationForm } from '@/components/RecommendationForm'
 import { RecommendationResults } from '@/components/RecommendationResults'
-import { LoadingSpinner } from '@/components/LoadingSpinner'
 import { Footer } from '@/components/Footer'
 import Image from 'next/image'
 import styles from './page.module.css'
 
 interface Recommendation {
-  rank: number
   region: string
-  final_score: number
-  static_score: number
-  realtime_score: number
-  static_details: {
-    industry_match: number
-    demographic_match: number
-    spending_match: number
-    time_match: number
-  }
-  realtime_details: {
-    user_industry_match: number
-    comprehensive_score: number
-    specialization_match: number
-    time_match: number
-  }
-  comprehensive_score: number
-  grade: string
-  specialized_industries: string[]
-  reasons: string[]
+  score: number
+  specialization: string | null
+  specialization_ratio: number | null
+  stability: string
+  growth_rate: number | null
+  reason: string
 }
 
 interface RecommendationResponse {
   recommendations: Recommendation[]
   user_profile: {
-    age: number
+    age_group: string
     gender: string
-    income_level: string
-    matched_segment: string
-    segment_description: string
-    preferred_industries: string[]
-    time_period: string
+    preferred_industry: string | null
+    time_period: string | null
     is_weekend: boolean
-    preference_type: string
-    top_segment_industries: string[]
+    matched_preferences: string[]
   }
 }
 
@@ -56,45 +37,29 @@ export default function Home() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const handleShowForm = () => {
-    setShowForm(true)
-    // 폼으로 부드럽게 스크롤
-    setTimeout(() => {
-      const formSection = document.getElementById('recommendation-section')
-      if (formSection) {
-        formSection.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      }
-    }, 100)
-  }
-
   const handleRecommend = async (formData: {
-    age: number
+    ageGroup: string
     gender: string
-    incomeLevel: string
-    preferredIndustries: string[]
+    preferredIndustry: string
     timePeriod: string
     isWeekend: boolean
-    preferenceType: string
   }) => {
     setLoading(true)
     setError(null)
     setRecommendations(null)
 
     try {
-      // Next.js API Routes 사용 (Vercel에서 완벽 작동!)
-      const response = await fetch('/api/recommend', {
+      const response = await fetch('http://localhost:8000/api/recommend', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          age: formData.age,
+          age_group: formData.ageGroup,
           gender: formData.gender,
-          income_level: formData.incomeLevel,
-          preferred_industries: formData.preferredIndustries,
-          time_period: formData.timePeriod,
+          preferred_industry: formData.preferredIndustry || null,
+          time_period: formData.timePeriod || null,
           is_weekend: formData.isWeekend,
-          preference_type: formData.preferenceType,
         }),
       })
 
@@ -115,27 +80,23 @@ export default function Home() {
     <main className={styles.container}>
       {/* Banner Section */}
       <section className={styles.banner}>
-        <div className={styles.bannerImageWrapper}>
-          <Image
-            src="/banner.png"
-            alt="Banner"
-            fill
-            priority
-            className={styles.bannerImage}
-            style={{ objectFit: 'cover' }}
-            sizes="100vw"
-            quality={90}
-          />
-        </div>
+        <Image
+          src="/banner.png"
+          alt="Banner"
+          fill
+          priority
+          className={styles.bannerImage}
+          style={{ objectFit: 'cover' }}
+        />
         <div className={styles.bannerContent}>
-          <span className={styles.bannerTag}>AI 기반 지역 추천</span>
+          <span className={styles.bannerTag}>AI 기반 소비 패턴 분석</span>
           <h1 className={styles.bannerTitle}>
-            <span className={styles.bannerTitleHighlight}>플레이스메이트 🤝</span>
+            <span className={styles.bannerTitleHighlight}>당신의 지역을 찾아드립니다</span>
           </h1>
           <p className={styles.bannerDescription}>
-            트렌드 지역이 핫하다고 해도, 나한테 맞는 곳인지 고민되시나요?
+            서울시민 카드 소비 데이터 분석. 유사한 소비 패턴을 가진 그룹을 찾고,
             <br />
-            서울시민 소비 데이터로 분석한 <strong>나이대별 트렌드 지역</strong>을 추천해드립니다.
+            맞춤형 장소와 업종을 추천합니다.
           </p>
           <div className={styles.bannerButtons}>
             <button
@@ -147,39 +108,32 @@ export default function Home() {
             <button className={styles.secondaryButton}>
               ⊙ 트렌드 맵 둘러보기
             </button>
-            <button
-              onClick={handleShowForm}
-              className={styles.triggerButton}
-            >
-              🎯 개인 정보 입력하기
-            </button>
           </div>
         </div>
       </section>
 
       {/* Recommendation Section */}
       <section id="recommendation-section" className={styles.serviceSection}>
-        {showForm && (
+        {!showForm ? (
+          <div className={styles.formTrigger}>
+            <button
+              onClick={() => setShowForm(true)}
+              className={styles.triggerButton}
+            >
+              개인 정보 입력하기
+            </button>
+          </div>
+        ) : (
           <>
             <RecommendationForm onSubmit={handleRecommend} loading={loading} />
 
-            {loading && <LoadingSpinner />}
-
             {error && (
-              <div className={styles.errorContainer}>
-                <div className={styles.errorIcon}>⚠️</div>
-                <h3 className={styles.errorTitle}>오류가 발생했습니다</h3>
-                <p className={styles.errorMessage}>{error}</p>
-                <button 
-                  onClick={() => setError(null)} 
-                  className={styles.errorButton}
-                >
-                  다시 시도하기
-                </button>
+              <div className={styles.error}>
+                <p>❌ {error}</p>
               </div>
             )}
 
-            {recommendations && !loading && (
+            {recommendations && (
               <RecommendationResults recommendations={recommendations} />
             )}
           </>
