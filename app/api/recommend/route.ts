@@ -307,39 +307,23 @@ export async function POST(request: NextRequest) {
         region[header] = value.replace(/^"|"$/g, '').trim()
       })
       
-      // 지역 이름 추출 - 여러 방법 시도
-      let regionName = ''
+      // 지역 이름 추출 - CSV 첫 번째 컬럼이 '구'이므로 직접 사용
+      // values[0]이 항상 지역 이름 (강남구, 강동구 등)
+      const regionName = (values[0] || '').trim()
       
-      // 방법 1: '구' 컬럼에서 가져오기
-      if (region.구) {
-        regionName = String(region.구).trim()
-      } else if (region['구']) {
-        regionName = String(region['구']).trim()
-      }
-      
-      // 방법 2: 첫 번째 컬럼이 '구'인 경우 직접 가져오기
-      if (!regionName && headers[0] === '구' && values[0]) {
-        regionName = String(values[0]).trim()
-      }
-      
-      // 방법 3: 첫 번째 값이 지역 이름일 가능성
-      if (!regionName && values[0]) {
-        const firstValue = String(values[0]).trim()
-        // '구'로 끝나는 경우 지역 이름으로 간주
-        if (firstValue.endsWith('구') && firstValue.length >= 3) {
-          regionName = firstValue
-        }
-      }
-      
-      // 지역 이름이 유효한 경우만 추가
-      if (regionName && regionName !== '' && regionName.length > 0) {
-        // region 객체에 regionName을 명시적으로 저장 (중요!)
+      // 지역 이름이 유효한 경우만 추가 (강남구, 홍대 등 실제 지역명)
+      if (regionName && regionName !== '' && regionName.length >= 2) {
+        // region 객체에 명시적으로 저장
         region.regionName = regionName
-        region.구 = regionName // 확실하게 설정
+        region.구 = regionName
+        // region 객체의 모든 속성에도 명시적으로 설정
+        if (headers[0] === '구') {
+          region[headers[0]] = regionName
+        }
         regions.push(region)
-        console.log(`Added region: ${regionName}`)
+        console.log(`✅ Added region: ${regionName}`)
       } else {
-        console.warn(`Skipped line ${i}: No valid region name. Headers: ${headers.join(', ')}, Values: ${values.join(', ')}`)
+        console.warn(`❌ Skipped line ${i}: Invalid region name "${regionName}". Values: [${values.join(', ')}]`)
       }
     }
     
@@ -357,23 +341,24 @@ export async function POST(request: NextRequest) {
     // 각 지역에 대해 추천 점수 계산 (지역 이름이 있는 데이터만)
     const recommendations = regions
       .map(region => {
-        // 지역 이름 추출 (여러 방법 시도)
-        const regionName = (region.regionName || region.구 || region['구'] || '').trim()
+        // 지역 이름 추출 - regionName이 명시적으로 저장되어 있음
+        const regionName = region.regionName || region.구 || region['구'] || ''
+        const finalRegionName = String(regionName).trim()
         
-        // 지역 이름이 없으면 null 반환 (이미 필터링했지만 이중 체크)
-        if (!regionName || regionName === '' || regionName.length === 0) {
-          console.error('Region without name found in recommendations:', JSON.stringify(region))
+        // 지역 이름이 없으면 null 반환
+        if (!finalRegionName || finalRegionName === '') {
+          console.error('❌ Region without name found:', JSON.stringify(region, null, 2))
           return null
         }
         
-        console.log(`Calculating score for region: ${regionName}`)
+        console.log(`📊 Calculating score for region: ${finalRegionName}`)
         
-        const score = calculateRecommendationScore(regionName, region, body)
+        const score = calculateRecommendationScore(finalRegionName, region, body)
         const specializationRatio = parseFloat(region.특화비율 || region['특화비율'] || '0')
         const cv = parseFloat(region.변동계수 || region['변동계수'] || '20')
         
         const recommendation = {
-          region: regionName, // 반드시 지역 이름 포함
+          region: finalRegionName, // 반드시 지역 이름 포함 (강남구, 홍대 등)
           score: Math.round(score * 10) / 10,
           specialization: (region.특화업종 || region['특화업종'] || '').trim() || null,
           specialization_ratio: specializationRatio || null,
@@ -382,7 +367,7 @@ export async function POST(request: NextRequest) {
           reason: generateReason(region, body, score)
         }
         
-        console.log(`Recommendation created: ${JSON.stringify(recommendation)}`)
+        console.log(`✅ Recommendation created: ${finalRegionName} (score: ${recommendation.score})`)
         return recommendation
       })
       .filter((rec): rec is NonNullable<typeof rec> => {

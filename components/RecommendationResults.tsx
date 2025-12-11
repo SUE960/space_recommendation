@@ -69,7 +69,14 @@ export function RecommendationResults({ recommendations }: RecommendationResults
       <div className={styles.recommendationsSection}>
         <h3 className={styles.recommendationsTitle}>추천 지역 Top 3</h3>
         <div className={styles.recommendationsList}>
-          {topRecs.map((rec, index) => (
+          {topRecs.map((rec, index) => {
+            // 지역 이름이 없으면 렌더링하지 않음
+            if (!rec.region || rec.region.trim() === '') {
+              console.error('Recommendation without region name:', rec)
+              return null
+            }
+            
+            return (
             <div key={rec.region || index} className={styles.recommendationCard}>
               <div className={styles.rankBadge}>
                 {index + 1}
@@ -117,7 +124,8 @@ export function RecommendationResults({ recommendations }: RecommendationResults
                 </div>
               </div>
             </div>
-          ))}
+            )
+          })}
         </div>
       </div>
     </div>
