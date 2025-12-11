@@ -108,6 +108,7 @@ export function RecommendationForm({ onSubmit, loading }: RecommendationFormProp
         <div
           className={styles.multiSelectTrigger}
           onClick={() => setIsIndustryDropdownOpen(!isIndustryDropdownOpen)}
+          data-open={isIndustryDropdownOpen}
         >
           <span className={styles.multiSelectText}>
             {selectedIndustries.length === 0
@@ -121,9 +122,6 @@ export function RecommendationForm({ onSubmit, loading }: RecommendationFormProp
             viewBox="0 0 16 16"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            style={{
-              transform: isIndustryDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-            }}
           >
             <path
               d="M4 6L8 10L12 6"

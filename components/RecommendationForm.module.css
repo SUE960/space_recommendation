@@ -101,8 +101,9 @@
   align-items: center;
   transition: all 0.2s ease;
   min-height: 50px;
-  gap: 12px;
+  gap: 0;
   box-sizing: border-box;
+  position: relative;
 }
 
 .multiSelectTrigger:hover {
@@ -126,15 +127,18 @@
 }
 
 .multiSelectArrow {
-  flex-shrink: 0;
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
   width: 18px;
   height: 18px;
   transition: transform 0.2s ease;
-  margin-right: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  vertical-align: middle;
+  pointer-events: none;
+}
+
+.multiSelectTrigger[data-open="true"] .multiSelectArrow {
+  transform: translateY(-50%) rotate(180deg);
 }
 
 .multiSelectDropdown {
