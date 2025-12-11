@@ -37,6 +37,7 @@ export function RecommendationForm({ onSubmit, loading }: RecommendationFormProp
   const [selectedIndustries, setSelectedIndustries] = useState<string[]>([])
   const [isIndustryDropdownOpen, setIsIndustryDropdownOpen] = useState(false)
   const [timePeriod, setTimePeriod] = useState('')
+  const [isSaved, setIsSaved] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   // localStorage에서 저장된 데이터 불러오기
@@ -49,6 +50,7 @@ export function RecommendationForm({ onSubmit, loading }: RecommendationFormProp
         setGender(parsed.gender || '남성')
         setSelectedIndustries(parsed.selectedIndustries || [])
         setTimePeriod(parsed.timePeriod || '')
+        setIsSaved(true) // 저장된 데이터가 있으면 저장 상태로 표시
       } catch (e) {
         console.error('Failed to load saved preferences:', e)
       }
@@ -87,9 +89,15 @@ export function RecommendationForm({ onSubmit, loading }: RecommendationFormProp
     }
     
     localStorage.setItem('userPreferences', JSON.stringify(userPreferences))
+    setIsSaved(true)
     
     // 저장 완료 알림
     alert('기본 세팅이 저장되었습니다!')
+  }
+
+  const handleEdit = () => {
+    setIsSaved(false)
+    setIsIndustryDropdownOpen(false)
   }
 
   return (
@@ -101,6 +109,8 @@ export function RecommendationForm({ onSubmit, loading }: RecommendationFormProp
           value={ageGroup}
           onChange={(e) => setAgeGroup(e.target.value)}
           required
+          disabled={isSaved}
+          className={isSaved ? styles.readOnlyField : ''}
         >
           <option value="20세미만">20세 미만</option>
           <option value="20-29세">20-29세</option>
@@ -119,6 +129,8 @@ export function RecommendationForm({ onSubmit, loading }: RecommendationFormProp
           value={gender}
           onChange={(e) => setGender(e.target.value)}
           required
+          disabled={isSaved}
+          className={isSaved ? styles.readOnlyField : ''}
         >
           <option value="남성">남성</option>
           <option value="여성">여성</option>
@@ -128,9 +140,10 @@ export function RecommendationForm({ onSubmit, loading }: RecommendationFormProp
       <div className={styles.formGroup} ref={dropdownRef}>
         <label>선호 업종 (선택)</label>
         <div
-          className={styles.multiSelectTrigger}
-          onClick={() => setIsIndustryDropdownOpen(!isIndustryDropdownOpen)}
+          className={`${styles.multiSelectTrigger} ${isSaved ? styles.readOnlyField : ''}`}
+          onClick={() => !isSaved && setIsIndustryDropdownOpen(!isIndustryDropdownOpen)}
           data-open={isIndustryDropdownOpen}
+          style={{ cursor: isSaved ? 'default' : 'pointer' }}
         >
           <span className={styles.multiSelectText}>
             {selectedIndustries.length === 0
@@ -154,7 +167,7 @@ export function RecommendationForm({ onSubmit, loading }: RecommendationFormProp
             />
           </svg>
         </div>
-        {isIndustryDropdownOpen && (
+        {isIndustryDropdownOpen && !isSaved && (
           <div className={styles.multiSelectDropdown}>
             {INDUSTRIES.map((industry) => (
               <label key={industry} className={styles.multiSelectOption}>
@@ -177,6 +190,8 @@ export function RecommendationForm({ onSubmit, loading }: RecommendationFormProp
           id="timePeriod"
           value={timePeriod}
           onChange={(e) => setTimePeriod(e.target.value)}
+          disabled={isSaved}
+          className={isSaved ? styles.readOnlyField : ''}
         >
           <option value="">선택 안함</option>
           <option value="점심(12-18시)">점심 (12-18시)</option>
@@ -185,9 +200,15 @@ export function RecommendationForm({ onSubmit, loading }: RecommendationFormProp
         </select>
       </div>
 
-      <button type="submit" className={styles.submitButton} onClick={handleSave}>
-        저장
-      </button>
+      {isSaved ? (
+        <button type="button" className={styles.editButton} onClick={handleEdit}>
+          수정하기
+        </button>
+      ) : (
+        <button type="submit" className={styles.submitButton} onClick={handleSave}>
+          저장
+        </button>
+      )}
     </form>
   )
 }
