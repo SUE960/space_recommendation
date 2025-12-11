@@ -79,11 +79,20 @@ export default function QuestionPage() {
         setUserPreferences(parsed)
       } catch (e) {
         console.error('Failed to load saved preferences:', e)
+        // 기본값 설정
+        setUserPreferences({
+          ageGroup: '20-29',
+          gender: '남성',
+          selectedIndustries: []
+        })
       }
     } else {
-      // 기본 세팅이 없으면 홈으로 리다이렉트
-      alert('먼저 기본 세팅을 완료해주세요!')
-      router.push('/')
+      // 기본 세팅이 없으면 기본값으로 설정 (질문은 계속 진행 가능)
+      setUserPreferences({
+        ageGroup: '20-29',
+        gender: '남성',
+        selectedIndustries: []
+      })
     }
   }, [router])
 

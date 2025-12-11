@@ -1,6 +1,8 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useState, useCallback } from 'react'
+import Map, { Marker, Popup } from 'react-map-gl'
+import 'mapbox-gl/dist/mapbox-gl.css'
 import styles from './TrendMap.module.css'
 
 interface Hotspot {
@@ -99,20 +101,15 @@ interface TrendMapProps {
   hotspots: Hotspot[]
 }
 
-declare global {
-  interface Window {
-    kakao: any
-  }
-}
-
 export default function TrendMap({ hotspots }: TrendMapProps) {
-  const mapContainer = useRef<HTMLDivElement>(null)
-  const [map, setMap] = useState<any>(null)
-  const [markers, setMarkers] = useState<any[]>([])
-  const [infoWindow, setInfoWindow] = useState<any>(null)
   const [selectedHotspot, setSelectedHotspot] = useState<Hotspot | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [viewState, setViewState] = useState({
+    longitude: 126.9780,
+    latitude: 37.5665,
+    zoom: 11,
+  })
+
+  const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || 'pk.eyJ1IjoiamlzdWUiLCJhIjoiY21odDVjZDY0MGU1NDJqcHZmMmY0ZzB2MCJ9.8EwsXPa4L8qaQrVqJxJe8w'
 
   // 좌표가 있는 핫스팟만 필터링
   const hotspotsWithCoords = hotspots
@@ -132,253 +129,95 @@ export default function TrendMap({ hotspots }: TrendMapProps) {
     return '#90EE90' // 연두
   }
 
-  // 카카오맵 SDK 로드 및 초기화
-  useEffect(() => {
-    if (!mapContainer.current) return
-
-    const kakaoKey = process.env.NEXT_PUBLIC_KAKAO_MAP_KEY || 'c2e410bd46b3705d319f436284127360'
-    
-    const loadKakaoMap = () => {
-      // 카카오맵 SDK가 이미 완전히 로드되어 있는지 확인
-      if (window.kakao && window.kakao.maps && window.kakao.maps.load) {
-        console.log('카카오맵 SDK 이미 로드됨, 초기화 시작')
-        window.kakao.maps.load(() => {
-          initializeMap()
-        })
-        return
-      }
-
-      // 기존 스크립트 확인
-      const existingScript = document.querySelector(`script[src*="dapi.kakao.com"]`)
-      
-      if (existingScript) {
-        console.log('카카오맵 스크립트 태그 발견, 로드 대기 중...')
-        // 스크립트가 있으면 로드 대기
-        let attempts = 0
-        const maxAttempts = 150 // 15초 (100ms * 150)
-        
-        const checkInterval = setInterval(() => {
-          attempts++
-          
-          if (window.kakao && window.kakao.maps && window.kakao.maps.load) {
-            console.log(`카카오맵 SDK 로드 완료 (${attempts}번째 시도)`)
-            clearInterval(checkInterval)
-            window.kakao.maps.load(() => {
-              initializeMap()
-            })
-          } else if (attempts >= maxAttempts) {
-            console.error('카카오맵 SDK 로드 타임아웃')
-            clearInterval(checkInterval)
-            // 타임아웃 후 수동 로드 시도
-            loadScriptManually()
-          }
-        }, 100)
-        
-        return
-      }
-
-      // 스크립트가 없으면 즉시 로드
-      console.log('카카오맵 스크립트 없음, 수동 로드 시작')
-      loadScriptManually()
-    }
-
-    const loadScriptManually = () => {
-      // 기존 스크립트 제거 (있다면)
-      const oldScripts = document.querySelectorAll(`script[src*="dapi.kakao.com"]`)
-      oldScripts.forEach(script => script.remove())
-
-      // 새 스크립트 생성 및 로드
-      const script = document.createElement('script')
-      script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoKey}&autoload=false`
-      script.async = false // 동기 로드로 변경하여 확실하게 로드
-      script.onload = () => {
-        console.log('카카오맵 스크립트 onload 이벤트 발생')
-        // 약간의 지연 후 확인 (SDK 초기화 시간 필요)
-        setTimeout(() => {
-          if (window.kakao && window.kakao.maps && window.kakao.maps.load) {
-            console.log('카카오맵 SDK 로드 확인, 초기화 시작')
-            window.kakao.maps.load(() => {
-              initializeMap()
-            })
-          } else {
-            console.error('카카오맵 SDK 객체를 찾을 수 없음')
-            setError('카카오맵 SDK를 불러올 수 없습니다.')
-            setLoading(false)
-          }
-        }, 100)
-      }
-      script.onerror = (err) => {
-        console.error('카카오맵 SDK 로드 실패:', err)
-        setError('카카오맵 SDK 로드에 실패했습니다. 네트워크 연결을 확인해주세요.')
-        setLoading(false)
-      }
-      document.head.appendChild(script)
-      console.log('카카오맵 스크립트 태그 추가됨')
-    }
-
-    const initializeMap = () => {
-      console.log('카카오맵 초기화 시작')
-      
-      if (!mapContainer.current) {
-        console.error('맵 컨테이너가 없습니다')
-        setError('맵 컨테이너를 찾을 수 없습니다.')
-        setLoading(false)
-        return
-      }
-
-      if (!window.kakao || !window.kakao.maps) {
-        console.error('카카오맵 SDK가 로드되지 않았습니다')
-        setError('카카오맵 SDK를 불러올 수 없습니다.')
-        setLoading(false)
-        return
-      }
-
-      try {
-        const center = new window.kakao.maps.LatLng(37.5665, 126.9780)
-        const options = {
-          center,
-          level: 6,
-        }
-
-        console.log('카카오맵 인스턴스 생성 중...')
-        const kakaoMap = new window.kakao.maps.Map(mapContainer.current, options)
-        
-        if (!kakaoMap) {
-          throw new Error('카카오맵 생성 실패')
-        }
-        
-        console.log('카카오맵 초기화 완료')
-        setMap(kakaoMap)
-        setLoading(false)
-        setError(null)
-
-        // 마커 생성
-        const markerList: any[] = []
-        hotspotsWithCoords.forEach((hotspot) => {
-          const position = new window.kakao.maps.LatLng(hotspot.lat, hotspot.lng)
-          const color = getMarkerColor(hotspot.실시간지역프로필점수)
-
-          // 커스텀 마커 이미지 생성
-          const imageSrc = `data:image/svg+xml;base64,${btoa(`
-            <svg width="32" height="32" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="16" cy="16" r="14" fill="${color}" stroke="white" stroke-width="2"/>
-              <text x="16" y="21" font-size="12" font-weight="bold" fill="white" text-anchor="middle">${hotspot.순위}</text>
-            </svg>
-          `)}`
-          const imageSize = new window.kakao.maps.Size(32, 32)
-          const imageOption = { offset: new window.kakao.maps.Point(16, 32) }
-          const markerImage = new window.kakao.maps.MarkerImage(
-            imageSrc,
-            imageSize,
-            imageOption
-          )
-
-          const marker = new window.kakao.maps.Marker({
-            position,
-            image: markerImage,
-          })
-
-          // 마커 클릭 이벤트
-          window.kakao.maps.event.addListener(marker, 'click', () => {
-            setSelectedHotspot(hotspot)
-            
-            const content = `
-              <div style="padding: 12px; min-width: 200px;">
-                <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: bold; color: #333; border-bottom: 2px solid #ff6b6b; padding-bottom: 6px;">
-                  ${hotspot.핫스팟명}
-                </h3>
-                <div style="font-size: 13px; color: #666; line-height: 1.8;">
-                  <div style="display: flex; justify-content: space-between;">
-                    <span>순위:</span>
-                    <span style="font-weight: 600; color: #333;">${hotspot.순위}위</span>
-                  </div>
-                  <div style="display: flex; justify-content: space-between;">
-                    <span>종합 점수:</span>
-                    <span style="font-weight: 600; color: #333;">${hotspot.실시간지역프로필점수.toFixed(1)}점</span>
-                  </div>
-                  <div style="display: flex; justify-content: space-between;">
-                    <span>등급:</span>
-                    <span style="font-weight: 600; color: #333;">${hotspot.실시간등급}</span>
-                  </div>
-                  <div style="display: flex; justify-content: space-between;">
-                    <span>특화 업종:</span>
-                    <span style="font-weight: 600; color: #333;">${hotspot.특화업종}</span>
-                  </div>
-                  <div style="display: flex; justify-content: space-between;">
-                    <span>상권 활성도:</span>
-                    <span style="font-weight: 600; color: #333;">${hotspot.상권활성도.toFixed(1)}</span>
-                  </div>
-                  <div style="display: flex; justify-content: space-between;">
-                    <span>결제 건수:</span>
-                    <span style="font-weight: 600; color: #333;">${hotspot.결제건수.toLocaleString()}건</span>
-                  </div>
-                </div>
-              </div>
-            `
-
-            if (infoWindow) {
-              infoWindow.close()
-            }
-
-            const newInfoWindow = new window.kakao.maps.InfoWindow({
-              content,
-              removable: true,
-            })
-            newInfoWindow.open(kakaoMap, marker)
-            setInfoWindow(newInfoWindow)
-          })
-
-          marker.setMap(kakaoMap)
-          markerList.push(marker)
-        })
-
-        setMarkers(markerList)
-      } catch (err) {
-        console.error('카카오맵 초기화 오류:', err)
-        setError('카카오맵을 초기화하는 중 오류가 발생했습니다.')
-        setLoading(false)
-      }
-    }
-
-    loadKakaoMap()
-  }, [hotspotsWithCoords])
-
-  if (error) {
+  if (!mapboxToken) {
     return (
       <div className={styles.errorContainer}>
-        <p>⚠️ {error}</p>
-        <button
-          onClick={() => window.location.reload()}
-          style={{
-            marginTop: '12px',
-            padding: '8px 16px',
-            background: '#ff6b6b',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-          }}
-        >
-          페이지 새로고침
-        </button>
-      </div>
-    )
-  }
-
-  if (loading || !map) {
-    return (
-      <div className={styles.errorContainer}>
-        <p>⚠️ 카카오맵 SDK를 불러오는 중...</p>
-        <p style={{ fontSize: '14px', color: '#666', marginTop: '8px' }}>
-          잠시만 기다려주세요
-        </p>
+        <p>⚠️ Mapbox API 토큰이 설정되지 않았습니다.</p>
+        <p>환경 변수 NEXT_PUBLIC_MAPBOX_TOKEN을 설정해주세요.</p>
       </div>
     )
   }
 
   return (
     <div className={styles.mapContainer}>
-      <div ref={mapContainer} className={styles.map} />
+      <Map
+        {...viewState}
+        onMove={(evt) => setViewState(evt.viewState)}
+        mapboxAccessToken={mapboxToken}
+        style={{ width: '100%', height: '100%' }}
+        mapStyle="mapbox://styles/mapbox/light-v11"
+      >
+        {hotspotsWithCoords.map((hotspot) => (
+          <Marker
+            key={hotspot.핫스팟코드}
+            longitude={hotspot.lng}
+            latitude={hotspot.lat}
+            anchor="bottom"
+            onClick={(e) => {
+              e.originalEvent.stopPropagation()
+              setSelectedHotspot(hotspot)
+            }}
+          >
+            <div
+              className={styles.marker}
+              style={{
+                backgroundColor: getMarkerColor(hotspot.실시간지역프로필점수),
+              }}
+            >
+              <span className={styles.markerText}>
+                {hotspot.순위}
+              </span>
+            </div>
+          </Marker>
+        ))}
+
+        {selectedHotspot && selectedHotspot.lng && selectedHotspot.lat && (
+          <Popup
+            longitude={selectedHotspot.lng}
+            latitude={selectedHotspot.lat}
+            anchor="bottom"
+            onClose={() => setSelectedHotspot(null)}
+            closeButton={true}
+            closeOnClick={false}
+          >
+            <div className={styles.popup}>
+              <h3 className={styles.popupTitle}>{selectedHotspot.핫스팟명}</h3>
+              <div className={styles.popupInfo}>
+                <div className={styles.popupRow}>
+                  <span className={styles.label}>순위:</span>
+                  <span className={styles.value}>{selectedHotspot.순위}위</span>
+                </div>
+                <div className={styles.popupRow}>
+                  <span className={styles.label}>종합 점수:</span>
+                  <span className={styles.value}>
+                    {selectedHotspot.실시간지역프로필점수.toFixed(1)}점
+                  </span>
+                </div>
+                <div className={styles.popupRow}>
+                  <span className={styles.label}>등급:</span>
+                  <span className={styles.value}>{selectedHotspot.실시간등급}</span>
+                </div>
+                <div className={styles.popupRow}>
+                  <span className={styles.label}>특화 업종:</span>
+                  <span className={styles.value}>{selectedHotspot.특화업종}</span>
+                </div>
+                <div className={styles.popupRow}>
+                  <span className={styles.label}>상권 활성도:</span>
+                  <span className={styles.value}>
+                    {selectedHotspot.상권활성도.toFixed(1)}
+                  </span>
+                </div>
+                <div className={styles.popupRow}>
+                  <span className={styles.label}>결제 건수:</span>
+                  <span className={styles.value}>
+                    {selectedHotspot.결제건수.toLocaleString()}건
+                  </span>
+                </div>
+              </div>
+            </div>
+          </Popup>
+        )}
+      </Map>
     </div>
   )
 }

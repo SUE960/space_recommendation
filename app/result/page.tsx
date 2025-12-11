@@ -48,7 +48,7 @@ export default function ResultPage() {
       setLoading(true)
       setError(null)
 
-      // API 호출 (Vercel Serverless Function 사용)
+      // API 호출 - 질문에서 수집한 모든 정보를 실제 데이터 기반 추천에 활용
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || '/api'
       const response = await fetch(`${apiUrl}/recommend`, {
         method: 'POST',
@@ -61,6 +61,9 @@ export default function ResultPage() {
           preferred_industry: data.preferredIndustry || null,
           time_period: data.currentTime || null,
           is_weekend: data.isWeekend || false,
+          purpose: data.purpose || null, // 방문 목적
+          budget: data.budget || null, // 예산
+          priority: data.priority || null, // 우선순위
         }),
       })
 

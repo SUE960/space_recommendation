@@ -100,22 +100,15 @@ export default function Home() {
           <div className={styles.bannerButtons}>
             <button
               onClick={() => {
-                const section = document.getElementById('recommendation-section')
-                if (section) {
-                  section.scrollIntoView({ behavior: 'smooth' })
-                }
+                // 질문 페이지로 이동하여 방문할 곳에 대한 정보 수집
+                router.push('/question')
               }}
               className={styles.primaryButton}
             >
               추천받기 →
             </button>
             <button
-              onClick={() => {
-                const section = document.getElementById('recommendation-section')
-                if (section) {
-                  section.scrollIntoView({ behavior: 'smooth' })
-                }
-              }}
+              onClick={() => router.push('/trend-map')}
               className={styles.secondaryButton}
             >
               ⊙ 트렌드 맵 둘러보기
