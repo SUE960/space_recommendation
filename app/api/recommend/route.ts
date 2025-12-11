@@ -273,6 +273,9 @@ export async function POST(request: NextRequest) {
     const lines = csvContent.split('\n').filter(line => line.trim())
     const headers = lines[0].split(',').map(h => h.trim())
     
+    console.log('CSV Headers:', headers)
+    console.log('Total lines:', lines.length)
+    
     // CSV 파싱 (더 정교한 파싱)
     const regions: any[] = []
     for (let i = 1; i < lines.length; i++) {
@@ -304,13 +307,21 @@ export async function POST(request: NextRequest) {
         region[header] = value.replace(/^"|"$/g, '').trim()
       })
       
-      // 지역 이름이 있는 경우만 추가 (데이터와 로직 기반 추천을 위해 필수)
-      const regionName = (region.구 || region['구'] || '').trim()
+      // 지역 이름 추출 (첫 번째 컬럼이 '구'인지 확인)
+      const regionName = (region.구 || region['구'] || values[0] || '').trim()
+      
       if (regionName && regionName !== '' && regionName.length > 0) {
         // 지역 이름이 유효한 경우만 regions 배열에 추가
+        // region 객체에 regionName을 명시적으로 저장
+        region.regionName = regionName
         regions.push(region)
+        console.log(`Added region: ${regionName}`)
+      } else {
+        console.warn(`Skipped line ${i}: No valid region name. First value: "${values[0]}"`)
       }
     }
+    
+    console.log(`Total valid regions: ${regions.length}`)
     
     // 지역 이름이 있는 데이터만 추천 후보로 사용
     if (regions.length === 0) {
@@ -324,21 +335,23 @@ export async function POST(request: NextRequest) {
     // 각 지역에 대해 추천 점수 계산 (지역 이름이 있는 데이터만)
     const recommendations = regions
       .map(region => {
-        // 지역 이름 추출 (반드시 '구' 컬럼에서 가져옴)
-        const regionName = (region.구 || region['구'] || '').trim()
+        // 지역 이름 추출 (여러 방법 시도)
+        const regionName = (region.regionName || region.구 || region['구'] || '').trim()
         
         // 지역 이름이 없으면 null 반환 (이미 필터링했지만 이중 체크)
         if (!regionName || regionName === '' || regionName.length === 0) {
-          console.warn('Region without name found in recommendations:', region)
+          console.error('Region without name found in recommendations:', JSON.stringify(region))
           return null
         }
+        
+        console.log(`Calculating score for region: ${regionName}`)
         
         const score = calculateRecommendationScore(regionName, region, body)
         const specializationRatio = parseFloat(region.특화비율 || region['특화비율'] || '0')
         const cv = parseFloat(region.변동계수 || region['변동계수'] || '20')
         
-        return {
-          region: regionName,
+        const recommendation = {
+          region: regionName, // 반드시 지역 이름 포함
           score: Math.round(score * 10) / 10,
           specialization: (region.특화업종 || region['특화업종'] || '').trim() || null,
           specialization_ratio: specializationRatio || null,
@@ -346,6 +359,9 @@ export async function POST(request: NextRequest) {
           growth_rate: null,
           reason: generateReason(region, body, score)
         }
+        
+        console.log(`Recommendation created: ${JSON.stringify(recommendation)}`)
+        return recommendation
       })
       .filter((rec): rec is NonNullable<typeof rec> => {
         // 지역 이름이 있는 추천만 통과
@@ -369,8 +385,24 @@ export async function POST(request: NextRequest) {
         : []
     }
     
+    // 최종 필터링: null 제거 및 지역 이름 검증
+    const validRecommendations = recommendations
+      .filter((rec): rec is NonNullable<typeof rec> => {
+        if (!rec) return false
+        if (!rec.region || rec.region.trim() === '') {
+          console.error('Found recommendation without region name:', rec)
+          return false
+        }
+        return true
+      })
+    
+    console.log(`Final recommendations count: ${validRecommendations.length}`)
+    validRecommendations.forEach((rec, idx) => {
+      console.log(`Recommendation ${idx + 1}: ${rec.region} (score: ${rec.score})`)
+    })
+    
     // 추천 결과가 없거나 지역 이름이 없는 경우 에러
-    if (recommendations.length === 0) {
+    if (validRecommendations.length === 0) {
       console.error('No valid recommendations with region names found')
       return NextResponse.json(
         { error: '추천할 지역 데이터를 찾을 수 없습니다' },
@@ -378,29 +410,15 @@ export async function POST(request: NextRequest) {
       )
     }
     
-    // 최종 검증: 모든 추천에 지역 이름이 있는지 확인
-    const invalidRecs = recommendations.filter(rec => !rec.region || rec.region.trim() === '')
-    if (invalidRecs.length > 0) {
-      console.error('Found recommendations without region names:', invalidRecs)
-      // 지역 이름이 없는 추천 제거
-      const validRecs = recommendations.filter(rec => rec.region && rec.region.trim() !== '')
-      if (validRecs.length === 0) {
-        return NextResponse.json(
-          { error: '유효한 지역 추천을 생성할 수 없습니다' },
-          { status: 500 }
-        )
-      }
-      // 유효한 추천만 반환
-      return NextResponse.json({
-        recommendations: validRecs,
-        user_profile: userProfile
-      })
+    // 최종 응답 (지역 이름이 반드시 포함된 추천만 반환)
+    const finalResponse = {
+      recommendations: validRecommendations,
+      user_profile: userProfile
     }
     
-    return NextResponse.json({
-      recommendations,
-      user_profile: userProfile
-    })
+    console.log('Final response:', JSON.stringify(finalResponse, null, 2))
+    
+    return NextResponse.json(finalResponse)
   } catch (error) {
     console.error('Recommendation error:', error)
     return NextResponse.json(
