@@ -115,11 +115,11 @@ export default function QuestionPage() {
         priority: answers[4] || '',
       }
       
-      // 추천 API 호출 또는 결과 페이지로 이동
-      router.push({
-        pathname: '/result',
-        query: allData,
-      })
+      // localStorage에 임시 저장 (결과 페이지에서 사용)
+      localStorage.setItem('recommendationData', JSON.stringify(allData))
+      
+      // 결과 페이지로 이동
+      router.push('/result')
     }
   }
 
