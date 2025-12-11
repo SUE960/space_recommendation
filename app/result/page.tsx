@@ -136,11 +136,19 @@ export default function ResultPage() {
           }),
         })
 
+        const resultData = await response.json()
+        
         if (!response.ok) {
-          throw new Error('추천 요청에 실패했습니다')
+          throw new Error(resultData.error || '추천 요청에 실패했습니다')
         }
 
-        const result: RecommendationResponse = await response.json()
+        // 추천 결과가 비어있는지 확인
+        if (!resultData.recommendations || resultData.recommendations.length === 0) {
+          throw new Error('추천 결과를 찾을 수 없습니다. 다시 시도해주세요.')
+        }
+
+        const result: RecommendationResponse = resultData
+        console.log('Received recommendations:', result)
         setRecommendations(result)
         setShowResults(true)
         
@@ -194,13 +202,25 @@ export default function ResultPage() {
           <h1 className={styles.title}>오류가 발생했습니다</h1>
           <div className={styles.error}>
             <p>❌ {error}</p>
+            <p style={{ marginTop: '10px', fontSize: '14px', color: '#666' }}>
+              문제가 지속되면 질문 페이지로 돌아가 다시 시도해주세요.
+            </p>
           </div>
-          <button
-            onClick={handleGetRecommendations}
-            className={styles.button}
-          >
-            다시 시도
-          </button>
+          <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
+            <button
+              onClick={handleGetRecommendations}
+              className={styles.button}
+            >
+              다시 시도
+            </button>
+            <button
+              onClick={() => router.push('/question')}
+              className={styles.button}
+              style={{ background: '#666' }}
+            >
+              질문 다시하기
+            </button>
+          </div>
         </div>
       </div>
     )

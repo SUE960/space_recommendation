@@ -221,10 +221,14 @@ function calculateRecommendationScore(
   const weights = getPriorityWeights(request.priority || null)
   
   // 핫스팟 데이터와 구 데이터의 필드명이 다를 수 있으므로 처리
-  const specializationRatio = parseFloat(
-    data.특화비율 || data['특화비율'] || 
-    data.특화점수 || data['특화점수'] || '0'
-  )
+  let specializationRatio = parseFloat(data.특화비율 || data['특화비율'] || '0')
+  const specializationScore = parseFloat(data.특화점수 || data['특화점수'] || '0')
+  
+  // 특화점수는 0-100 범위이므로 그대로 사용 가능
+  if (specializationScore > 0 && specializationRatio === 0) {
+    specializationRatio = specializationScore
+  }
+  
   const specializationIndustry = (data.특화업종 || data['특화업종'] || '').trim()
   
   // 1. 업종 매칭 (purpose 반영)
@@ -264,7 +268,8 @@ function calculateRecommendationScore(
     diversity = calculateDiversityScore(diversityText)
   } else if (industryCount > 0) {
     // 핫스팟 데이터는 업종수로 다양성 계산
-    diversity = Math.min(industryCount / 10, 1.0) // 10개 이상이면 1.0
+    // 업종수가 많을수록 다양성 높음
+    diversity = Math.min(industryCount / 5, 1.0) // 5개 이상이면 1.0
   }
   score += diversity * weights.diversity
   
@@ -354,24 +359,30 @@ export async function POST(request: NextRequest) {
       // 지역 이름 추출 - 핫스팟명 또는 구 컬럼에서 가져오기
       let regionName = ''
       
-      if (region.핫스팟명) {
-        // 핫스팟 데이터인 경우
-        regionName = String(region.핫스팟명).trim()
-      } else if (region['핫스팟명']) {
+      // 방법 1: region 객체에서 직접 가져오기
+      if (region['핫스팟명']) {
         regionName = String(region['핫스팟명']).trim()
-      } else if (region.구) {
-        // 구 데이터인 경우
-        regionName = String(region.구).trim()
       } else if (region['구']) {
         regionName = String(region['구']).trim()
-      } else if (headers.includes('핫스팟명') && values[headers.indexOf('핫스팟명')]) {
-        // 핫스팟명 컬럼에서 직접 가져오기
-        regionName = String(values[headers.indexOf('핫스팟명')]).trim()
-      } else if (headers.includes('구') && values[headers.indexOf('구')]) {
-        // 구 컬럼에서 직접 가져오기
-        regionName = String(values[headers.indexOf('구')]).trim()
-      } else if (values[0]) {
-        // 첫 번째 값이 지역 이름일 가능성
+      }
+      
+      // 방법 2: 헤더 인덱스로 직접 가져오기
+      if (!regionName) {
+        const hotspotIndex = headers.indexOf('핫스팟명')
+        const guIndex = headers.indexOf('구')
+        
+        if (hotspotIndex >= 0 && values[hotspotIndex]) {
+          regionName = String(values[hotspotIndex]).trim()
+        } else if (guIndex >= 0 && values[guIndex]) {
+          regionName = String(values[guIndex]).trim()
+        }
+      }
+      
+      // 방법 3: 첫 번째 또는 두 번째 값 (핫스팟 데이터는 첫 번째가 순위, 두 번째가 핫스팟명)
+      if (!regionName && headers[0] === '순위' && values[1]) {
+        regionName = String(values[1]).trim()
+      } else if (!regionName && values[0] && !values[0].match(/^\d+$/)) {
+        // 첫 번째 값이 숫자가 아니면 지역 이름일 가능성
         regionName = String(values[0]).trim()
       }
       
@@ -380,15 +391,15 @@ export async function POST(request: NextRequest) {
         // region 객체에 명시적으로 저장
         region.regionName = regionName
         if (headers.includes('핫스팟명')) {
-          region.핫스팟명 = regionName
+          region['핫스팟명'] = regionName
         }
         if (headers.includes('구')) {
-          region.구 = regionName
+          region['구'] = regionName
         }
         regions.push(region)
         console.log(`✅ Added region: ${regionName}`)
       } else {
-        console.warn(`❌ Skipped line ${i}: Invalid region name. Headers: [${headers.join(', ')}], Values: [${values.join(', ')}]`)
+        console.warn(`❌ Skipped line ${i}: Invalid region name. Headers: [${headers.join(', ')}], First values: [${values.slice(0, 3).join(', ')}]`)
       }
     }
     
@@ -407,34 +418,37 @@ export async function POST(request: NextRequest) {
     const recommendations = regions
       .map(region => {
         // 지역 이름 추출 - regionName이 명시적으로 저장되어 있음
-        const regionName = region.regionName || region.구 || region['구'] || ''
+        const regionName = region.regionName || region['핫스팟명'] || region['구'] || region.구 || ''
         const finalRegionName = String(regionName).trim()
         
         // 지역 이름이 없으면 null 반환
         if (!finalRegionName || finalRegionName === '') {
-          console.error('❌ Region without name found:', JSON.stringify(region, null, 2))
+          console.error('❌ Region without name found. Available keys:', Object.keys(region))
           return null
         }
         
         console.log(`📊 Calculating score for region: ${finalRegionName}`)
         
         // 핫스팟 데이터와 구 데이터의 필드명이 다를 수 있으므로 처리
-        const specializationRatio = parseFloat(
-          region.특화비율 || region['특화비율'] || 
-          region.특화점수 || region['특화점수'] || '0'
-        )
+        let specializationRatio = parseFloat(region.특화비율 || region['특화비율'] || '0')
+        const specializationScore = parseFloat(region.특화점수 || region['특화점수'] || '0')
+        
+        // 특화점수가 있으면 사용
+        if (specializationScore > 0 && specializationRatio === 0) {
+          specializationRatio = specializationScore
+        }
         
         // 변동계수는 구 데이터에만 있으므로, 핫스팟 데이터는 상권활성도로 대체
-        const cv = parseFloat(region.변동계수 || region['변동계수'] || '20')
-        const activity = parseFloat(region.상권활성도 || region['상권활성도'] || '50')
+        const cv = parseFloat(region.변동계수 || region['변동계수'] || '0')
+        const activity = parseFloat(region.상권활성도 || region['상권활성도'] || '0')
         
         // 안정성 계산 (핫스팟 데이터는 상권활성도 기반)
         let stability = '보통'
-        if (cv > 0) {
-          // 구 데이터인 경우
+        if (cv > 0 && cv < 100) {
+          // 구 데이터인 경우 (변동계수는 보통 10-30 범위)
           stability = cv < 16 ? '매우 안정적' : cv < 18 ? '안정적' : cv < 20 ? '보통' : '불안정'
         } else if (activity > 0) {
-          // 핫스팟 데이터인 경우 (상권활성도 기반)
+          // 핫스팟 데이터인 경우 (상권활성도 기반, 0-100 범위)
           stability = activity >= 70 ? '매우 안정적' : activity >= 50 ? '안정적' : activity >= 30 ? '보통' : '불안정'
         }
         
