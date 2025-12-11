@@ -48,8 +48,9 @@ export default function ResultPage() {
       setLoading(true)
       setError(null)
 
-      // API 호출
-      const response = await fetch('http://localhost:8000/api/recommend', {
+      // API 호출 (Vercel Serverless Function 사용)
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || '/api'
+      const response = await fetch(`${apiUrl}/recommend`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

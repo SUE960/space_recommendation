@@ -50,7 +50,8 @@ export default function Home() {
     setRecommendations(null)
 
     try {
-      const response = await fetch('http://localhost:8000/api/recommend', {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || '/api'
+      const response = await fetch(`${apiUrl}/recommend`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
