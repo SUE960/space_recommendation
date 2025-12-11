@@ -100,12 +100,7 @@ export default function Home() {
           </p>
           <div className={styles.bannerButtons}>
             <button
-              onClick={() => {
-                const section = document.getElementById('recommendation-section')
-                if (section) {
-                  section.scrollIntoView({ behavior: 'smooth' })
-                }
-              }}
+              onClick={() => router.push('/question')}
               className={styles.primaryButton}
             >
               지금 시작하기 →
