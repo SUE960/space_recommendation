@@ -139,33 +139,37 @@ export default function TrendMap({ hotspots }: TrendMapProps) {
     const kakaoKey = process.env.NEXT_PUBLIC_KAKAO_MAP_KEY || 'c2e410bd46b3705d319f436284127360'
     
     const loadKakaoMap = () => {
-      // 카카오맵 SDK가 이미 로드되어 있는지 확인
-      if (window.kakao && window.kakao.maps) {
+      // 카카오맵 SDK가 이미 완전히 로드되어 있는지 확인
+      if (window.kakao && window.kakao.maps && window.kakao.maps.load) {
+        console.log('카카오맵 SDK 이미 로드됨, 초기화 시작')
         window.kakao.maps.load(() => {
           initializeMap()
         })
         return
       }
 
-      // 스크립트가 이미 있는지 확인
+      // 기존 스크립트 확인
       const existingScript = document.querySelector(`script[src*="dapi.kakao.com"]`)
       
       if (existingScript) {
+        console.log('카카오맵 스크립트 태그 발견, 로드 대기 중...')
         // 스크립트가 있으면 로드 대기
         let attempts = 0
-        const maxAttempts = 100 // 10초 (100ms * 100)
+        const maxAttempts = 150 // 15초 (100ms * 150)
         
         const checkInterval = setInterval(() => {
           attempts++
           
-          if (window.kakao && window.kakao.maps) {
+          if (window.kakao && window.kakao.maps && window.kakao.maps.load) {
+            console.log(`카카오맵 SDK 로드 완료 (${attempts}번째 시도)`)
             clearInterval(checkInterval)
             window.kakao.maps.load(() => {
               initializeMap()
             })
           } else if (attempts >= maxAttempts) {
+            console.error('카카오맵 SDK 로드 타임아웃')
             clearInterval(checkInterval)
-            // 스크립트가 있지만 로드되지 않으면 수동 로드 시도
+            // 타임아웃 후 수동 로드 시도
             loadScriptManually()
           }
         }, 100)
@@ -173,41 +177,52 @@ export default function TrendMap({ hotspots }: TrendMapProps) {
         return
       }
 
-      // 스크립트가 없으면 수동 로드
+      // 스크립트가 없으면 즉시 로드
+      console.log('카카오맵 스크립트 없음, 수동 로드 시작')
       loadScriptManually()
     }
 
     const loadScriptManually = () => {
       // 기존 스크립트 제거 (있다면)
-      const oldScript = document.querySelector(`script[src*="dapi.kakao.com"]`)
-      if (oldScript) {
-        oldScript.remove()
-      }
+      const oldScripts = document.querySelectorAll(`script[src*="dapi.kakao.com"]`)
+      oldScripts.forEach(script => script.remove())
 
       // 새 스크립트 생성 및 로드
       const script = document.createElement('script')
       script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoKey}&autoload=false`
-      script.async = true
+      script.async = false // 동기 로드로 변경하여 확실하게 로드
       script.onload = () => {
-        if (window.kakao && window.kakao.maps) {
-          window.kakao.maps.load(() => {
-            initializeMap()
-          })
-        } else {
-          setError('카카오맵 SDK를 불러올 수 없습니다.')
-          setLoading(false)
-        }
+        console.log('카카오맵 스크립트 onload 이벤트 발생')
+        // 약간의 지연 후 확인 (SDK 초기화 시간 필요)
+        setTimeout(() => {
+          if (window.kakao && window.kakao.maps && window.kakao.maps.load) {
+            console.log('카카오맵 SDK 로드 확인, 초기화 시작')
+            window.kakao.maps.load(() => {
+              initializeMap()
+            })
+          } else {
+            console.error('카카오맵 SDK 객체를 찾을 수 없음')
+            setError('카카오맵 SDK를 불러올 수 없습니다.')
+            setLoading(false)
+          }
+        }, 100)
       }
-      script.onerror = () => {
+      script.onerror = (err) => {
+        console.error('카카오맵 SDK 로드 실패:', err)
         setError('카카오맵 SDK 로드에 실패했습니다. 네트워크 연결을 확인해주세요.')
         setLoading(false)
       }
       document.head.appendChild(script)
+      console.log('카카오맵 스크립트 태그 추가됨')
     }
 
     const initializeMap = () => {
+      console.log('카카오맵 초기화 시작')
+      
       if (!mapContainer.current) {
         console.error('맵 컨테이너가 없습니다')
+        setError('맵 컨테이너를 찾을 수 없습니다.')
+        setLoading(false)
         return
       }
 
@@ -225,12 +240,14 @@ export default function TrendMap({ hotspots }: TrendMapProps) {
           level: 6,
         }
 
+        console.log('카카오맵 인스턴스 생성 중...')
         const kakaoMap = new window.kakao.maps.Map(mapContainer.current, options)
         
         if (!kakaoMap) {
           throw new Error('카카오맵 생성 실패')
         }
         
+        console.log('카카오맵 초기화 완료')
         setMap(kakaoMap)
         setLoading(false)
         setError(null)
