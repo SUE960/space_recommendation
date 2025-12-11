@@ -73,6 +73,25 @@
   transform: translateY(0);
 }
 
+.navButtonTertiary {
+  padding: 10px 20px;
+  background: transparent;
+  border: 2px solid #ff8e53;
+  color: #ff8e53;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.navButtonTertiary:hover {
+  background: #ff8e53;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 142, 83, 0.3);
+}
+
 .navButtonSecondary {
   padding: 0.625rem 1.25rem;
   background: #ffffff;
