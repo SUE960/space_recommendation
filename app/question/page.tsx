@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import styles from './page.module.css'
 
@@ -13,7 +13,7 @@ interface Question {
 const questions: Question[] = [
   {
     id: 1,
-    question: '평일 주로 언제 소비하시나요?',
+    question: '지금 몇 시인가요?',
     options: [
       '오전 (06:00-12:00)',
       '오후 (12:00-18:00)',
@@ -23,34 +23,32 @@ const questions: Question[] = [
   },
   {
     id: 2,
-    question: '주말 주로 언제 소비하시나요?',
+    question: '오늘은 주말인가요?',
     options: [
-      '오전 (06:00-12:00)',
-      '오후 (12:00-18:00)',
-      '저녁 (18:00-23:00)',
-      '심야 (23:00-06:00)',
+      '평일',
+      '주말',
     ],
   },
   {
     id: 3,
-    question: '선호하는 업종은 무엇인가요?',
+    question: '지금 가고 싶은 목적은 무엇인가요?',
     options: [
-      '한식',
-      '일식/양식',
+      '식사',
       '카페/디저트',
-      '쇼핑/백화점',
+      '쇼핑',
       '문화/여가',
+      '운동/스포츠',
       '기타',
     ],
   },
   {
     id: 4,
-    question: '주로 소비하는 금액대는?',
+    question: '예산은 어느 정도인가요?',
     options: [
-      '10만원 미만',
-      '10만원 ~ 30만원',
-      '30만원 ~ 50만원',
-      '50만원 이상',
+      '5만원 미만',
+      '5만원 ~ 10만원',
+      '10만원 ~ 20만원',
+      '20만원 이상',
     ],
   },
   {
@@ -70,6 +68,24 @@ export default function QuestionPage() {
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [answers, setAnswers] = useState<string[]>([])
   const [selectedOption, setSelectedOption] = useState<string | null>(null)
+  const [userPreferences, setUserPreferences] = useState<any>(null)
+
+  // localStorage에서 기본 세팅 불러오기
+  useEffect(() => {
+    const savedData = localStorage.getItem('userPreferences')
+    if (savedData) {
+      try {
+        const parsed = JSON.parse(savedData)
+        setUserPreferences(parsed)
+      } catch (e) {
+        console.error('Failed to load saved preferences:', e)
+      }
+    } else {
+      // 기본 세팅이 없으면 홈으로 리다이렉트
+      alert('먼저 기본 세팅을 완료해주세요!')
+      router.push('/')
+    }
+  }, [router])
 
   const progress = ((currentQuestion + 1) / questions.length) * 100
   const currentQ = questions[currentQuestion]
@@ -85,8 +101,25 @@ export default function QuestionPage() {
       setCurrentQuestion(currentQuestion + 1)
       setSelectedOption(null)
     } else {
-      // 모든 질문 완료 - 결과 페이지로 이동
-      router.push('/result')
+      // 모든 질문 완료 - 기본 세팅과 함께 추천 요청
+      const allData = {
+        // 기본 세팅 (localStorage에서 가져온 값)
+        ageGroup: userPreferences?.ageGroup || '30-39세',
+        gender: userPreferences?.gender || '남성',
+        preferredIndustry: userPreferences?.selectedIndustries?.join(', ') || '',
+        // 추가 질문 답변
+        currentTime: answers[0] || '',
+        isWeekend: answers[1] === '주말',
+        purpose: answers[2] || '',
+        budget: answers[3] || '',
+        priority: answers[4] || '',
+      }
+      
+      // 추천 API 호출 또는 결과 페이지로 이동
+      router.push({
+        pathname: '/result',
+        query: allData,
+      })
     }
   }
 
@@ -125,10 +158,18 @@ export default function QuestionPage() {
       {/* Title Section */}
       {currentQuestion === 0 && (
         <div className={styles.titleSection}>
-          <h1 className={styles.title}>기본 세팅하기</h1>
+          <h1 className={styles.title}>지금 당장 갈 곳 추천</h1>
           <p className={styles.subtitle}>
-            몇 가지 질문에 답하시면 당신에게 딱 맞는 서울 지역을 추천해드립니다
+            몇 가지 질문에 답하시면 지금 당장 가기 좋은 서울 지역을 추천해드립니다
           </p>
+          {userPreferences && (
+            <div className={styles.savedInfo}>
+              <p className={styles.savedInfoText}>
+                기본 세팅: {userPreferences.ageGroup} {userPreferences.gender}
+                {userPreferences.selectedIndustries?.length > 0 && ` · ${userPreferences.selectedIndustries.join(', ')}`}
+              </p>
+            </div>
+          )}
         </div>
       )}
 

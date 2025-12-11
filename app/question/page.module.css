@@ -47,6 +47,23 @@
   color: #666666;
   line-height: 1.6;
   font-weight: 500;
+  margin-bottom: 20px;
+}
+
+.savedInfo {
+  margin-top: 24px;
+  padding: 16px 20px;
+  background: #FFF5F0;
+  border-radius: 12px;
+  border-left: 4px solid #FF7426;
+}
+
+.savedInfoText {
+  font-size: 14px;
+  color: #666666;
+  line-height: 1.6;
+  font-weight: 500;
+  margin: 0;
 }
 
 .progressInfo {
