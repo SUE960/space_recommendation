@@ -70,6 +70,9 @@ export default function ResultPage() {
       const result: RecommendationResponse = await response.json()
       setRecommendations(result)
       setShowResults(true)
+      
+      // 결과를 localStorage에 저장
+      localStorage.setItem('recommendationResults', JSON.stringify(result))
     } catch (err) {
       setError(err instanceof Error ? err.message : '알 수 없는 오류가 발생했습니다')
     } finally {
