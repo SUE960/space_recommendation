@@ -1,6 +1,6 @@
 .container {
   min-height: 100vh;
-  background: #0a0e27;
+  background: #fafafa;
 }
 
 /* Banner Section */
@@ -29,6 +29,7 @@
   z-index: 10;
   color: white;
   padding: 40px;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
 }
 
 .bannerTag {
@@ -74,46 +75,48 @@
 
 .primaryButton {
   padding: 16px 40px;
-  background: #ffffff;
-  color: #0a0e27;
+  background: #FF7426;
+  color: #ffffff;
   border: none;
-  border-radius: 8px;
+  border-radius: 28px;
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
+  box-shadow: 0 4px 16px rgba(255, 116, 38, 0.3);
 }
 
 .primaryButton:hover {
-  opacity: 0.9;
+  background: #FF8542;
   transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 116, 38, 0.4);
 }
 
 .secondaryButton {
   padding: 16px 40px;
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
-  color: rgba(255, 255, 255, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 8px;
+  color: #FF7426;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 28px;
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .secondaryButton:hover {
-  background: rgba(255, 255, 255, 0.25);
-  border-color: rgba(255, 255, 255, 0.5);
-  color: #ffffff;
+  background: #ffffff;
+  border-color: rgba(255, 255, 255, 0.8);
+  transform: translateY(-2px);
 }
 
 /* Section Styles */
 .serviceSection {
-  max-width: 800px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 120px 20px;
-  background: #0a0e27;
+  padding: 80px 20px;
+  background: #fafafa;
 }
 
 .formTrigger {
@@ -125,37 +128,43 @@
 
 .welcomeMessage {
   text-align: center;
-  padding: 40px 20px;
+  padding: 60px 20px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
 
 .welcomeMessage h2 {
   font-size: 2rem;
-  font-weight: 600;
-  color: #ffffff;
+  font-weight: 700;
+  color: #333333;
   margin-bottom: 1rem;
   letter-spacing: -0.02em;
 }
 
 .welcomeMessage p {
   font-size: 1.125rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: #666666;
   line-height: 1.6;
 }
 
 .triggerButton {
   padding: 18px 48px;
-  background: #ffffff;
-  color: #0a0e27;
+  background: #FF7426;
+  color: #ffffff;
   border: none;
-  border-radius: 8px;
+  border-radius: 28px;
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
+  box-shadow: 0 4px 16px rgba(255, 116, 38, 0.2);
 }
 
 .triggerButton:hover {
-  opacity: 0.9;
+  background: #FF8542;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 116, 38, 0.3);
 }
 
 
@@ -163,12 +172,13 @@
   max-width: 500px;
   margin: 20px auto;
   padding: 16px 24px;
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.2);
-  border-radius: 8px;
-  color: #fca5a5;
+  background: #FFF5F5;
+  border: 1px solid #FED7D7;
+  border-radius: 12px;
+  color: #C53030;
   text-align: center;
   font-size: 14px;
+  font-weight: 500;
 }
 
 @media (max-width: 768px) {

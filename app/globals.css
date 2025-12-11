@@ -17,11 +17,25 @@ body {
     'Pretendard', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #0a0e27;
-  color: #ffffff;
+  background: #fafafa;
+  color: #333333;
 }
 
 body {
   line-height: 1.6;
+}
+
+/* 망고플레이트 스타일 색상 변수 */
+:root {
+  --primary-orange: #FF7426;
+  --secondary-coral: #FF5A5F;
+  --background-light: #fafafa;
+  --background-white: #ffffff;
+  --text-dark: #333333;
+  --text-medium: #666666;
+  --text-light: #999999;
+  --border-light: #e8e8e8;
+  --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
