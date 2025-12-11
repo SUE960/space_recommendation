@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import Script from 'next/script'
 import './globals.css'
 import { Header } from '@/components/Header'
 
@@ -13,15 +12,9 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const kakaoKey = process.env.NEXT_PUBLIC_KAKAO_MAP_KEY || 'c2e410bd46b3705d319f436284127360'
-  
   return (
     <html lang="ko">
       <body>
-        <Script
-          src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoKey}&autoload=false`}
-          strategy="lazyOnload"
-        />
         <Header />
         <div style={{ paddingTop: '80px' }}>
           {children}

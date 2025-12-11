@@ -18,57 +18,157 @@ const SEOUL_GUS = [
   '중구', '중랑구', '강서구'
 ]
 
-// 업종 매칭 점수 계산
+// 연령대별 선호 지역 매핑 (실제 데이터 기반)
+const AGE_PREFERENCE_MAP: Record<string, string[]> = {
+  '10-19': ['강남구', '홍대', '이태원', '명동', '강남역'],
+  '20-29': ['홍대', '강남구', '이태원', '명동', '신촌', '건대', '강남역', '잠실'],
+  '30-39': ['강남구', '서초구', '송파구', '잠실', '목동', '여의도'],
+  '40-49': ['서초구', '강남구', '송파구', '목동', '잠실', '종로구'],
+  '50-59': ['종로구', '서초구', '송파구', '잠실', '목동'],
+  '60+': ['종로구', '서초구', '송파구', '잠실']
+}
+
+// 업종 매칭 점수 계산 (개선된 버전)
 function calculateIndustryMatch(
   preferredIndustry: string | null,
-  regionSpecialization: string
+  regionSpecialization: string,
+  specializationRatio: number
 ): number {
-  if (!preferredIndustry) return 0.5 // 기본 점수
+  if (!preferredIndustry || !regionSpecialization) return 0.3 // 기본 점수
   
-  const industries = preferredIndustry.split(',').map(i => i.trim())
+  const industries = preferredIndustry.split(',').map(i => i.trim().toLowerCase())
   const specialization = regionSpecialization.toLowerCase()
   
+  // 정확한 매칭
   for (const industry of industries) {
-    if (specialization.includes(industry.toLowerCase())) {
-      return 0.9 // 높은 매칭
+    if (specialization.includes(industry)) {
+      // 특화 비율이 높을수록 더 높은 점수
+      return 0.5 + (specializationRatio / 100) * 0.5 // 0.5 ~ 1.0
     }
   }
   
-  return 0.3 // 낮은 매칭
+  // 부분 매칭 (업종 키워드 포함)
+  const industryKeywords: Record<string, string[]> = {
+    '화장품': ['화장품', '뷰티', '미용'],
+    '의류': ['의류', '패션', '잡화'],
+    '음식': ['한식', '중식', '일식', '양식', '기타요식', '커피'],
+    '쇼핑': ['대형마트', '편의점', '슈퍼마켓', '백화점'],
+    '문화': ['영화', '공연', '게임', '노래방', '스포츠']
+  }
+  
+  for (const [category, keywords] of Object.entries(industryKeywords)) {
+    if (industries.some(ind => keywords.some(kw => ind.includes(kw)))) {
+      if (keywords.some(kw => specialization.includes(kw))) {
+        return 0.4 + (specializationRatio / 100) * 0.3 // 0.4 ~ 0.7
+      }
+    }
+  }
+  
+  return 0.2 // 낮은 매칭
 }
 
-// 추천 점수 계산
+// 업종 다양성 점수 계산
+function calculateDiversityScore(diversityText: string): number {
+  if (!diversityText) return 0.5
+  
+  if (diversityText.includes('높음')) return 0.9
+  if (diversityText.includes('보통')) return 0.7
+  if (diversityText.includes('낮음')) return 0.4
+  
+  // 업종 수 추출
+  const match = diversityText.match(/(\d+)개/)
+  if (match) {
+    const count = parseInt(match[1])
+    return Math.min(count / 15, 1.0) // 15개 이상이면 1.0
+  }
+  
+  return 0.5
+}
+
+// 안정성 점수 계산
+function calculateStabilityScore(cv: number): number {
+  if (cv < 16) return 1.0 // 매우 안정적
+  if (cv < 18) return 0.9 // 안정적
+  if (cv < 20) return 0.7 // 보통
+  if (cv < 22) return 0.5 // 불안정
+  return 0.3 // 매우 불안정
+}
+
+// 연령대별 지역 선호도 점수
+function calculateAgePreferenceScore(
+  ageGroup: string,
+  regionName: string
+): number {
+  const preferredRegions = AGE_PREFERENCE_MAP[ageGroup] || []
+  
+  // 정확한 매칭
+  if (preferredRegions.includes(regionName)) {
+    const index = preferredRegions.indexOf(regionName)
+    return 1.0 - (index * 0.1) // 1위: 1.0, 2위: 0.9, ...
+  }
+  
+  // 부분 매칭 (구 이름 포함)
+  for (const pref of preferredRegions) {
+    if (regionName.includes(pref) || pref.includes(regionName)) {
+      return 0.7
+    }
+  }
+  
+  return 0.5 // 기본 점수
+}
+
+// 추천 점수 계산 (실제 데이터 기반)
 function calculateRecommendationScore(
   region: string,
   data: any,
   request: RecommendationRequest
 ): number {
-  let score = 30 // 기본 점수 (30점부터 시작)
+  let score = 0 // 0부터 시작하여 가중치 합산
   
-  // 업종 매칭 (40%)
+  // 1. 업종 매칭 (35%)
+  const specializationRatio = parseFloat(data.특화비율 || '0')
   const industryMatch = calculateIndustryMatch(
     request.preferred_industry,
-    data.특화업종 || ''
+    data.특화업종 || '',
+    specializationRatio
   )
-  score += industryMatch * 40
+  score += industryMatch * 35
   
-  // 특화 비율 (20%)
-  const specializationRatio = parseFloat(data.특화비율 || '0') / 100
-  score += specializationRatio * 20
+  // 2. 연령대별 선호도 (25%)
+  const agePreference = calculateAgePreferenceScore(
+    request.age_group,
+    region
+  )
+  score += agePreference * 25
   
-  // 안정성 (10%)
+  // 3. 안정성 (20%)
   const cv = parseFloat(data.변동계수 || '20')
-  const stability = cv < 18 ? 0.9 : cv < 20 ? 0.7 : 0.5
-  score += stability * 10
+  const stability = calculateStabilityScore(cv)
+  score += stability * 20
   
-  // 주말 보너스 (최대 5점)
+  // 4. 업종 다양성 (15%)
+  const diversity = calculateDiversityScore(data.업종다양성 || '')
+  score += diversity * 15
+  
+  // 5. 특화 비율 보너스 (5%)
+  const specializationBonus = Math.min(specializationRatio / 100, 1.0) * 5
+  score += specializationBonus
+  
+  // 6. 시간대/주말 보너스
   if (request.is_weekend) {
-    score += 5
+    // 주말에는 다양성이 높은 지역에 보너스
+    if (diversity > 0.7) {
+      score += 3
+    }
+  } else {
+    // 평일에는 안정적인 지역에 보너스
+    if (stability > 0.8) {
+      score += 3
+    }
   }
   
-  // 점수 차별화를 위한 랜덤 요소 제거하고, 실제 데이터 기반으로만 계산
-  // 최대 100점이지만, 실제로는 30-100 사이의 점수가 나오도록 조정
-  return Math.min(Math.max(score, 30), 100) // 30-100 점수 범위
+  // 점수 정규화 (0-100)
+  return Math.min(Math.max(score, 20), 100) // 최소 20점, 최대 100점
 }
 
 export async function POST(request: NextRequest) {
@@ -146,24 +246,55 @@ export async function POST(request: NextRequest) {
 function generateReason(region: any, request: RecommendationRequest, score: number): string {
   const reasons: string[] = []
   
+  // 업종 매칭
   if (region.특화업종 && request.preferred_industry) {
     const industries = request.preferred_industry.split(',').map(i => i.trim())
-    if (industries.some(ind => region.특화업종.includes(ind))) {
-      reasons.push(`${region.특화업종} 특화 지역`)
+    const specializationRatio = parseFloat(region.특화비율 || '0')
+    
+    if (industries.some(ind => region.특화업종.toLowerCase().includes(ind.toLowerCase()))) {
+      if (specializationRatio > 50) {
+        reasons.push(`${region.특화업종} 강력 특화 지역 (${specializationRatio}%)`)
+      } else {
+        reasons.push(`${region.특화업종} 특화 지역`)
+      }
     }
   }
   
+  // 연령대 적합도
+  const agePrefRegions = AGE_PREFERENCE_MAP[request.age_group] || []
+  if (agePrefRegions.some(pref => region.구.includes(pref) || pref.includes(region.구))) {
+    reasons.push(`${request.age_group} 연령대 선호 지역`)
+  }
+  
+  // 안정성
   const cv = parseFloat(region.변동계수 || '20')
-  if (cv < 18) {
+  if (cv < 16) {
+    reasons.push('매우 안정적인 소비 패턴')
+  } else if (cv < 18) {
     reasons.push('안정적인 소비 패턴')
   }
   
+  // 다양성
+  const diversity = region.업종다양성 || ''
+  if (diversity.includes('높음') || diversity.includes('15개')) {
+    reasons.push('다양한 업종 선택 가능')
+  }
+  
+  // 시간대 적합도
   if (request.is_weekend) {
-    reasons.push('주말 방문에 적합')
+    if (diversity.includes('높음')) {
+      reasons.push('주말 다양한 활동에 적합')
+    } else {
+      reasons.push('주말 방문에 적합')
+    }
+  } else {
+    if (cv < 18) {
+      reasons.push('평일 안정적인 소비 환경')
+    }
   }
   
   if (reasons.length === 0) {
-    reasons.push('다양한 업종과 안정적인 지역')
+    reasons.push('균형잡힌 상권과 안정적인 지역')
   }
   
   return reasons.join(', ')
