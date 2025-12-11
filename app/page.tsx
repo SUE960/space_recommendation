@@ -96,9 +96,7 @@ export default function Home() {
             <span className={styles.bannerTitleHighlight}>당신의 지역을 찾아드립니다</span>
           </h1>
           <p className={styles.bannerDescription}>
-            서울시민 카드 소비 데이터 분석. 유사한 소비 패턴을 가진 그룹을 찾고,
-            <br />
-            맞춤형 장소와 업종을 추천합니다.
+            실제 데이터 기반 맞춤형 장소와 업종을 추천합니다.
           </p>
           <div className={styles.bannerButtons}>
             <button
