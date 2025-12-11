@@ -93,7 +93,7 @@ export default function Home() {
         <div className={styles.bannerContent}>
           <span className={styles.bannerTag}>AI 기반 소비 패턴 분석</span>
           <h1 className={styles.bannerTitle}>
-            <span className={styles.bannerTitleHighlight}>당신의 지역을 찾아드립니다</span>
+            <span className={styles.bannerTitleHighlight}>당신의 지역을<br />찾아드립니다</span>
           </h1>
           <p className={styles.bannerDescription}>
             실제 데이터 기반 맞춤형 장소와 업종을 추천합니다.
