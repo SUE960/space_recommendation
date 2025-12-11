@@ -70,12 +70,14 @@ export function RecommendationResults({ recommendations }: RecommendationResults
         <h3 className={styles.recommendationsTitle}>추천 지역 Top 3</h3>
         <div className={styles.recommendationsList}>
           {topRecs.map((rec, index) => (
-            <div key={rec.region} className={styles.recommendationCard}>
+            <div key={rec.region || index} className={styles.recommendationCard}>
               <div className={styles.rankBadge}>
                 {index + 1}
               </div>
               <div className={styles.cardContent}>
-                <h4 className={styles.regionName}>{rec.region}</h4>
+                <div className={styles.regionHeader}>
+                  <h4 className={styles.regionName}>{rec.region || '지역 정보 없음'}</h4>
+                </div>
                 <div className={styles.scoreBar}>
                   <div className={styles.scoreLabel}>추천 점수</div>
                   <div className={styles.scoreValue}>{rec.score.toFixed(2)}</div>

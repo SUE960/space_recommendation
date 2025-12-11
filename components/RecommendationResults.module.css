@@ -103,11 +103,19 @@
   gap: 16px;
 }
 
+.regionHeader {
+  margin-bottom: 8px;
+}
+
 .regionName {
-  font-size: 24px;
-  font-weight: 700;
-  color: #333333;
+  font-size: 28px;
+  font-weight: 800;
+  color: #1a1a1a;
   margin: 0;
+  padding: 0;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+  display: block;
 }
 
 .scoreBar {
