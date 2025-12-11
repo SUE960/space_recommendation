@@ -1,16 +1,6 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/next"
-    }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  },
-  "regions": ["icn1"],
-  "framework": "nextjs"
+  "framework": "nextjs",
+  "regions": ["icn1"]
 }
 
 
