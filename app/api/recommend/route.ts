@@ -271,24 +271,57 @@ export async function POST(request: NextRequest) {
     }
     const csvContent = fs.readFileSync(csvPath, 'utf-8')
     const lines = csvContent.split('\n').filter(line => line.trim())
-    const headers = lines[0].split(',')
+    const headers = lines[0].split(',').map(h => h.trim())
     
-    // CSV 파싱
+    // CSV 파싱 (더 정교한 파싱)
     const regions: any[] = []
     for (let i = 1; i < lines.length; i++) {
-      const values = lines[i].split(',')
+      const line = lines[i].trim()
+      if (!line) continue
+      
+      // 쉼표로 split하되, 따옴표 안의 쉼표는 무시
+      const values: string[] = []
+      let current = ''
+      let inQuotes = false
+      
+      for (let j = 0; j < line.length; j++) {
+        const char = line[j]
+        if (char === '"') {
+          inQuotes = !inQuotes
+        } else if (char === ',' && !inQuotes) {
+          values.push(current.trim())
+          current = ''
+        } else {
+          current += char
+        }
+      }
+      values.push(current.trim()) // 마지막 값
+      
       const region: any = {}
       headers.forEach((header, index) => {
-        region[header] = values[index] || ''
+        const value = values[index] || ''
+        // 따옴표 제거
+        region[header] = value.replace(/^"|"$/g, '').trim()
       })
-      regions.push(region)
+      
+      // 지역 이름이 있는 경우만 추가
+      const regionName = region.구 || region['구']
+      if (regionName && regionName !== '') {
+        regions.push(region)
+      }
     }
     
     // 각 지역에 대해 추천 점수 계산
     const recommendations = regions
       .map(region => {
-        // 지역 이름 추출 (여러 가능한 컬럼명 시도)
-        const regionName = region.구 || region['구'] || region.region || region.Region || '알 수 없는 지역'
+        // 지역 이름 추출 (반드시 '구' 컬럼에서 가져옴)
+        const regionName = (region.구 || region['구'] || '').trim()
+        
+        // 지역 이름이 없으면 스킵
+        if (!regionName || regionName === '') {
+          return null
+        }
+        
         const score = calculateRecommendationScore(regionName, region, body)
         const specializationRatio = parseFloat(region.특화비율 || region['특화비율'] || '0')
         const cv = parseFloat(region.변동계수 || region['변동계수'] || '20')
@@ -296,16 +329,25 @@ export async function POST(request: NextRequest) {
         return {
           region: regionName,
           score: Math.round(score * 10) / 10,
-          specialization: region.특화업종 || region['특화업종'] || null,
+          specialization: (region.특화업종 || region['특화업종'] || '').trim() || null,
           specialization_ratio: specializationRatio || null,
-          stability: cv < 18 ? '매우 안정적' : cv < 20 ? '안정적' : '보통',
+          stability: cv < 16 ? '매우 안정적' : cv < 18 ? '안정적' : cv < 20 ? '보통' : '불안정',
           growth_rate: null,
           reason: generateReason(region, body, score)
         }
       })
-      .filter(rec => rec.region && rec.region !== '알 수 없는 지역') // 유효한 지역만 필터링
+      .filter((rec): rec is NonNullable<typeof rec> => rec !== null && rec.region !== '') // null과 빈 지역명 제거
       .sort((a, b) => b.score - a.score)
       .slice(0, 3) // 상위 3개
+    
+    // 추천 결과가 없으면 에러
+    if (recommendations.length === 0) {
+      console.error('No valid regions found in CSV data')
+      return NextResponse.json(
+        { error: '추천할 지역 데이터를 찾을 수 없습니다' },
+        { status: 500 }
+      )
+    }
     
     // 사용자 프로필 구성
     const userProfile = {

@@ -76,7 +76,7 @@ export function RecommendationResults({ recommendations }: RecommendationResults
               </div>
               <div className={styles.cardContent}>
                 <div className={styles.regionHeader}>
-                  <h4 className={styles.regionName}>{rec.region || '지역 정보 없음'}</h4>
+                  <h4 className={styles.regionName}>{rec.region}</h4>
                 </div>
                 <div className={styles.scoreBar}>
                   <div className={styles.scoreLabel}>추천 점수</div>
