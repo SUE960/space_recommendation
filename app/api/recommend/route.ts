@@ -450,7 +450,8 @@ export async function POST(request: NextRequest) {
       .filter((rec): rec is NonNullable<typeof rec> => {
         // 지역 이름이 있는 추천만 통과
         if (!rec) return false
-        if (!rec.region || typeof rec.region !== 'string') return false
+        if (!rec.region) return false
+        if (typeof rec.region !== 'string') return false
         return rec.region.trim() !== ''
       })
       .sort((a, b) => b.score - a.score)
@@ -480,8 +481,10 @@ export async function POST(request: NextRequest) {
     const validRecommendations = recommendations
       .filter((rec): rec is NonNullable<typeof rec> => {
         if (!rec) return false
-        if (!rec.region || rec.region.trim() === '') {
-          console.error('Found recommendation without region name:', rec)
+        if (!rec.region) return false
+        if (typeof rec.region !== 'string') return false
+        if (rec.region.trim() === '') {
+          console.error('Found recommendation with empty region name:', rec)
           return false
         }
         return true
@@ -522,7 +525,9 @@ export async function POST(request: NextRequest) {
       const allValid = recommendations
         .filter((rec): rec is NonNullable<typeof rec> => {
           if (!rec) return false
-          if (!rec.region || rec.region.trim() === '') {
+          if (!rec.region) return false
+          if (typeof rec.region !== 'string') return false
+          if (rec.region.trim() === '') {
             console.warn(`Skipping rec without region:`, rec)
             return false
           }
