@@ -12,7 +12,7 @@ export function Header() {
       <div className={styles.container}>
         <div className={styles.logo} onClick={() => router.push('/')}>
           <Image
-            src="/logo_f.png"
+            src="/logo_f.png?v=2"
             alt="플레이스메이트 - 맞춤 지역 추천 서비스"
             width={300}
             height={60}

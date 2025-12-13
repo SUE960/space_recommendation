@@ -34,7 +34,8 @@
 
 .logoImage {
   width: auto;
-  height: 50px;
+  height: 60px;
+  max-width: 300px;
   object-fit: contain;
   transition: transform 0.2s ease, opacity 0.2s ease;
 }
