@@ -325,8 +325,13 @@ export async function POST(request: NextRequest) {
     console.log('Total lines:', lines.length)
     console.log('Using data file:', csvPath)
     
-    // CSV 파싱 (더 정교한 파싱)
+    // CSV 파싱 (간단하고 확실한 방법)
     const regions: any[] = []
+    const hotspotNameIndex = headers.indexOf('핫스팟명')
+    const guIndex = headers.indexOf('구')
+    
+    console.log(`핫스팟명 인덱스: ${hotspotNameIndex}, 구 인덱스: ${guIndex}`)
+    
     for (let i = 1; i < lines.length; i++) {
       const line = lines[i].trim()
       if (!line) continue
@@ -349,6 +354,7 @@ export async function POST(request: NextRequest) {
       }
       values.push(current.trim()) // 마지막 값
       
+      // region 객체 생성
       const region: any = {}
       headers.forEach((header, index) => {
         const value = values[index] || ''
@@ -356,40 +362,24 @@ export async function POST(request: NextRequest) {
         region[header] = value.replace(/^"|"$/g, '').trim()
       })
       
-      // 지역 이름 추출 - 핫스팟명 또는 구 컬럼에서 직접 가져오기
+      // 지역 이름 추출 - 핫스팟명 우선, 없으면 구
       let regionName = ''
       
-      // 방법 1: 헤더에서 '핫스팟명' 또는 '구' 컬럼 인덱스 찾기
-      const hotspotIndex = headers.indexOf('핫스팟명')
-      const guIndex = headers.indexOf('구')
-      
-      if (hotspotIndex >= 0 && hotspotIndex < values.length && values[hotspotIndex]) {
-        regionName = String(values[hotspotIndex]).trim()
-        console.log(`Found 핫스팟명 at index ${hotspotIndex}: "${regionName}"`)
-      } else if (guIndex >= 0 && guIndex < values.length && values[guIndex]) {
-        regionName = String(values[guIndex]).trim()
-        console.log(`Found 구 at index ${guIndex}: "${regionName}"`)
+      if (hotspotNameIndex >= 0 && hotspotNameIndex < values.length) {
+        regionName = String(values[hotspotNameIndex] || '').trim()
       }
       
-      // 방법 2: 첫 번째 컬럼이 '순위'면 두 번째가 지역명 (핫스팟 데이터)
-      if (!regionName && headers[0] === '순위' && values.length > 1 && values[1]) {
-        regionName = String(values[1]).trim()
-        console.log(`Found region from values[1]: "${regionName}"`)
-      }
-      // 방법 3: 첫 번째 값이 숫자가 아니면 지역명 (구 데이터)
-      else if (!regionName && values[0] && !values[0].match(/^\d+$/)) {
-        regionName = String(values[0]).trim()
-        console.log(`Found region from values[0]: "${regionName}"`)
+      if (!regionName && guIndex >= 0 && guIndex < values.length) {
+        regionName = String(values[guIndex] || '').trim()
       }
       
-      // 지역 이름이 유효한 경우만 추가 (홍대 관광특구, 강남역, 강남구 등)
+      // 지역 이름이 유효한 경우만 추가
       if (regionName && regionName !== '' && regionName.length >= 2) {
-        // region 객체에 명시적으로 저장
         region.regionName = regionName
         regions.push(region)
-        console.log(`✅ Added region: ${regionName} (line ${i}, total: ${regions.length})`)
-      } else {
-        console.warn(`❌ Skipped line ${i}: No region name found. Headers: [${headers.join(', ')}], Values: [${values.slice(0, 3).join(', ')}]`)
+        if (i <= 5) { // 처음 5개만 로그
+          console.log(`✅ Added region: ${regionName} (line ${i})`)
+        }
       }
     }
     
@@ -417,13 +407,11 @@ export async function POST(request: NextRequest) {
           return null
         }
         
-        console.log(`📊 Calculating score for region: ${finalRegionName}`)
-        
         // 핫스팟 데이터와 구 데이터의 필드명이 다를 수 있으므로 처리
         let specializationRatio = parseFloat(region.특화비율 || region['특화비율'] || '0')
         const specializationScore = parseFloat(region.특화점수 || region['특화점수'] || '0')
         
-        // 특화점수가 있으면 사용
+        // 특화점수가 있으면 사용 (핫스팟 데이터는 특화점수 사용)
         if (specializationScore > 0 && specializationRatio === 0) {
           specializationRatio = specializationScore
         }
@@ -443,6 +431,8 @@ export async function POST(request: NextRequest) {
         }
         
         const score = calculateRecommendationScore(finalRegionName, region, body)
+        
+        console.log(`📊 ${finalRegionName}: score=${score.toFixed(2)}, activity=${activity}, specialization=${specializationRatio.toFixed(1)}`)
         
         const recommendation = {
           region: finalRegionName, // 반드시 지역 이름 포함 (홍대 관광특구, 강남역, 강남구 등)
@@ -560,9 +550,10 @@ function generateReason(region: any, request: RecommendationRequest, score: numb
     }
   }
   
-  // 연령대 적합도
+  // 연령대 적합도 (핫스팟명 또는 구 컬럼 사용)
   const agePrefRegions = AGE_PREFERENCE_MAP[request.age_group] || []
-  if (agePrefRegions.some(pref => region.구.includes(pref) || pref.includes(region.구))) {
+  const regionName = region.regionName || region.핫스팟명 || region.구 || ''
+  if (regionName && agePrefRegions.some(pref => regionName.includes(pref) || pref.includes(regionName))) {
     reasons.push(`${request.age_group} 연령대 선호 지역`)
   }
   
