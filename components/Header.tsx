@@ -14,10 +14,11 @@ export function Header() {
           <Image
             src="/logo_f.png"
             alt="플레이스메이트 - 맞춤 지역 추천 서비스"
-            width={200}
-            height={50}
+            width={300}
+            height={60}
             className={styles.logoImage}
             priority
+            unoptimized
           />
         </div>
 
