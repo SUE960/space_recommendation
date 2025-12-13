@@ -95,16 +95,25 @@ export default function ResultPage() {
         return
       }
 
-      // 이미 결과가 있으면 바로 표시
+      // 이미 결과가 있으면 바로 표시 (하지만 새로고침해서 최신 데이터 가져오기)
       const savedResults = localStorage.getItem('recommendationResults')
       if (savedResults) {
         try {
           const parsed = JSON.parse(savedResults)
-          setRecommendations(parsed)
-          setShowResults(true)
-          return
+          console.log('Loading saved results:', {
+            count: parsed.recommendations?.length,
+            regions: parsed.recommendations?.map((r: any) => r.region)
+          })
+          // 저장된 결과가 유효한지 확인
+          if (parsed.recommendations && parsed.recommendations.length > 0) {
+            setRecommendations(parsed)
+            setShowResults(true)
+            // 저장된 결과를 사용하되, 백그라운드에서 새로고침
+            // return // 일단 새로고침하도록 주석 처리
+          }
         } catch (e) {
           console.error('Failed to load saved results:', e)
+          localStorage.removeItem('recommendationResults')
         }
       }
 
@@ -138,17 +147,27 @@ export default function ResultPage() {
 
         const resultData = await response.json()
         
+        console.log('API Response status:', response.status)
+        console.log('API Response data:', resultData)
+        
         if (!response.ok) {
+          console.error('API Error:', resultData)
           throw new Error(resultData.error || '추천 요청에 실패했습니다')
         }
 
         // 추천 결과가 비어있는지 확인
         if (!resultData.recommendations || resultData.recommendations.length === 0) {
+          console.error('Empty recommendations:', resultData)
           throw new Error('추천 결과를 찾을 수 없습니다. 다시 시도해주세요.')
         }
 
         const result: RecommendationResponse = resultData
-        console.log('Received recommendations:', result)
+        console.log('✅ Received recommendations:', {
+          count: result.recommendations.length,
+          regions: result.recommendations.map(r => r.region),
+          fullData: result
+        })
+        
         setRecommendations(result)
         setShowResults(true)
         

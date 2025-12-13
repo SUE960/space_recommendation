@@ -35,11 +35,17 @@ export function RecommendationResults({ recommendations }: RecommendationResults
   console.log('RecommendationResults received:', { 
     recsCount: recs?.length, 
     recs: recs,
-    firstRec: recs?.[0] 
+    firstRec: recs?.[0],
+    allRegions: recs?.map(r => r.region)
   })
   
   // TOP 3로 제한
-  const topRecs = (recs || []).slice(0, 3)
+  const topRecs = (recs || []).filter(rec => rec && rec.region && rec.region.trim() !== '').slice(0, 3)
+  
+  console.log('Top recs after filtering:', {
+    count: topRecs.length,
+    regions: topRecs.map(r => r.region)
+  })
   
   // 추천 결과가 없으면 에러 메시지 표시 (구글 애드센스 정책: 빈 페이지에 광고 금지)
   if (!topRecs || topRecs.length === 0) {

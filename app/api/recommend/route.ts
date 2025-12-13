@@ -447,6 +447,14 @@ export async function POST(request: NextRequest) {
       .sort((a, b) => b.score - a.score)
       .slice(0, 10) // 상위 10개로 먼저 확보
     
+    console.log(`Total recommendations after scoring: ${recommendations.length}`)
+    if (recommendations.length > 0) {
+      console.log('Top 5 recommendations:')
+      recommendations.slice(0, 5).forEach((rec, idx) => {
+        console.log(`  ${idx + 1}. ${rec.region} (score: ${rec.score})`)
+      })
+    }
+    
     // 사용자 프로필 구성 (먼저 선언)
     const userProfile = {
       age_group: body.age_group,
