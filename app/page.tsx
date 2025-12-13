@@ -90,7 +90,6 @@ export default function Home() {
           style={{ objectFit: 'cover' }}
         />
         <div className={styles.bannerContent}>
-          <span className={styles.bannerTag}>AI 기반 소비 패턴 분석</span>
           <h1 className={styles.bannerTitle}>
             <span className={styles.bannerTitleHighlight}>당신의 지역을<br />찾아드립니다</span>
           </h1>
