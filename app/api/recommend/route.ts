@@ -505,13 +505,32 @@ export async function POST(request: NextRequest) {
       )
     }
     
+    // 최소 3개 보장 (부족하면 점수 순으로 추가)
+    let finalRecommendations = validRecommendations
+    if (finalRecommendations.length < 3 && regions.length > 0) {
+      console.warn(`⚠️ Only ${finalRecommendations.length} recommendations, adding more...`)
+      // 이미 계산된 recommendations에서 추가로 가져오기
+      const allValid = recommendations
+        .filter((rec): rec is NonNullable<typeof rec> => {
+          return rec !== null && rec.region && rec.region.trim() !== ''
+        })
+        .sort((a, b) => b.score - a.score)
+      
+      finalRecommendations = allValid.slice(0, Math.max(3, allValid.length))
+      console.log(`✅ Extended to ${finalRecommendations.length} recommendations`)
+    }
+    
     // 최종 응답 (지역 이름이 반드시 포함된 추천만 반환)
     const finalResponse = {
-      recommendations: validRecommendations,
+      recommendations: finalRecommendations.slice(0, 10), // 최대 10개 반환
       user_profile: userProfile
     }
     
-    console.log('Final response:', JSON.stringify(finalResponse, null, 2))
+    console.log('Final response:', {
+      count: finalResponse.recommendations.length,
+      regions: finalResponse.recommendations.map(r => r.region),
+      scores: finalResponse.recommendations.map(r => r.score)
+    })
     
     return NextResponse.json(finalResponse)
   } catch (error) {
