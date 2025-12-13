@@ -215,7 +215,7 @@ function calculateRecommendationScore(
   data: any,
   request: RecommendationRequest
 ): number {
-  let score = 0 // 0부터 시작하여 가중치 합산
+  let baseScore = 30 // 기본 점수 30점부터 시작 (모든 지역은 최소 30점)
   
   // 우선순위에 따른 가중치 조정
   const weights = getPriorityWeights(request.priority || null)
@@ -231,23 +231,23 @@ function calculateRecommendationScore(
   
   const specializationIndustry = (data.특화업종 || data['특화업종'] || '').trim()
   
-  // 1. 업종 매칭 (purpose 반영)
+  // 1. 업종 매칭 (purpose 반영) - 최대 30점
   const industryMatch = calculateIndustryMatch(
     request.preferred_industry,
     specializationIndustry,
     specializationRatio,
     request.purpose || null
   )
-  score += industryMatch * weights.industry
+  baseScore += industryMatch * (weights.industry / 100) * 30
   
-  // 2. 연령대별 선호도
+  // 2. 연령대별 선호도 - 최대 25점
   const agePreference = calculateAgePreferenceScore(
     request.age_group,
     region
   )
-  score += agePreference * weights.age
+  baseScore += agePreference * (weights.age / 100) * 25
   
-  // 3. 안정성 (핫스팟 데이터는 상권활성도 기반)
+  // 3. 안정성 (핫스팟 데이터는 상권활성도 기반) - 최대 20점
   const cv = parseFloat(data.변동계수 || data['변동계수'] || '0')
   const activity = parseFloat(data.상권활성도 || data['상권활성도'] || '0')
   let stability = 0.5
@@ -258,9 +258,9 @@ function calculateRecommendationScore(
     // 핫스팟 데이터인 경우 (상권활성도 기반)
     stability = activity >= 70 ? 0.9 : activity >= 50 ? 0.7 : activity >= 30 ? 0.5 : 0.3
   }
-  score += stability * weights.stability
+  baseScore += stability * (weights.stability / 100) * 20
   
-  // 4. 업종 다양성
+  // 4. 업종 다양성 - 최대 15점
   const diversityText = data.업종다양성 || data['업종다양성'] || ''
   const industryCount = parseFloat(data.업종수 || data['업종수'] || '0')
   let diversity = 0.5
@@ -268,34 +268,31 @@ function calculateRecommendationScore(
     diversity = calculateDiversityScore(diversityText)
   } else if (industryCount > 0) {
     // 핫스팟 데이터는 업종수로 다양성 계산
-    // 업종수가 많을수록 다양성 높음
     diversity = Math.min(industryCount / 5, 1.0) // 5개 이상이면 1.0
   }
-  score += diversity * weights.diversity
+  baseScore += diversity * (weights.diversity / 100) * 15
   
-  // 5. 특화 비율 보너스
-  const specializationBonus = Math.min(specializationRatio / 100, 1.0) * 5
-  score += specializationBonus
+  // 5. 특화 비율 보너스 - 최대 10점
+  const specializationBonus = Math.min(specializationRatio / 100, 1.0) * 10
+  baseScore += specializationBonus
   
-  // 6. 예산 점수 적용
+  // 6. 예산 점수 적용 (배수)
   const budgetMultiplier = calculateBudgetScore(request.budget || null, region)
-  score *= budgetMultiplier
+  baseScore *= budgetMultiplier
   
-  // 7. 시간대/주말 보너스
+  // 7. 시간대/주말 보너스 - 최대 5점
   if (request.is_weekend) {
-    // 주말에는 다양성이 높은 지역에 보너스
     if (diversity > 0.7) {
-      score += 3
+      baseScore += 5
     }
   } else {
-    // 평일에는 안정적인 지역에 보너스
     if (stability > 0.8) {
-      score += 3
+      baseScore += 5
     }
   }
   
-  // 점수 정규화 (0-100)
-  return Math.min(Math.max(score, 20), 100) // 최소 20점, 최대 100점
+  // 점수 정규화 (30-100 범위로 보장)
+  return Math.min(Math.max(baseScore, 30), 100)
 }
 
 export async function POST(request: NextRequest) {
