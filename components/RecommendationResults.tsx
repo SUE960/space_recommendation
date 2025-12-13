@@ -41,7 +41,7 @@ export function RecommendationResults({ recommendations }: RecommendationResults
   // TOP 3로 제한
   const topRecs = (recs || []).slice(0, 3)
   
-  // 추천 결과가 없으면 메시지 표시
+  // 추천 결과가 없으면 에러 메시지 표시 (구글 애드센스 정책: 빈 페이지에 광고 금지)
   if (!topRecs || topRecs.length === 0) {
     return (
       <div className={styles.results}>
@@ -76,8 +76,34 @@ export function RecommendationResults({ recommendations }: RecommendationResults
         </div>
         <div className={styles.recommendationsSection}>
           <h3 className={styles.recommendationsTitle}>추천 지역 Top 3</h3>
-          <div style={{ textAlign: 'center', padding: '40px', color: '#999' }}>
-            <p>추천 결과를 불러오는 중입니다...</p>
+          <div style={{ 
+            textAlign: 'center', 
+            padding: '60px 40px', 
+            background: '#fff',
+            borderRadius: '16px',
+            border: '2px solid #f0f0f0'
+          }}>
+            <p style={{ fontSize: '18px', color: '#333', marginBottom: '10px', fontWeight: '600' }}>
+              추천 결과를 불러올 수 없습니다
+            </p>
+            <p style={{ fontSize: '14px', color: '#666', marginBottom: '20px' }}>
+              데이터를 다시 불러오는 중입니다. 잠시만 기다려주세요.
+            </p>
+            <button 
+              onClick={() => window.location.reload()} 
+              style={{
+                padding: '12px 24px',
+                background: '#FF7426',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '8px',
+                fontSize: '16px',
+                fontWeight: '600',
+                cursor: 'pointer'
+              }}
+            >
+              새로고침
+            </button>
           </div>
         </div>
       </div>
