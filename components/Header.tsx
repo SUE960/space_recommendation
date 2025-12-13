@@ -12,7 +12,7 @@ export function Header() {
       <div className={styles.container}>
         <div className={styles.logo} onClick={() => router.push('/')}>
           <Image
-            src="/logo-full.jpeg"
+            src="/logo_f.jpeg"
             alt="서울 추천 서비스"
             width={200}
             height={50}
