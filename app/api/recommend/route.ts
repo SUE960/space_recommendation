@@ -374,17 +374,24 @@ export async function POST(request: NextRequest) {
       if (regionName && regionName !== '' && regionName.length >= 2) {
         region.regionName = regionName
         regions.push(region)
-        if (i <= 5) { // 처음 5개만 로그
-          console.log(`✅ Added region: ${regionName} (line ${i})`)
+        if (i <= 3) { // 처음 3개만 로그
+          console.log(`✅ Added region ${i}: "${regionName}" (index: ${hotspotNameIndex})`)
         }
+      } else if (i <= 3) {
+        console.warn(`❌ Line ${i}: No region name. hotspotIndex=${hotspotNameIndex}, values[${hotspotNameIndex}]=${values[hotspotNameIndex]}`)
       }
     }
     
-    console.log(`Total valid regions: ${regions.length}`)
+    console.log(`✅ Total valid regions parsed: ${regions.length}`)
+    if (regions.length > 0) {
+      console.log(`Sample regions: ${regions.slice(0, 3).map(r => r.regionName).join(', ')}`)
+    }
     
     // 지역 이름이 있는 데이터만 추천 후보로 사용
     if (regions.length === 0) {
-      console.error('No regions with valid names found in CSV')
+      console.error('❌ No regions with valid names found in CSV')
+      console.error('Headers:', headers)
+      console.error('First line values:', lines[1] ? lines[1].split(',').slice(0, 5) : 'none')
       return NextResponse.json(
         { error: '유효한 지역 데이터를 찾을 수 없습니다' },
         { status: 500 }
@@ -507,17 +514,39 @@ export async function POST(request: NextRequest) {
     
     // 최소 3개 보장 (부족하면 점수 순으로 추가)
     let finalRecommendations = validRecommendations
-    if (finalRecommendations.length < 3 && regions.length > 0) {
-      console.warn(`⚠️ Only ${finalRecommendations.length} recommendations, adding more...`)
-      // 이미 계산된 recommendations에서 추가로 가져오기
+    if (finalRecommendations.length < 3) {
+      console.warn(`⚠️ Only ${finalRecommendations.length} valid recommendations, checking all...`)
+      // 모든 recommendations를 다시 확인
       const allValid = recommendations
         .filter((rec): rec is NonNullable<typeof rec> => {
-          return rec !== null && rec.region && rec.region.trim() !== ''
+          if (!rec) return false
+          if (!rec.region || rec.region.trim() === '') {
+            console.warn(`Skipping rec without region:`, rec)
+            return false
+          }
+          return true
         })
         .sort((a, b) => b.score - a.score)
       
-      finalRecommendations = allValid.slice(0, Math.max(3, allValid.length))
-      console.log(`✅ Extended to ${finalRecommendations.length} recommendations`)
+      if (allValid.length > 0) {
+        finalRecommendations = allValid.slice(0, Math.max(3, Math.min(10, allValid.length)))
+        console.log(`✅ Extended to ${finalRecommendations.length} recommendations`)
+      } else {
+        console.error('❌ No valid recommendations found even after re-filtering!')
+        // 최후의 수단: 첫 3개 지역을 강제로 반환
+        if (regions.length >= 3) {
+          console.warn('⚠️ Using fallback: returning first 3 regions with default scores')
+          finalRecommendations = regions.slice(0, 3).map((region, idx) => ({
+            region: region.regionName,
+            score: 50 - (idx * 5), // 50, 45, 40
+            specialization: (region.특화업종 || '').trim() || null,
+            specialization_ratio: parseFloat(region.특화점수 || '0') || null,
+            stability: '보통',
+            growth_rate: null,
+            reason: `${region.regionName} 지역 추천`
+          }))
+        }
+      }
     }
     
     // 최종 응답 (지역 이름이 반드시 포함된 추천만 반환)
@@ -526,11 +555,28 @@ export async function POST(request: NextRequest) {
       user_profile: userProfile
     }
     
-    console.log('Final response:', {
+    console.log('✅ Final response:', {
       count: finalResponse.recommendations.length,
       regions: finalResponse.recommendations.map(r => r.region),
-      scores: finalResponse.recommendations.map(r => r.score)
+      scores: finalResponse.recommendations.map(r => r.score),
+      firstRec: finalResponse.recommendations[0]
     })
+    
+    // 응답 검증
+    if (finalResponse.recommendations.length === 0) {
+      console.error('❌ CRITICAL: Final response has 0 recommendations!')
+      return NextResponse.json(
+        { 
+          error: '추천 결과를 생성할 수 없습니다',
+          debug: {
+            regionsParsed: regions.length,
+            recommendationsCalculated: recommendations.length,
+            validRecommendations: validRecommendations.length
+          }
+        },
+        { status: 500 }
+      )
+    }
     
     return NextResponse.json(finalResponse)
   } catch (error) {
