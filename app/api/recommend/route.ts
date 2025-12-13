@@ -400,7 +400,6 @@ export async function POST(request: NextRequest) {
         
         // 지역 이름이 없으면 null 반환
         if (!finalRegionName || finalRegionName === '') {
-          console.error('❌ Region without name found. region.regionName:', region.regionName, 'Available keys:', Object.keys(region))
           return null
         }
         
@@ -429,8 +428,6 @@ export async function POST(request: NextRequest) {
         
         const score = calculateRecommendationScore(finalRegionName, region, body)
         
-        console.log(`📊 ${finalRegionName}: score=${score.toFixed(2)}, activity=${activity}, specialization=${specializationRatio.toFixed(1)}`)
-        
         const recommendation = {
           region: finalRegionName, // 반드시 지역 이름 포함 (홍대 관광특구, 강남역, 강남구 등)
           score: Math.round(score * 10) / 10,
@@ -441,18 +438,14 @@ export async function POST(request: NextRequest) {
           reason: generateReason(region, body, score)
         }
         
-        console.log(`✅ Recommendation created: ${finalRegionName} (score: ${recommendation.score})`)
         return recommendation
       })
       .filter((rec): rec is NonNullable<typeof rec> => {
         // 지역 이름이 있는 추천만 통과
-        if (!rec || !rec.region || rec.region.trim() === '') {
-          return false
-        }
-        return true
+        return rec !== null && rec.region && rec.region.trim() !== ''
       })
       .sort((a, b) => b.score - a.score)
-      .slice(0, 3) // 상위 3개
+      .slice(0, 10) // 상위 10개로 먼저 확보
     
     // 사용자 프로필 구성 (먼저 선언)
     const userProfile = {
@@ -478,15 +471,28 @@ export async function POST(request: NextRequest) {
       })
     
     console.log(`Final recommendations count: ${validRecommendations.length}`)
-    validRecommendations.forEach((rec, idx) => {
-      console.log(`Recommendation ${idx + 1}: ${rec.region} (score: ${rec.score})`)
-    })
+    if (validRecommendations.length > 0) {
+      console.log('Top 3 recommendations:')
+      validRecommendations.slice(0, 3).forEach((rec, idx) => {
+        console.log(`  ${idx + 1}. ${rec.region} (score: ${rec.score})`)
+      })
+    } else {
+      console.error('❌ No valid recommendations found!')
+      console.error('Total regions parsed:', regions.length)
+      console.error('Sample region data:', regions[0] ? Object.keys(regions[0]) : 'none')
+    }
     
     // 추천 결과가 없거나 지역 이름이 없는 경우 에러
     if (validRecommendations.length === 0) {
       console.error('No valid recommendations with region names found')
       return NextResponse.json(
-        { error: '추천할 지역 데이터를 찾을 수 없습니다' },
+        { 
+          error: '추천할 지역 데이터를 찾을 수 없습니다',
+          debug: {
+            totalRegions: regions.length,
+            sampleRegion: regions[0] ? Object.keys(regions[0]) : null
+          }
+        },
         { status: 500 }
       )
     }
