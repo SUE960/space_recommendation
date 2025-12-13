@@ -201,29 +201,6 @@ export function RecommendationResults({ recommendations }: RecommendationResults
                     />
                   </div>
                 </div>
-                <div className={styles.details}>
-                  {rec.specialization && (
-                    <div className={styles.detailItem}>
-                      <span className={styles.detailLabel}>특화 업종:</span>
-                      <span className={styles.detailValue}>
-                        {rec.specialization}
-                        {rec.specialization_ratio && ` (${rec.specialization_ratio}%)`}
-                      </span>
-                    </div>
-                  )}
-                  <div className={styles.detailItem}>
-                    <span className={styles.detailLabel}>안정성:</span>
-                    <span className={styles.detailValue}>{rec.stability}</span>
-                  </div>
-                  {rec.growth_rate !== null && rec.growth_rate > 0 && (
-                    <div className={styles.detailItem}>
-                      <span className={styles.detailLabel}>성장률:</span>
-                      <span className={styles.detailValue}>
-                        <span className={styles.growthPositive}>+{rec.growth_rate.toFixed(2)}%</span>
-                      </span>
-                    </div>
-                  )}
-                </div>
                 <div className={styles.reason}>
                   <span className={styles.reasonLabel}>💡 추천 이유:</span>
                   <span className={styles.reasonText}>{rec.reason}</span>
