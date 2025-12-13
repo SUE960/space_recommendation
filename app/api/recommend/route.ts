@@ -449,7 +449,9 @@ export async function POST(request: NextRequest) {
       })
       .filter((rec): rec is NonNullable<typeof rec> => {
         // 지역 이름이 있는 추천만 통과
-        return rec !== null && rec.region && rec.region.trim() !== ''
+        if (!rec) return false
+        if (!rec.region || typeof rec.region !== 'string') return false
+        return rec.region.trim() !== ''
       })
       .sort((a, b) => b.score - a.score)
       .slice(0, 10) // 상위 10개로 먼저 확보
