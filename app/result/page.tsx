@@ -147,25 +147,39 @@ export default function ResultPage() {
 
         const resultData = await response.json()
         
-        console.log('API Response status:', response.status)
-        console.log('API Response data:', resultData)
+        console.log('📡 API Response status:', response.status)
+        console.log('📡 API Response data:', resultData)
+        console.log('📡 Response keys:', Object.keys(resultData))
+        console.log('📡 Recommendations type:', typeof resultData.recommendations)
+        console.log('📡 Recommendations is array:', Array.isArray(resultData.recommendations))
         
         if (!response.ok) {
-          console.error('API Error:', resultData)
+          console.error('❌ API Error:', resultData)
           throw new Error(resultData.error || '추천 요청에 실패했습니다')
         }
 
         // 추천 결과가 비어있는지 확인
-        if (!resultData.recommendations || resultData.recommendations.length === 0) {
-          console.error('Empty recommendations:', resultData)
+        if (!resultData.recommendations) {
+          console.error('❌ No recommendations property in response!', resultData)
+          throw new Error('추천 결과 형식이 올바르지 않습니다.')
+        }
+        
+        if (!Array.isArray(resultData.recommendations)) {
+          console.error('❌ Recommendations is not an array!', typeof resultData.recommendations, resultData.recommendations)
+          throw new Error('추천 결과 형식이 올바르지 않습니다.')
+        }
+        
+        if (resultData.recommendations.length === 0) {
+          console.error('❌ Empty recommendations array:', resultData)
           throw new Error('추천 결과를 찾을 수 없습니다. 다시 시도해주세요.')
         }
 
         const result: RecommendationResponse = resultData
         console.log('✅ Received recommendations:', {
           count: result.recommendations.length,
-          regions: result.recommendations.map(r => r.region),
-          fullData: result
+          regions: result.recommendations.map(r => r?.region),
+          firstRec: result.recommendations[0],
+          allRecs: result.recommendations
         })
         
         setRecommendations(result)

@@ -32,17 +32,41 @@ export function RecommendationResults({ recommendations }: RecommendationResults
   const { recommendations: recs, user_profile } = recommendations
   
   // 디버깅: 받은 데이터 확인
-  console.log('RecommendationResults received:', { 
+  console.log('🔍 RecommendationResults received:', { 
     recsCount: recs?.length, 
     recs: recs,
     firstRec: recs?.[0],
-    allRegions: recs?.map(r => r.region)
+    allRegions: recs?.map(r => r?.region),
+    fullResponse: recommendations
   })
   
-  // TOP 3로 제한
-  const topRecs = (recs || []).filter(rec => rec && rec.region && rec.region.trim() !== '').slice(0, 3)
+  // 데이터 검증 및 필터링
+  let topRecs: Recommendation[] = []
   
-  console.log('Top recs after filtering:', {
+  if (recs && Array.isArray(recs) && recs.length > 0) {
+    // 유효한 추천만 필터링
+    const validRecs = recs.filter(rec => {
+      if (!rec) return false
+      if (!rec.region || typeof rec.region !== 'string' || rec.region.trim() === '') {
+        console.warn('❌ Invalid rec (no region):', rec)
+        return false
+      }
+      return true
+    })
+    
+    console.log(`✅ Valid recs: ${validRecs.length} out of ${recs.length}`)
+    
+    if (validRecs.length > 0) {
+      topRecs = validRecs.slice(0, 3)
+      console.log('✅ Top 3 recs:', topRecs.map(r => ({ region: r.region, score: r.score })))
+    } else {
+      console.error('❌ No valid recommendations after filtering!')
+    }
+  } else {
+    console.error('❌ No recommendations array or empty array!', { recs, type: typeof recs })
+  }
+  
+  console.log('📊 Final topRecs:', {
     count: topRecs.length,
     regions: topRecs.map(r => r.region)
   })

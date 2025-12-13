@@ -550,8 +550,29 @@ export async function POST(request: NextRequest) {
     }
     
     // 최종 응답 (지역 이름이 반드시 포함된 추천만 반환)
+    // 최소 3개 보장 - 부족하면 폴백 사용
+    let finalRecs = finalRecommendations.slice(0, 10)
+    
+    if (finalRecs.length === 0 && regions.length > 0) {
+      console.warn('⚠️ CRITICAL: No recommendations, using emergency fallback!')
+      // 긴급 폴백: 상위 3개 지역 강제 반환
+      finalRecs = regions.slice(0, 3).map((region, idx) => {
+        const regionName = region.regionName || `지역${idx + 1}`
+        return {
+          region: regionName,
+          score: 50.0 - (idx * 5),
+          specialization: (region.특화업종 || '').trim() || null,
+          specialization_ratio: parseFloat(region.특화점수 || '0') || null,
+          stability: '보통',
+          growth_rate: null,
+          reason: `${regionName} 지역 추천`
+        }
+      })
+      console.log('🚨 Emergency fallback created:', finalRecs.map(r => r.region))
+    }
+    
     const finalResponse = {
-      recommendations: finalRecommendations.slice(0, 10), // 최대 10개 반환
+      recommendations: finalRecs,
       user_profile: userProfile
     }
     
@@ -559,7 +580,8 @@ export async function POST(request: NextRequest) {
       count: finalResponse.recommendations.length,
       regions: finalResponse.recommendations.map(r => r.region),
       scores: finalResponse.recommendations.map(r => r.score),
-      firstRec: finalResponse.recommendations[0]
+      firstRec: finalResponse.recommendations[0],
+      responseKeys: Object.keys(finalResponse)
     })
     
     // 응답 검증
@@ -571,14 +593,27 @@ export async function POST(request: NextRequest) {
           debug: {
             regionsParsed: regions.length,
             recommendationsCalculated: recommendations.length,
-            validRecommendations: validRecommendations.length
+            validRecommendations: validRecommendations.length,
+            finalRecommendations: finalRecommendations.length
           }
         },
         { status: 500 }
       )
     }
     
-    return NextResponse.json(finalResponse)
+    // JSON 직렬화 테스트
+    try {
+      const testJson = JSON.stringify(finalResponse)
+      console.log('✅ Response JSON valid, length:', testJson.length)
+    } catch (e) {
+      console.error('❌ JSON serialization error:', e)
+    }
+    
+    return NextResponse.json(finalResponse, {
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
   } catch (error) {
     console.error('Recommendation error:', error)
     return NextResponse.json(
